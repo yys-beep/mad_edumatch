@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="lightApricot">#FAEFC3</color>
+    <color name="lightSkyBlue">#B9EBFA</color>
+    <color name="pastelBlue">#ADD3FA</color>
+    <color name="pastelGreen">#B0F2C2</color>
+    <color name="pastelGrey">#EEEEEE</color>
+    <color name="pastelPurple">#E1D5FA</color>
+    <color name="pastelRed">#FFB3B3</color>
+    <color name="pastelYellow">#FAFAD5</color>
+    <color name="softPastelGreen">#FADFAA</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">mad_eduMatch</string>
+    <string name="gcm_defaultSenderId" translatable="false">674700121118</string>
+    <string name="google_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
+    <string name="google_app_id" translatable="false">1:674700121118:android:db606041a9e6369dd74a0f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
+    <string name="google_storage_bucket" translatable="false">edumatch-74070.firebasestorage.app</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="project_id" translatable="false">edumatch-74070</string>
+    <style name="Base.Theme.Mad_eduMatch" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="CircularImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="DetailIconStyle">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:tint">@color/black</item>
+    </style>
+    <style name="DetailRowStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+    <style name="DetailTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Theme.Mad_eduMatch" parent="Base.Theme.Mad_eduMatch"/>
+</resources>

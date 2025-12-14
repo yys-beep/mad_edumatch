@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightApricot">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp"
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:id="@+id/ivDetailAvatar"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circular_bg"
+                        android:src="@drawable/ic_launcher_foreground"
+                        android:scaleType="centerCrop"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvDetailTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Question Title"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/tvDetailInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="User • Date"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:alpha="0.6"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDetailContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Content goes here..."
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEditQuestion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Edit"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/pastelYellow"
+                        app:icon="@drawable/outline_edit_square_24"
+                        app:iconTint="@color/black"
+                        app:iconGravity="textStart"
+                        android:layout_marginEnd="4dp"
+                        android:visibility="gone"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDeleteQuestion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Delete"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/pastelRed"
+                        app:icon="@drawable/outline_delete_24"
+                        app:iconTint="@color/black"
+                        app:iconGravity="textStart"
+                        android:layout_marginStart="4dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewAttachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Download Attachment"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/lightSkyBlue"
+                    app:icon="@drawable/outline_download_24"
+                    app:iconTint="@color/black"
+                    app:iconGravity="textStart"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMarkSolved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mark as Solved"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/pastelGreen"
+                    app:icon="@drawable/outline_check_circle_24"
+                    app:iconTint="@color/black"
+                    app:iconGravity="textStart"
+                    android:visibility="gone"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Solutions"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNoAnswers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No solution yet."
+                android:textColor="#757575"
+                android:textAlignment="center"
+                android:padding="20dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAnswers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/pastelGrey"
+        android:elevation="8dp"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etAnswerContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type your solution..."
+            android:padding="12dp"
+            android:background="@drawable/card_background"
+            android:backgroundTint="@color/white"
+            android:minHeight="48dp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etSolutionLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Link (http://...) - Optional"
+            android:padding="12dp"
+            android:background="@drawable/card_background"
+            android:backgroundTint="@color/white"
+            android:minHeight="48dp"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/tvAnswerFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No file selected"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAttachFileToAnswer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Attach"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/pastelPurple"
+                app:icon="@drawable/outline_attach_file_24"
+                app:iconTint="@color/black"
+                app:iconGravity="textStart"
+                android:layout_marginEnd="4dp"
+                android:minHeight="50dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPostAnswer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Post"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/pastelBlue"
+                app:icon="@drawable/baseline_send_24"
+                app:iconTint="@color/black"
+                app:iconGravity="textStart"
+                android:layout_marginStart="4dp"
+                android:minHeight="50dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

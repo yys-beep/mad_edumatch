@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/lightSkyBlue">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Lesson"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etEditTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Lesson Title"
+        android:padding="12dp"
+        android:background="@drawable/card_background"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etEditDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:padding="12dp"
+        android:background="@drawable/card_background"
+        android:minLines="3"
+        android:gravity="top"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etEditVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Video Link"
+        android:padding="12dp"
+        android:background="@drawable/card_background"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnEditUploadMaterial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📄 Replace Material (PDF/Img)"
+        android:backgroundTint="#FF9800"
+        android:textColor="@color/white"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvEditFileStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current File: None"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="#555"
+        android:layout_marginBottom="24dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveChanges"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Save Changes"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/pastelGreen"/>
+
+</LinearLayout>

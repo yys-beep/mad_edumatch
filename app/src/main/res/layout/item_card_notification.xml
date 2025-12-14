@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <!-- Notification Icon -->
+        <ImageView
+            android:id="@+id/ivNotificationIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/outline_notifications_active_24"
+            android:contentDescription="Notification Icon"
+            android:layout_marginEnd="12dp"/>
+
+        <!-- Notification Text -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvNotificationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Tutor Application"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvNotificationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="John Doe applied for your tuition request."
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingTop="2dp"/>
+
+            <TextView
+                android:id="@+id/tvNotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 hours ago"
+                android:textColor="@color/pastelBlue"
+                android:textSize="12sp"
+                android:paddingTop="2dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

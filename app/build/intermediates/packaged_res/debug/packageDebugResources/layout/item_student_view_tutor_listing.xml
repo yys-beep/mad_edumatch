@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tutor Name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Posted: 2 hours ago"
+            android:textSize="11sp"
+            android:textColor="#888"
+            android:layout_marginBottom="12dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:text="Subjects:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mathematics, Science"
+            android:textColor="#444"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:text="Levels:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvLevels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Primary, Lower Secondary"
+            android:textColor="#444"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:text="Fee:"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvFee"
+                    android:text="RM 50/hr"
+                    android:textColor="#444"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:text="Area:"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvArea"
+                    android:text="Subang Jaya"
+                    android:textColor="#444"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:text="Qualification:"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvQualification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bachelor in Education"
+            android:textColor="#444"
+            android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContactTutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact Tutor"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:icon="@drawable/baseline_perm_contact_calendar_24"
+            app:iconGravity="textStart"
+            app:cornerRadius="8dp"
+            app:backgroundTint="@color/softPastelGreen"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">674700121118</string>
+    <string name="google_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
+    <string name="google_app_id" translatable="false">1:674700121118:android:db606041a9e6369dd74a0f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
+    <string name="google_storage_bucket" translatable="false">edumatch-74070.firebasestorage.app</string>
+    <string name="project_id" translatable="false">edumatch-74070</string>
+</resources>

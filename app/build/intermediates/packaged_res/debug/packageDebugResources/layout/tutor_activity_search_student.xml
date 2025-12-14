@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightSkyBlue">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvSearchStudentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search Student Requests"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Filters -->
+    <LinearLayout
+        android:id="@+id/llFilters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSearchStudentTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/etSubjectFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Subject"
+            android:background="@color/white"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/etAreaFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Area"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:backgroundTint="@color/pastelBlue"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <!-- RecyclerView for search results -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvStudentRequests"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/llFilters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:listitem="@layout/tutor_item_student_request"
+        tools:itemCount="3"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

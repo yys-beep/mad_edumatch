@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Tutor Listing"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Subjects"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditSubjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Academic Levels"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupEditLevels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp">
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Lower Secondary (F1-F3)" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="SPM" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="STPM / A-Level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="IGCSE" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="University" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fee (RM/hr)"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditFee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Area"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Qualification"
+            android:layout_marginBottom="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditQualification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contact Info"
+            android:layout_marginBottom="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEditContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView android:text="Learning Mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+        <RadioGroup
+            android:id="@+id/rgEditLearningMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <RadioButton android:id="@+id/rbEditOneToOne" android:text="One-to-One" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditOneToMany" android:text="Group" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </RadioGroup>
+
+        <TextView android:text="Delivery Mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+        <RadioGroup
+            android:id="@+id/rgEditDeliveryMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <RadioButton android:id="@+id/rbEditPhysical" android:text="Physical" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditOnline" android:text="Online" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnCancelEdit"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textColor="#555"/>
+
+            <Button
+                android:id="@+id/btnSaveEdit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:backgroundTint="@color/pastelBlue"
+                android:textColor="@color/black"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
