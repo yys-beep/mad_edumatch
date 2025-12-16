@@ -2,7 +2,6 @@ package com.example.mad_edumatch.recycleAdapters;
 
 import android.content.Context;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+import java.util.TimeZone; // Import TimeZone
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
 
@@ -52,10 +51,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         holder.tvLastMessage.setText(chatList.getLastMessage());
         holder.tvName.setText("Loading...");
 
-        // --- NEW SMART TIME LOGIC ---
+        // --- UPDATED TIME LOGIC ---
         holder.tvTime.setText(getSmartDate(chatList.getTimestamp()));
 
-        // Bold Logic (Unread Messages)
+        // Bold Logic (Unread)
         if (!chatList.isSeen()) {
             holder.tvLastMessage.setTypeface(null, android.graphics.Typeface.BOLD);
             holder.tvName.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -74,10 +73,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         });
     }
 
-    // --- HELPER METHOD FOR "Today / Yesterday / Date" ---
+    // --- FIX: USE MALAYSIA TIMEZONE HERE ---
     private String getSmartDate(long timestamp) {
-        Calendar now = Calendar.getInstance();
-        Calendar msgTime = Calendar.getInstance();
+        // 1. Force TimeZone
+        TimeZone myTimeZone = TimeZone.getTimeZone("Asia/Kuala_Lumpur");
+
+        Calendar now = Calendar.getInstance(myTimeZone);
+        Calendar msgTime = Calendar.getInstance(myTimeZone);
         msgTime.setTimeInMillis(timestamp);
 
         // Check if it's the same day
@@ -99,9 +101,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         return DateFormat.format("dd MMM", msgTime).toString();
     }
 
+    // ... (Keep loadUserInfo, openChatFragment, getItemCount same as before) ...
     private void loadUserInfo(String userId, ViewHolder holder) {
         DatabaseReference ref = FirebaseDatabase.getInstance(DB_URL).getReference("Users").child(userId);
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -109,8 +111,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     String name = "User";
                     if (snapshot.hasChild("name")) name = snapshot.child("name").getValue(String.class);
                     else if (snapshot.hasChild("username")) name = snapshot.child("username").getValue(String.class);
-                    else if (snapshot.hasChild("fullName")) name = snapshot.child("fullName").getValue(String.class);
-
                     holder.tvName.setText(name);
 
                     if(snapshot.hasChild("profileImageUrl")) {
@@ -121,8 +121,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     } else {
                         holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
                     }
-                } else {
-                    holder.tvName.setText("Unknown User");
                 }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -135,12 +133,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         args.putString("targetUserId", targetId);
         args.putString("targetUserName", targetName);
         chatFragment.setArguments(args);
-
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, chatFragment)
-                    .addToBackStack(null)
-                    .commit();
+                    .addToBackStack(null).commit();
         }
     }
 

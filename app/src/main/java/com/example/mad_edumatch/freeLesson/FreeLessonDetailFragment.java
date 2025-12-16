@@ -74,6 +74,7 @@ public class FreeLessonDetailFragment extends Fragment {
     private EditText etCommentInput;
     private ImageButton btnSendComment, btnAttachFile;
     private TextView tvAttachmentPreview;
+    private TextView tvNoComments;
 
     // --- DATA ---
     private String lessonId, videoUrl, materialUrl, materialName, tutorId; // Added materialName
@@ -152,6 +153,7 @@ public class FreeLessonDetailFragment extends Fragment {
         rvComments = view.findViewById(R.id.rvLessonComments);
         etCommentInput = view.findViewById(R.id.etCommentInput);
         btnSendComment = view.findViewById(R.id.btnSendComment);
+        tvNoComments = view.findViewById(R.id.tvNoComments);
 
         layoutOwnerActions = view.findViewById(R.id.layoutOwnerActions);
         layoutParticipation = view.findViewById(R.id.layoutParticipation); // Bind new view
@@ -492,9 +494,24 @@ public class FreeLessonDetailFragment extends Fragment {
                         commentList.add(comment);
                     }
                 }
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    commentAdapter.notifyDataSetChanged();
+                    // Optional: Scroll to bottom on new message
+                    if (commentList.isEmpty()) {
+                        tvNoComments.setVisibility(View.VISIBLE);
+                        rvComments.setVisibility(View.GONE);
+                    } else {
+                        tvNoComments.setVisibility(View.GONE);
+                        rvComments.setVisibility(View.VISIBLE);
+                        rvComments.smoothScrollToPosition(commentList.size() - 1);
+                    }
+                });
                 commentAdapter.notifyDataSetChanged();
             }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Comments", "Failed: " + error.getMessage());
+            }
         });
     }
 

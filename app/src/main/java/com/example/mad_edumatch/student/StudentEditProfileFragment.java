@@ -35,17 +35,20 @@ import java.util.Map;
 
 public class StudentEditProfileFragment extends Fragment implements AvatarAdapter.AvatarClickListener {
 
-    // Input fields (for basic data)
+    // Input fields
     private EditText etUsername, etEmail, etContact, etAge, etAcademicLevel, etDescription;
 
-    // Dynamic list containers (replacing the old list EditTexts)
-    private LinearLayout layoutAchievementsContainer, layoutLessonsContainer;
+    // Dynamic list containers
+    private LinearLayout layoutAchievementsContainer; // ONLY Achievements UI
     private Button btnAddAchievement;
+
+    // Data Preservation (To keep lessons without showing them in UI)
+    private ArrayList<String> preservedLessonsList = new ArrayList<>();
 
     // Avatar Selection
     private RecyclerView rvEditAvatarSelect;
     private AvatarAdapter avatarAdapter;
-    private String selectedAvatarName = AvatarManager.getAvatarName(0); // Default
+    private String selectedAvatarName = AvatarManager.getAvatarName(0);
 
     private Button btnSaveProfile;
     private String studentId;
@@ -80,6 +83,8 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
 
         // Dynamic List Elements
         layoutAchievementsContainer = view.findViewById(R.id.layoutAchievementsContainer);
+        // NOTE: layoutLessonsContainer is NOT bound because it is not in XML
+
         btnAddAchievement = view.findViewById(R.id.btnAddAchievement);
 
         // Avatar
@@ -99,7 +104,6 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         btnAddAchievement.setOnClickListener(v -> addDynamicItemInput(layoutAchievementsContainer, "Achievement"));
     }
 
-    // Implementation for AvatarAdapter.AvatarClickListener
     @Override
     public void onAvatarSelected(int index) {
         selectedAvatarName = AvatarManager.getAvatarName(index);
@@ -113,63 +117,45 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.exists()) {
-                            // Fallback: If student profile is missing, try to get Name/Email from Users node
                             loadBasicUserFallback();
                             return;
                         }
 
                         StudentProfile profile = snapshot.getValue(StudentProfile.class);
                         if (profile != null) {
-                            // 1. Name & Email (Always Show)
+                            // 1. Basic Fields
                             etUsername.setText(profile.getUsername());
                             etEmail.setText(profile.getEmail());
 
-                            // 2. Contact: Hide "N/A" or "-"
                             String contact = profile.getContact();
-                            if (contact != null && !contact.equals("N/A") && !contact.equals("-")) {
-                                etContact.setText(contact);
-                            } else {
-                                etContact.setText(""); // Leave blank for cleaner editing
-                            }
+                            etContact.setText((contact != null && !contact.equals("N/A")) ? contact : "");
 
-                            // 3. Age: Hide "0"
-                            if (profile.getAge() > 0) {
-                                etAge.setText(String.valueOf(profile.getAge()));
-                            } else {
-                                etAge.setText("");
-                            }
+                            if (profile.getAge() > 0) etAge.setText(String.valueOf(profile.getAge()));
 
-                            // 4. Academic Level: Hide "N/A"
                             String academic = profile.getAcademicLevel();
-                            if (academic != null && !academic.equals("N/A")) {
-                                etAcademicLevel.setText(academic);
-                            } else {
-                                etAcademicLevel.setText("");
-                            }
+                            etAcademicLevel.setText((academic != null && !academic.equals("N/A")) ? academic : "");
 
-                            // 5. Description: Hide "-"
                             String desc = profile.getDescription();
-                            if (desc != null && !desc.equals("-")) {
-                                etDescription.setText(desc);
-                            } else {
-                                etDescription.setText("");
-                            }
+                            etDescription.setText((desc != null && !desc.equals("-")) ? desc : "");
 
-                            // 6. Avatar Selection
+                            // 2. Avatar
                             selectedAvatarName = profile.getProfileImageUrl();
-                            // If avatar is missing, default to avatar_1
                             if (selectedAvatarName == null || selectedAvatarName.isEmpty()) {
                                 selectedAvatarName = "avatar_1";
                             }
-                            int avatarIndex = getAvatarIndexFromName(selectedAvatarName);
-                            // Update the RecyclerView selection
                             if(avatarAdapter != null) {
-                                avatarAdapter.setSelectedPosition(avatarIndex);
+                                avatarAdapter.setSelectedPosition(getAvatarIndexFromName(selectedAvatarName));
                             }
 
-                            // 7. Dynamic Lists
+                            // 3. Dynamic Lists - Achievements (UI)
                             populateDynamicList(layoutAchievementsContainer, profile.getAchievements(), "Achievement");
-                            populateDynamicList(layoutLessonsContainer, profile.getParticipatedFreeLessons(), "Lesson Name");
+
+                            // 4. Data Preservation - Lessons (No UI)
+                            // We save them to a list so we can send them back when saving
+                            preservedLessonsList.clear();
+                            if (profile.getParticipatedFreeLessons() != null) {
+                                preservedLessonsList.addAll(profile.getParticipatedFreeLessons());
+                            }
                         }
                     }
 
@@ -180,7 +166,6 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
                 });
     }
 
-    // Helper: Loads basic info if the specific StudentProfile is empty/missing
     private void loadBasicUserFallback() {
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("Users")
@@ -205,21 +190,20 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         String email = etEmail.getText().toString().trim();
         String contact = etContact.getText().toString().trim();
 
-        // 1. Calculate age in a temporary variable first
         int tempAge = 0;
         try {
             tempAge = Integer.parseInt(etAge.getText().toString().trim());
         } catch (NumberFormatException ignored) {}
-
-        // 2. Create a 'final' copy to use inside the Lambda
         final int finalAge = tempAge;
 
         String academicLevel = etAcademicLevel.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
 
-        // Get list data
+        // 1. Get Achievements from UI
         ArrayList<String> achievementsList = getItemsFromContainer(layoutAchievementsContainer);
-        ArrayList<String> participatedLessonsList = getItemsFromContainer(layoutLessonsContainer);
+
+        // 2. Use PRESERVED Lessons (Don't try to get from UI)
+        ArrayList<String> participatedLessonsList = new ArrayList<>(preservedLessonsList);
 
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email)) {
             Toast.makeText(requireContext(), "Name and email are required", Toast.LENGTH_SHORT).show();
@@ -232,11 +216,8 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
                 .get()
                 .addOnSuccessListener(dataSnapshot -> {
                     StudentProfile existingProfile = dataSnapshot.getValue(StudentProfile.class);
-                    // Handle case where profile might not exist yet
                     long registerTime = existingProfile != null ? existingProfile.getRegisterTime() : System.currentTimeMillis();
                     String currentAvatar = existingProfile != null ? existingProfile.getProfileImageUrl() : AvatarManager.getAvatarName(0);
-
-                    // Use the selected avatar, or fallback to existing
                     String avatarToSave = selectedAvatarName != null ? selectedAvatarName : currentAvatar;
 
                     StudentProfile updatedProfile = new StudentProfile(
@@ -244,13 +225,13 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
                             username,
                             email,
                             contact,
-                            finalAge, // <--- Use the final variable here
+                            finalAge,
                             academicLevel,
                             description,
                             registerTime,
                             avatarToSave,
                             achievementsList,
-                            participatedLessonsList
+                            participatedLessonsList // Saving the preserved data back
                     );
 
                     FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -269,53 +250,32 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
                 });
     }
 
-    // Helper to sync specific fields to the "Users" node
     private void updateMainUserNode(String newName, String newAvatar) {
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", newName);
         updates.put("profileImageUrl", newAvatar);
-
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("Users")
-                .child(studentId)
-                .updateChildren(updates);
+                .getReference("Users").child(studentId).updateChildren(updates);
     }
 
-    // ===============================================
-    // DYNAMIC LIST UTILITIES (Achievements/Lessons)
-    // ===============================================
+    // --- UTILITIES ---
 
-    /**
-     * Adds an EditText field and a remove button to the specified container.
-     */
     private void addDynamicItemInput(LinearLayout container, String hint) {
+        if(container == null) return; // Safety check
+
         Context context = requireContext();
         LinearLayout rowLayout = new LinearLayout(context);
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        // EditText (takes up most space)
         TextInputEditText editText = new TextInputEditText(context);
-        LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                1.0f
-        );
+        LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         etParams.setMargins(0, 8, 8, 8);
         editText.setLayoutParams(etParams);
         editText.setHint(hint);
 
-        // Remove Button (Small icon)
         ImageView removeButton = new ImageView(context);
-        removeButton.setImageResource(R.drawable.outline_delete_24); // You need a delete icon drawable
+        removeButton.setImageResource(R.drawable.outline_delete_24);
         removeButton.setPadding(16, 16, 16, 16);
-        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        btnParams.setMargins(0, 8, 0, 8);
-        removeButton.setLayoutParams(btnParams);
-
-        // Set listener to remove the row
         removeButton.setOnClickListener(v -> container.removeView(rowLayout));
 
         rowLayout.addView(editText);
@@ -323,11 +283,8 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         container.addView(rowLayout);
     }
 
-    /**
-     * Populates the dynamic container with existing data.
-     */
     private void populateDynamicList(LinearLayout container, ArrayList<String> items, String hint) {
-        if (items != null) {
+        if (items != null && container != null) {
             for (String item : items) {
                 if (!item.trim().isEmpty()) {
                     addDynamicItemInput(container, hint, item);
@@ -336,10 +293,9 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         }
     }
 
-    // Overloaded helper for populating data
     private void addDynamicItemInput(LinearLayout container, String hint, String initialValue) {
         addDynamicItemInput(container, hint);
-        // Find the last EditText added and set its text
+        if(container == null) return;
         View lastRow = container.getChildAt(container.getChildCount() - 1);
         if (lastRow instanceof LinearLayout) {
             View editText = ((LinearLayout) lastRow).getChildAt(0);
@@ -349,15 +305,14 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         }
     }
 
-    /**
-     * Extracts all non-empty text values from the TextInputEditTexts within the container.
-     */
     private ArrayList<String> getItemsFromContainer(LinearLayout container) {
         ArrayList<String> items = new ArrayList<>();
+        // SAFETY CHECK: This is what prevents the crash if container is null
+        if (container == null) return items;
+
         for (int i = 0; i < container.getChildCount(); i++) {
             View childRow = container.getChildAt(i);
             if (childRow instanceof LinearLayout) {
-                // The EditText is the first child (index 0) of the row LinearLayout
                 View editText = ((LinearLayout) childRow).getChildAt(0);
                 if (editText instanceof TextInputEditText) {
                     String text = ((TextInputEditText) editText).getText().toString().trim();
@@ -370,18 +325,14 @@ public class StudentEditProfileFragment extends Fragment implements AvatarAdapte
         return items;
     }
 
-    /**
-     * Finds the index of the selected avatar name for setting the RecyclerView position.
-     */
     private int getAvatarIndexFromName(String avatarName) {
         if (avatarName == null || avatarName.isEmpty()) return 0;
         try {
-            // avatarName is like "avatar_5". We need index 4.
             String[] parts = avatarName.split("_");
             if (parts.length > 1) {
                 return Integer.parseInt(parts[1]) - 1;
             }
         } catch (Exception ignored) {}
-        return 0; // Default index
+        return 0;
     }
 }

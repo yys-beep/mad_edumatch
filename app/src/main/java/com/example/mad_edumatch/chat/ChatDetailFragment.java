@@ -17,11 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Ensure Glide dependency is added
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.ChatMessage;
 import com.example.mad_edumatch.helper.CurrentUser;
 import com.example.mad_edumatch.recycleAdapters.ChatAdapter;
+import com.example.mad_edumatch.student.StudentProfileFragment; // Import Student Fragment
+import com.example.mad_edumatch.tutor.TutorProfileFragment;   // Import Tutor Fragment
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,17 +44,16 @@ public class ChatDetailFragment extends Fragment {
     private ImageButton btnSend;
 
     // Top Bar Views
-    private TextView tvUserName;
-    private TextView tvUserRole;
+    private TextView tvUserName, tvUserRole;
     private ImageView imgTopAvatar;
 
     private String targetUserId;
     private String targetUserName;
     private String currentUserId;
+    private String targetUserRoleStr = "Student"; // Default role
 
-    // URLs for Chat Bubbles
-    private String targetProfileUrl = "";
-    private String myProfileUrl = "";
+    private String targetProfileImageName = "";
+    private String myProfileImageName = "";
 
     private DatabaseReference rootRef;
 
@@ -67,7 +67,6 @@ public class ChatDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Get Arguments
         if (getArguments() != null) {
             targetUserId = getArguments().getString("targetUserId");
             targetUserName = getArguments().getString("targetUserName");
@@ -75,80 +74,85 @@ public class ChatDetailFragment extends Fragment {
         currentUserId = CurrentUser.getInstance().getUid();
         rootRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
-        // 2. Init Views
+        // Init Views
         tvUserName = view.findViewById(R.id.tvChatUserName);
-        tvUserRole = view.findViewById(R.id.tvChatUserRole); // Make sure ID exists in XML
-        imgTopAvatar = view.findViewById(R.id.imgTopAvatar); // Make sure ID exists in XML
+        tvUserRole = view.findViewById(R.id.tvChatUserRole);
+        imgTopAvatar = view.findViewById(R.id.imgTopAvatar);
 
         recyclerView = view.findViewById(R.id.rvChatMessages);
         etMessage = view.findViewById(R.id.etChatMessage);
         btnSend = view.findViewById(R.id.btnSendMessage);
 
-        // Set initial name (will update if fetch succeeds)
         tvUserName.setText(targetUserName != null ? targetUserName : "User");
 
-        // 3. Setup RecyclerView
+        // Setup Recycler
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         messageList = new ArrayList<>();
-
-        // Init Adapter with empty URLs initially
-        chatAdapter = new ChatAdapter(getContext(), messageList, myProfileUrl, targetProfileUrl);
+        chatAdapter = new ChatAdapter(getContext(), messageList, myProfileImageName, targetProfileImageName);
         recyclerView.setAdapter(chatAdapter);
 
-        // 4. Fetch Details & Messages
+        // Fetch Data
         fetchTargetUserDetails(targetUserId);
         fetchMyDetails();
         loadMessages();
 
-        // 5. Send Button
         btnSend.setOnClickListener(v -> sendMessage());
         seenMessage();
+
+        // --- CLICK LISTENER FOR PROFILE PIC ---
+        imgTopAvatar.setOnClickListener(v -> openUserProfile());
+    }
+
+    private void openUserProfile() {
+        Fragment profileFragment;
+        Bundle args = new Bundle();
+        args.putString("targetUserId", targetUserId); // Pass the ID to the fragment
+
+        // Check the role string we fetched earlier
+        if ("Tutor".equalsIgnoreCase(targetUserRoleStr)) {
+            profileFragment = new TutorProfileFragment();
+        } else {
+            profileFragment = new StudentProfileFragment();
+        }
+
+        profileFragment.setArguments(args);
+
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, profileFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void fetchTargetUserDetails(String uid) {
         if (uid == null) return;
-
-        DatabaseReference userRef = rootRef.child("Users").child(uid);
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) return;
 
-                // 1. Name & Role (Same as before)
                 String name = snapshot.child("name").getValue(String.class);
                 if (name != null) tvUserName.setText(name);
 
-                String role = "Student";
-                if (snapshot.hasChild("role")) role = snapshot.child("role").getValue(String.class);
-                tvUserRole.setText(role);
+                // --- CAPTURE ROLE ---
+                if (snapshot.hasChild("role")) {
+                    targetUserRoleStr = snapshot.child("role").getValue(String.class);
+                }
+                tvUserRole.setText(targetUserRoleStr);
 
-                // 2. IMAGE LOGIC (FIXED)
+                // --- IMAGE ---
                 if (snapshot.hasChild("profileImageUrl")) {
-                    targetProfileUrl = snapshot.child("profileImageUrl").getValue(String.class); // e.g. "avatar_1"
+                    targetProfileImageName = snapshot.child("profileImageUrl").getValue(String.class);
+                    int resId = getResources().getIdentifier(targetProfileImageName, "drawable", requireContext().getPackageName());
+                    imgTopAvatar.setImageResource(resId != 0 ? resId : R.drawable.outline_background_replace_24);
 
-                    // Convert String "avatar_1" to R.drawable.avatar_1
-                    int resId = getResources().getIdentifier(targetProfileUrl, "drawable", requireContext().getPackageName());
-
-                    if (resId != 0) {
-                        // Found the drawable!
-                        if (imgTopAvatar != null) imgTopAvatar.setImageResource(resId);
-                    } else {
-                        // Fallback if drawable not found
-                        if (imgTopAvatar != null) imgTopAvatar.setImageResource(R.drawable.outline_background_replace_24);
-                    }
-
-                    // Update Adapter
-                    if (chatAdapter != null) {
-                        chatAdapter.updateProfileUrls(myProfileUrl, targetProfileUrl);
-                    }
+                    if (chatAdapter != null) chatAdapter.updateProfileUrls(myProfileImageName, targetProfileImageName);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -160,12 +164,8 @@ public class ChatDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists() && snapshot.hasChild("profileImageUrl")) {
-                    myProfileUrl = snapshot.child("profileImageUrl").getValue(String.class);
-
-                    // Update Adapter
-                    if (chatAdapter != null) {
-                        chatAdapter.updateProfileUrls(myProfileUrl, targetProfileUrl);
-                    }
+                    myProfileImageName = snapshot.child("profileImageUrl").getValue(String.class);
+                    if (chatAdapter != null) chatAdapter.updateProfileUrls(myProfileImageName, targetProfileImageName);
                 }
             }
             @Override
@@ -173,25 +173,16 @@ public class ChatDetailFragment extends Fragment {
         });
     }
 
+    // ... (sendMessage, loadMessages, seenMessage same as before) ...
     private void sendMessage() {
         String msg = etMessage.getText().toString().trim();
         if (TextUtils.isEmpty(msg)) return;
 
-        // 1. Generate Message ID
         String messagePushId = rootRef.child("chats").child(currentUserId).child(targetUserId).push().getKey();
         if (messagePushId == null) return;
 
         long timestamp = System.currentTimeMillis();
 
-        // 2. Define Paths (Declared only once now)
-        String senderPath = "chats/" + currentUserId + "/" + targetUserId + "/" + messagePushId;
-        String receiverPath = "chats/" + targetUserId + "/" + currentUserId + "/" + messagePushId;
-
-        // 3. Define ChatList Paths (For Recent Chats screen)
-        String senderListPath = "chatlist/" + currentUserId + "/" + targetUserId;
-        String receiverListPath = "chatlist/" + targetUserId + "/" + currentUserId;
-
-        // 4. Create Message Data
         Map<String, Object> messageMap = new HashMap<>();
         messageMap.put("messageId", messagePushId);
         messageMap.put("senderId", currentUserId);
@@ -199,33 +190,27 @@ public class ChatDetailFragment extends Fragment {
         messageMap.put("message", msg);
         messageMap.put("timestamp", timestamp);
 
-        // 5. Create ChatList Data (Summary)
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("chats/" + currentUserId + "/" + targetUserId + "/" + messagePushId, messageMap);
+        updateMap.put("chats/" + targetUserId + "/" + currentUserId + "/" + messagePushId, messageMap);
+
+        // Update Chat Lists
         Map<String, Object> listMap = new HashMap<>();
         listMap.put("id", targetUserId);
         listMap.put("lastMessage", msg);
         listMap.put("timestamp", timestamp);
         listMap.put("isSeen", true);
+        updateMap.put("chatlist/" + currentUserId + "/" + targetUserId, listMap);
 
         Map<String, Object> receiverListMap = new HashMap<>();
         receiverListMap.put("id", currentUserId);
         receiverListMap.put("lastMessage", msg);
         receiverListMap.put("timestamp", timestamp);
         receiverListMap.put("isSeen", false);
+        updateMap.put("chatlist/" + targetUserId + "/" + currentUserId, receiverListMap);
 
-        // 6. Combine all updates into one map for atomic write
-        Map<String, Object> updateMap = new HashMap<>();
-        updateMap.put(senderPath, messageMap);
-        updateMap.put(receiverPath, messageMap);
-        updateMap.put(senderListPath, listMap);       // Add to My Recent Chats
-        updateMap.put(receiverListPath, receiverListMap); // Add to Their Recent Chats
-
-        // 7. Execute Update
         rootRef.updateChildren(updateMap).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                etMessage.setText("");
-            } else {
-                Toast.makeText(getContext(), "Failed to send", Toast.LENGTH_SHORT).show();
-            }
+            if (task.isSuccessful()) etMessage.setText("");
         });
     }
 
@@ -236,29 +221,20 @@ public class ChatDetailFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         messageList.clear();
                         for (DataSnapshot data : snapshot.getChildren()) {
-                            ChatMessage message = data.getValue(ChatMessage.class);
-                            messageList.add(message);
+                            messageList.add(data.getValue(ChatMessage.class));
                         }
                         chatAdapter.notifyDataSetChanged();
-                        if (!messageList.isEmpty()) {
-                            recyclerView.scrollToPosition(messageList.size() - 1);
-                        }
+                        if (!messageList.isEmpty()) recyclerView.scrollToPosition(messageList.size() - 1);
                     }
-
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
     }
 
     private void seenMessage() {
-        DatabaseReference listRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("chatlist")
-                .child(currentUserId)
-                .child(targetUserId);
-
-        // Set "isSeen" to true immediately
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("isSeen", true);
-        listRef.updateChildren(hashMap);
+        FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("chatlist").child(currentUserId).child(targetUserId).updateChildren(hashMap);
     }
 }
