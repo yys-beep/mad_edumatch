@@ -24,8 +24,6 @@ import com.example.mad_edumatch.helper.AvatarManager;
 import com.example.mad_edumatch.helper.CurrentUser;
 import com.example.mad_edumatch.recycleAdapters.AchievementAdapter;
 import com.example.mad_edumatch.recycleAdapters.FreeLessonAdapter;
-// NOTE: You must uncomment and ensure these adapters and the setLimit() method exist.
-// import com.example.mad_edumatch.recycleAdapters.StringListAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TutorProfileFragment extends Fragment {
 
@@ -42,36 +39,38 @@ public class TutorProfileFragment extends Fragment {
     private TextView tvName, tvQual, tvDesc, tvSubjects, tvFee, tvArea, tvContact, tvEmail;
     private Button btnEdit;
 
-    // Hosted Lessons Views
-    private RecyclerView rvLessons;
-    private TextView tvLessonCollapseToggle; // NEW FIELD
+    // Headers (Use these to show counts!)
+    private TextView tvHeaderLessons, tvHeaderExperience, tvHeaderAchievements;
 
-    // Experience Views
-    private RecyclerView rvExperience; // NEW FIELD
-    private TextView tvExperienceCollapseToggle; // NEW FIELD
-    private TextView tvNoExperience; // NEW FIELD
+    // Toggle Buttons
+    private TextView tvLessonCollapseToggle, tvExperienceCollapseToggle, tvAchievementsCollapseToggle;
 
-    // Achievements Views
-    private RecyclerView rvAchievements; // NEW FIELD
-    private TextView tvAchievementsCollapseToggle; // NEW FIELD
-    private TextView tvNoAchievements; // NEW FIELD
+    // Empty Messages
+    private TextView tvNoExperience, tvNoAchievements;
+    private View lessonHeaderContainer; // To hide lesson header if empty
 
-    // Data
-    private ArrayList<FreeLesson> hostedLessonList;
-    private List<String> experienceList = new ArrayList<>(); // Initialized List
-    private List<String> achievementList = new ArrayList<>(); // Initialized List
+    // RecyclerViews
+    private RecyclerView rvLessons, rvExperience, rvAchievements;
 
-    // Adapters (Placeholder names - replace with your actual adapter types)
+    // Adapters
     private FreeLessonAdapter freeLessonAdapter;
-    private AchievementAdapter experienceAdapter; // USE AchievementAdapter for Experience!
+    private AchievementAdapter experienceAdapter;
     private AchievementAdapter achievementAdapter;
 
-    // State & Constants
+    // Data
+    private ArrayList<FreeLesson> hostedLessonList = new ArrayList<>();
+    private ArrayList<String> experienceList = new ArrayList<>();
+    private ArrayList<String> achievementList = new ArrayList<>();
+
+    // State
     private boolean isLessonsExpanded = true;
     private boolean isExperienceExpanded = false;
     private boolean isAchievementsExpanded = false;
     private static final int INITIAL_ITEM_LIMIT = 3;
     private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+    // ID Variable
+    private String profileUserId;
 
     @Nullable
     @Override
@@ -81,8 +80,16 @@ public class TutorProfileFragment extends Fragment {
         bindViews(view);
         setupRecyclerViews();
 
-        loadHostedLessons();
-        loadProfile();
+        // --- DETERMINE USER ID ---
+        if (getArguments() != null && getArguments().getString("targetUserId") != null) {
+            // Viewing someone else
+            profileUserId = getArguments().getString("targetUserId");
+            btnEdit.setVisibility(View.GONE); // Hide Edit button
+        } else {
+            // Viewing myself
+            profileUserId = CurrentUser.getInstance().getUid();
+            btnEdit.setVisibility(View.VISIBLE); // Show Edit button
+        }
 
         btnEdit.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -92,11 +99,13 @@ public class TutorProfileFragment extends Fragment {
                     .commit();
         });
 
+        loadHostedLessons();
+        loadProfile();
+
         return view;
     }
 
     private void bindViews(View view) {
-        // Core Profile Views (Existing)
         imgProfile = view.findViewById(R.id.imgTotorProfilePic);
         tvName = view.findViewById(R.id.tvTutorName);
         tvQual = view.findViewById(R.id.tvTutorQualification);
@@ -108,71 +117,52 @@ public class TutorProfileFragment extends Fragment {
         tvEmail = view.findViewById(R.id.tvTutorEmail);
         btnEdit = view.findViewById(R.id.btnEditProfile);
 
-        // Hosted Lessons Views (Modified/New)
-        rvLessons = view.findViewById(R.id.rvTutorHostedLessons);
-        tvLessonCollapseToggle = view.findViewById(R.id.tvLessonCollapseToggle); // NEW BINDING
+        // Bind Headers for Counts
+        tvHeaderLessons = view.findViewById(R.id.tvHeaderLessons);
+        tvHeaderExperience = view.findViewById(R.id.tvHeaderExperience);
+        tvHeaderAchievements = view.findViewById(R.id.tvHeaderAchievements);
 
-        // Experience Views (New Bindings)
+        // Lists & Toggles
+        rvLessons = view.findViewById(R.id.rvTutorHostedLessons);
+        tvLessonCollapseToggle = view.findViewById(R.id.tvLessonCollapseToggle);
+        if (tvLessonCollapseToggle.getParent() instanceof View) {
+            lessonHeaderContainer = (View) tvLessonCollapseToggle.getParent();
+        }
+
         rvExperience = view.findViewById(R.id.rvTutorExperience);
         tvExperienceCollapseToggle = view.findViewById(R.id.tvExperienceCollapseToggle);
         tvNoExperience = view.findViewById(R.id.tvNoExperience);
 
-        // Achievements Views (New Bindings)
         rvAchievements = view.findViewById(R.id.rvTutorAchievements);
         tvAchievementsCollapseToggle = view.findViewById(R.id.tvAchievementsCollapseToggle);
         tvNoAchievements = view.findViewById(R.id.tvNoAchievements);
     }
 
     private void setupRecyclerViews() {
-        // 1. Hosted Lessons Setup
-        hostedLessonList = new ArrayList<>();
+        // Lessons
         rvLessons.setLayoutManager(new LinearLayoutManager(getContext()));
         freeLessonAdapter = new FreeLessonAdapter(hostedLessonList, this::openLessonDetail);
         rvLessons.setAdapter(freeLessonAdapter);
 
-        // 2. Experience Setup
-        // experienceList is initialized as empty
-         experienceAdapter = new AchievementAdapter(experienceList);
-         rvExperience.setLayoutManager(new LinearLayoutManager(getContext()));
-         experienceAdapter.setLimit(INITIAL_ITEM_LIMIT);
-         rvExperience.setAdapter(experienceAdapter);
+        // Experience
+        rvExperience.setLayoutManager(new LinearLayoutManager(getContext()));
+        experienceAdapter = new AchievementAdapter(experienceList);
+        experienceAdapter.setLimit(INITIAL_ITEM_LIMIT);
+        rvExperience.setAdapter(experienceAdapter);
 
-        // 3. Achievements Setup (Uses AchievementAdapter)
-        achievementAdapter = new AchievementAdapter(achievementList);
+        // Achievements
         rvAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
+        achievementAdapter = new AchievementAdapter(achievementList);
         achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvAchievements.setAdapter(achievementAdapter);
 
-        // Set up Toggles (Existing Logic)
-        if (tvLessonCollapseToggle != null) tvLessonCollapseToggle.setOnClickListener(v -> toggleLessonView());
-        if (tvExperienceCollapseToggle != null) tvExperienceCollapseToggle.setOnClickListener(v -> toggleExperienceView());
-        if (tvAchievementsCollapseToggle != null) tvAchievementsCollapseToggle.setOnClickListener(v -> toggleAchievementView());
+        tvLessonCollapseToggle.setOnClickListener(v -> toggleLessonView());
+        tvExperienceCollapseToggle.setOnClickListener(v -> toggleExperienceView());
+        tvAchievementsCollapseToggle.setOnClickListener(v -> toggleAchievementView());
     }
-
-    private void openLessonDetail(FreeLesson lesson) {
-        FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
-        Bundle args = new Bundle();
-        args.putString("lessonId", lesson.getLessonId());
-        args.putString("tutorId", lesson.getTutorId());
-        args.putString("title", lesson.getTitle());
-        args.putString("desc", lesson.getDescription());
-        args.putString("videoUrl", lesson.getVideoLink());
-        args.putString("matUrl", lesson.getMaterialUrl());
-        args.putString("matName", lesson.getMaterialName());
-        fragment.setArguments(args);
-
-        getParentFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    // --- TOGGLE LOGIC FOR ALL THREE LISTS ---
 
     private void toggleLessonView() {
         isLessonsExpanded = !isLessonsExpanded;
-
         if (isLessonsExpanded) {
             rvLessons.setVisibility(View.VISIBLE);
             tvLessonCollapseToggle.setText("Collapse");
@@ -185,7 +175,7 @@ public class TutorProfileFragment extends Fragment {
     private void toggleExperienceView() {
         isExperienceExpanded = !isExperienceExpanded;
         int limit = isExperienceExpanded ? experienceList.size() : INITIAL_ITEM_LIMIT;
-        experienceAdapter.setLimit(limit); // Now works!
+        experienceAdapter.setLimit(limit);
         experienceAdapter.notifyDataSetChanged();
         tvExperienceCollapseToggle.setText(isExperienceExpanded ? "Collapse" : "View All");
     }
@@ -193,77 +183,58 @@ public class TutorProfileFragment extends Fragment {
     private void toggleAchievementView() {
         isAchievementsExpanded = !isAchievementsExpanded;
         int limit = isAchievementsExpanded ? achievementList.size() : INITIAL_ITEM_LIMIT;
-        achievementAdapter.setLimit(limit); // Now works!
+        achievementAdapter.setLimit(limit);
         achievementAdapter.notifyDataSetChanged();
         tvAchievementsCollapseToggle.setText(isAchievementsExpanded ? "Collapse" : "View All");
     }
 
-    // --- DATA LOADING & VISIBILITY MANAGEMENT ---
-
     private void loadHostedLessons() {
-        String uid = CurrentUser.getInstance().getUid();
-        if (uid == null) return;
+        if (profileUserId == null) return;
 
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("free_lessons");
+        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons");
 
-        ref.orderByChild("tutorId").equalTo(uid).addValueEventListener(new ValueEventListener() {
+        // Query by the determined profileUserId
+        ref.orderByChild("tutorId").equalTo(profileUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!isAdded()) return;
 
-                List<FreeLesson> tempLessons = new ArrayList<>();
+                hostedLessonList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     try {
                         FreeLesson lesson = ds.getValue(FreeLesson.class);
                         if (lesson != null) {
                             lesson.setLessonId(ds.getKey());
-                            tempLessons.add(lesson);
+                            hostedLessonList.add(lesson);
                         }
-                    } catch (Exception e) {
-                        Log.e("HostedLessons", "TYPE MISMATCH ERROR at key: " + ds.getKey(), e);
-                    }
+                    } catch (Exception e) {}
                 }
-
-                hostedLessonList.clear();
-                hostedLessonList.addAll(tempLessons);
                 freeLessonAdapter.notifyDataSetChanged();
 
-                boolean isEmpty = hostedLessonList.isEmpty();
+                // --- SHOW COUNT ---
+                tvHeaderLessons.setText("Hosted Free Lessons (" + hostedLessonList.size() + ")");
 
-                // Manage visibility of the entire block (header, toggle, and RV)
-                TextView tvHeaderLessons = getView() != null ? getView().findViewById(R.id.tvHeaderLessons) : null;
-                View lessonHeaderContainer = (View) tvLessonCollapseToggle.getParent();
-
-                if (isEmpty) {
-                    // If empty, hide everything
+                if (hostedLessonList.isEmpty()) {
                     if (lessonHeaderContainer != null) lessonHeaderContainer.setVisibility(View.GONE);
                     rvLessons.setVisibility(View.GONE);
                 } else {
-                    // If not empty, ensure the header block is visible
                     if (lessonHeaderContainer != null) lessonHeaderContainer.setVisibility(View.VISIBLE);
-
-                    // Set initial state to Expanded/Visible
-                    isLessonsExpanded = true;
                     rvLessons.setVisibility(View.VISIBLE);
                     tvLessonCollapseToggle.setText("Collapse");
+                    isLessonsExpanded = true;
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Load hosted lessons cancelled: " + error.getMessage());
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     private void loadProfile() {
-        String uid = CurrentUser.getInstance().getUid();
-        if (uid == null) return;
+        if (profileUserId == null) return;
 
         DatabaseReference userRef = FirebaseDatabase.getInstance(FIREBASE_URL)
                 .getReference("tutor_profiles")
-                .child(uid);
+                .child(profileUserId); // Use the variable
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -271,9 +242,7 @@ public class TutorProfileFragment extends Fragment {
                 if (!isAdded()) return;
 
                 TutorProfile profile = snapshot.getValue(TutorProfile.class);
-
                 if (profile != null) {
-                    // 1. Basic Fields and Subject List Formatting
                     tvName.setText(getSafeDisplayString(profile.getUsername()));
                     tvQual.setText(getSafeDisplayString(profile.getQualification()));
                     tvDesc.setText(getSafeDisplayString(profile.getDescription()));
@@ -284,71 +253,77 @@ public class TutorProfileFragment extends Fragment {
                     String fee = getSafeDisplayString(profile.getFee());
                     tvFee.setText(fee.equals("N/A") ? "Hourly Fee: N/A" : "Hourly Fee: RM " + fee + "/hr");
 
-                    // Subject List Formatting
                     String subjectsText = "N/A";
                     if (profile.getSubjects() != null && !profile.getSubjects().isEmpty()) {
                         subjectsText = TextUtils.join(", ", profile.getSubjects());
                     }
                     tvSubjects.setText("Subjects: " + subjectsText);
 
-                    // 2. Load and Manage Experience List
+                    // Experience
                     experienceList.clear();
                     if (profile.getExperience() != null) experienceList.addAll(profile.getExperience());
 
-                    isExperienceExpanded = false;
-                    // if (experienceAdapter != null) experienceAdapter.setLimit(INITIAL_ITEM_LIMIT);
-                    // if (experienceAdapter != null) experienceAdapter.notifyDataSetChanged();
-                    manageListVisibility(experienceList.size(), rvExperience, tvNoExperience, tvExperienceCollapseToggle, "Experience");
+                    // --- SHOW COUNT ---
+                    tvHeaderExperience.setText("Experience (" + experienceList.size() + ")");
 
-                    // 3. Load and Manage Achievement List
+                    experienceAdapter.setLimit(INITIAL_ITEM_LIMIT);
+                    experienceAdapter.notifyDataSetChanged();
+                    manageListVisibility(experienceList.size(), rvExperience, tvNoExperience, tvExperienceCollapseToggle);
+
+                    // Achievements
                     achievementList.clear();
                     if (profile.getAchievement() != null) achievementList.addAll(profile.getAchievement());
 
-                    isAchievementsExpanded = false;
-                    // if (achievementAdapter != null) achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
-                    // if (achievementAdapter != null) achievementAdapter.notifyDataSetChanged();
-                    manageListVisibility(achievementList.size(), rvAchievements, tvNoAchievements, tvAchievementsCollapseToggle, "Achievement");
+                    // --- SHOW COUNT ---
+                    tvHeaderAchievements.setText("Achievements (" + achievementList.size() + ")");
 
-                    // 4. Avatar
-                    String avatarName = profile.getProfileImageUrl();
-                    int resId = AvatarManager.getAvatarResourceId(avatarName);
-                    if (resId != 0) imgProfile.setImageResource(resId);
+                    achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
+                    achievementAdapter.notifyDataSetChanged();
+                    manageListVisibility(achievementList.size(), rvAchievements, tvNoAchievements, tvAchievementsCollapseToggle);
+
+                    // Avatar
+                    int resId = AvatarManager.getAvatarResourceId(profile.getProfileImageUrl());
+                    imgProfile.setImageResource(resId != 0 ? resId : R.drawable.avatar_1);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    // --- UNIVERSAL HELPERS ---
-
     private String getSafeDisplayString(String value) {
-        if (value == null || value.trim().isEmpty() || value.equals("-") || value.equals("N/A")) {
-            return "N/A";
-        }
-        return value.trim();
+        return (value == null || value.trim().isEmpty() || value.equals("-") || value.equals("N/A")) ? "N/A" : value.trim();
     }
 
-    /**
-     * Manages the visibility of the RecyclerView, the "No Items" message, and the toggle button.
-     */
-    private void manageListVisibility(int listSize, RecyclerView rv, TextView tvNoItems, TextView tvToggle, String listType) {
+    private void manageListVisibility(int listSize, RecyclerView rv, TextView tvNoItems, TextView tvToggle) {
         if (listSize == 0) {
             rv.setVisibility(View.GONE);
             tvNoItems.setVisibility(View.VISIBLE);
-            tvNoItems.setText("No " + listType.toLowerCase() + " recorded.");
             tvToggle.setVisibility(View.GONE);
         } else {
             rv.setVisibility(View.VISIBLE);
             tvNoItems.setVisibility(View.GONE);
-
             if (listSize > INITIAL_ITEM_LIMIT) {
                 tvToggle.setVisibility(View.VISIBLE);
-                tvToggle.setText("View All"); // Always start in collapsed state
+                tvToggle.setText("View All");
             } else {
                 tvToggle.setVisibility(View.GONE);
             }
         }
+    }
+
+    // Open detail method
+    private void openLessonDetail(FreeLesson lesson) {
+        FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
+        Bundle args = new Bundle();
+        args.putString("lessonId", lesson.getLessonId());
+        args.putString("tutorId", lesson.getTutorId());
+        args.putString("title", lesson.getTitle());
+        args.putString("desc", lesson.getDescription());
+        args.putString("videoUrl", lesson.getVideoLink());
+        args.putString("matUrl", lesson.getMaterialUrl());
+        args.putString("matName", lesson.getMaterialName());
+        fragment.setArguments(args);
+        getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
     }
 }

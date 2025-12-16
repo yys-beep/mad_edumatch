@@ -43,6 +43,7 @@ public class QnaAnswerCommentFragment extends Fragment {
 
     private EditText etCommentInput;
     private Button btnPostComment;
+    private TextView tvNoComments;
 
     private static final String PROJECT_ID = "693c16f700198f0a2ed3";
     private static final String BUCKET_ID = "693c1807002ab38e1751";
@@ -66,6 +67,7 @@ public class QnaAnswerCommentFragment extends Fragment {
         tvContent = view.findViewById(R.id.tvAnswerDetailContent);
         tvLink = view.findViewById(R.id.tvAnswerDetailLink); // Ensure this ID exists in XML
         ivAnswerAvatar = view.findViewById(R.id.ivAnswerDetailAvatar);
+        tvNoComments = view.findViewById(R.id.tvNoComments);
 
         btnDeleteSolution = view.findViewById(R.id.btnDeleteSolution);
         btnDownloadAttachment = view.findViewById(R.id.btnDownloadMaterial);
@@ -210,6 +212,13 @@ public class QnaAnswerCommentFragment extends Fragment {
                     if (c != null) commentList.add(c);
                 }
                 adapter.notifyDataSetChanged();
+                if (commentList.isEmpty()) {
+                    tvNoComments.setVisibility(View.VISIBLE);
+                    rvComments.setVisibility(View.GONE);
+                } else {
+                    tvNoComments.setVisibility(View.GONE);
+                    rvComments.setVisibility(View.VISIBLE);
+                }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });

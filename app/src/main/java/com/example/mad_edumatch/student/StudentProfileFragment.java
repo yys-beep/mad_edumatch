@@ -62,6 +62,9 @@ public class StudentProfileFragment extends Fragment {
     private static final int INITIAL_ITEM_LIMIT = 3;
     private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
 
+    // Variable to determine WHICH user we are viewing
+    private String profileUserId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -69,6 +72,22 @@ public class StudentProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.student_fragment_profile, container, false);
 
         bindViews(view);
+
+        // --- 1. DETERMINE USER ID ---
+        if (getArguments() != null && getArguments().getString("targetUserId") != null) {
+            // Case A: Viewing someone else (passed from Chat)
+            profileUserId = getArguments().getString("targetUserId");
+
+            // HIDE EDIT BUTTON because it's not our profile
+            btnEditProfile.setVisibility(View.GONE);
+        } else {
+            // Case B: Viewing my own profile (Default)
+            profileUserId = CurrentUser.getInstance().getUid();
+
+            // SHOW EDIT BUTTON
+            btnEditProfile.setVisibility(View.VISIBLE);
+        }
+
         setupRecyclerViews();
 
         btnEditProfile.setOnClickListener(v -> {
@@ -110,13 +129,12 @@ public class StudentProfileFragment extends Fragment {
         // 1. Achievements (Uses Limit Logic)
         rvAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
         achievementAdapter = new AchievementAdapter(achievementList);
-        achievementAdapter.setLimit(INITIAL_ITEM_LIMIT); // Adapter MUST have this method
+        achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvAchievements.setAdapter(achievementAdapter);
 
         // 2. Lessons (Uses Show/Hide Logic)
         rvStudentFreeLessons.setLayoutManager(new LinearLayoutManager(getContext()));
         freeLessonAdapter = new FreeLessonAdapter(freeLessonList, this::openLessonDetail);
-        // NOTE: We do NOT set a limit here because we want to toggle the whole view visibility
         rvStudentFreeLessons.setAdapter(freeLessonAdapter);
 
         // Click Listeners
@@ -143,9 +161,6 @@ public class StudentProfileFragment extends Fragment {
                 .commit();
     }
 
-    // ====================================================================
-    // LOGIC: MATCHING TUTOR "LESSON" STYLE (Toggle Visibility)
-    // ====================================================================
     private void toggleLessonsView() {
         isLessonsExpanded = !isLessonsExpanded;
 
@@ -158,9 +173,6 @@ public class StudentProfileFragment extends Fragment {
         }
     }
 
-    // ====================================================================
-    // LOGIC: MATCHING TUTOR "ACHIEVEMENT" STYLE (Limit Items)
-    // ====================================================================
     private void toggleAchievementView() {
         isAchievementExpanded = !isAchievementExpanded;
 
@@ -176,14 +188,14 @@ public class StudentProfileFragment extends Fragment {
     // ====================================================================
 
     private void loadStudentProfile() {
-        String uid = CurrentUser.getInstance().getUid();
-        if (uid == null) return;
+        // --- CRITICAL FIX: USE profileUserId INSTEAD OF CurrentUser ---
+        if (profileUserId == null) return;
 
-        loadParticipatedLessons(uid);
+        loadParticipatedLessons(profileUserId);
 
         FirebaseDatabase.getInstance(FIREBASE_URL)
                 .getReference("student_profiles")
-                .child(uid)
+                .child(profileUserId) // Use the variable!
                 .get()
                 .addOnCompleteListener(task -> {
                     if (!isAdded()) return;
@@ -221,7 +233,6 @@ public class StudentProfileFragment extends Fragment {
                         rvAchievements.setVisibility(View.VISIBLE);
                         tvNoAchievements.setVisibility(View.GONE);
 
-                        // FIX: Only show toggle if we have more than 3 items
                         if (achievementList.size() > INITIAL_ITEM_LIMIT) {
                             tvAchievementCollapseToggle.setVisibility(View.VISIBLE);
                             tvAchievementCollapseToggle.setText("View All");
@@ -229,11 +240,13 @@ public class StudentProfileFragment extends Fragment {
                             tvAchievementCollapseToggle.setVisibility(View.GONE);
                         }
                     }
+
+                    // --- SHOW COUNT ---
                     tvStudentAchievementsTitle.setText("Achievements (" + achievementList.size() + ")");
                 });
     }
 
-    private void loadParticipatedLessons(String currentUid) {
+    private void loadParticipatedLessons(String uidToLoad) {
         FirebaseDatabase.getInstance(FIREBASE_URL)
                 .getReference("lesson_participation")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,8 +255,9 @@ public class StudentProfileFragment extends Fragment {
                         if (!isAdded()) return;
                         List<String> ids = new ArrayList<>();
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            if (ds.hasChild(currentUid) &&
-                                    Boolean.TRUE.equals(ds.child(currentUid).child("isCompleted").getValue(Boolean.class))) {
+                            // Check if the specific user (uidToLoad) has participated and completed
+                            if (ds.hasChild(uidToLoad) &&
+                                    Boolean.TRUE.equals(ds.child(uidToLoad).child("isCompleted").getValue(Boolean.class))) {
                                 ids.add(ds.getKey());
                             }
                         }
@@ -291,26 +305,18 @@ public class StudentProfileFragment extends Fragment {
         if (!isAdded()) return;
         freeLessonAdapter.notifyDataSetChanged();
 
+        // --- SHOW COUNT ---
         tvStudentFreeLessonsTitle.setText("Participated Free Lessons (" + freeLessonList.size() + ")");
 
-        // LOGIC: MATCHING TUTOR LESSON VISIBILITY
         if (freeLessonList.isEmpty()) {
-            // Empty State
             rvStudentFreeLessons.setVisibility(View.GONE);
-            tvLessonsCollapseToggle.setVisibility(View.GONE); // Hide button
+            tvLessonsCollapseToggle.setVisibility(View.GONE);
             tvNoLessons.setVisibility(View.VISIBLE);
         } else {
-            // Populated State
             tvNoLessons.setVisibility(View.GONE);
-
-            // 1. Show List
             rvStudentFreeLessons.setVisibility(View.VISIBLE);
-
-            // 2. Show Button (FIX: Explicitly set VISIBLE)
             tvLessonsCollapseToggle.setVisibility(View.VISIBLE);
             tvLessonsCollapseToggle.setText("Collapse");
-
-            // 3. Set State
             isLessonsExpanded = true;
         }
     }
