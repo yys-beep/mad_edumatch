@@ -11,7 +11,7 @@
         android:id="@+id/tvAchievementTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Achievement Title"
+        android:text="@string/achievement_title"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"/>
@@ -20,7 +20,7 @@
         android:id="@+id/tvAchievementDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Achievement Description"
+        android:text="@string/achievement_description"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:paddingTop="4dp"/>

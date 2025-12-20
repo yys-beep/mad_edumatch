@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post a Request"
+            android:text="@string/post_a_request"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -33,14 +33,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subject"
+                android:text="@string/subject"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <EditText
                 android:id="@+id/etSubject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="e.g. Mathematics"
+                android:hint="@string/e_g_mathematics"
                 android:padding="12dp"
                 android:background="#F5F5F5"
                 android:layout_marginBottom="16dp"/>
@@ -48,7 +48,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Academic Level"
+                android:text="@string/academic_level"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
@@ -63,45 +63,45 @@
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Primary"/>
+                        android:text="@string/primary"/>
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lower Secondary (F1-F3)"/>
+                        android:text="@string/lower_secondary_f1_f3"/>
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SPM"/>
+                        android:text="@string/spm"/>
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="STPM / A-Level"/>
+                        android:text="@string/stpm_a_level"/>
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="IGCSE"/>
+                        android:text="@string/igcse"/>
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="University"/>
+                        android:text="@string/university"/>
                 </com.google.android.material.chip.ChipGroup>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Area"
+                android:text="@string/area"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <EditText
                 android:id="@+id/etArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="e.g. Cheras"
+                android:hint="@string/e_g_cheras"
                 android:padding="12dp"
                 android:background="#F5F5F5"
                 android:layout_marginBottom="16dp"/>
@@ -109,14 +109,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Budget (RM/hr)"
+                android:text="@string/budget_rm_hr"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <EditText
                 android:id="@+id/etBudget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="e.g. 40"
+                android:hint="@string/e_g_40"
                 android:inputType="numberDecimal"
                 android:padding="12dp"
                 android:background="#F5F5F5"
@@ -125,14 +125,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description / Preferences"
+                android:text="@string/description_preferences"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <EditText
                 android:id="@+id/etDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Any specific requirements or preferred times?"
+                android:hint="@string/any_specific_requirements_or_preferred_times"
                 android:gravity="top"
                 android:minLines="3"
                 android:padding="12dp"
@@ -148,7 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Learning Mode"
+                android:text="@string/learning_mode"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <RadioGroup
@@ -161,20 +161,20 @@
                     android:id="@+id/rbOneToOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="One-to-One"
+                    android:text="@string/one_to_one"
                     android:layout_weight="1"/>
                 <RadioButton
                     android:id="@+id/rbOneToMany"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="One-to-Many"
+                    android:text="@string/one_to_many"
                     android:layout_weight="1"/>
             </RadioGroup>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delivery Mode"
+                android:text="@string/delivery_mode"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
             <RadioGroup
@@ -187,13 +187,13 @@
                     android:id="@+id/rbPhysical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Physical"
+                    android:text="@string/physical"
                     android:layout_weight="1"/>
                 <RadioButton
                     android:id="@+id/rbOnline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Online"
+                    android:text="@string/online"
                     android:layout_weight="1"/>
             </RadioGroup>
 
@@ -201,7 +201,7 @@
                 android:id="@+id/btnPostRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Post Request"
+                android:text="@string/post_request"
                 android:padding="12dp"
                 android:backgroundTint="@color/pastelBlue"
                 android:textColor="@color/black"

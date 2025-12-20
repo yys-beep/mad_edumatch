@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Find Students"
+        android:text="@string/find_students"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -20,7 +20,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search Subject (e.g. Math)"
+        android:hint="@string/search_subject_e_g_math"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusTopStart="30dp"
         app:boxCornerRadiusTopEnd="30dp"
@@ -45,7 +45,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter by Level:"
+        android:text="@string/filter_by_level"
         android:textStyle="bold"
         android:textColor="#555"
         android:layout_marginBottom="8dp"/>
@@ -67,32 +67,32 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Primary"/>
+                android:text="@string/primary"/>
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lower Secondary"/>
+                android:text="@string/lower_secondary_f1_f3"/>
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SPM"/>
+                android:text="@string/spm"/>
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="STPM / A-Level"/>
+                android:text="@string/stpm_a_level"/>
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IGCSE"/>
+                android:text="@string/igcse"/>
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="University"/>
+                android:text="@string/university"/>
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
@@ -100,7 +100,7 @@
         android:id="@+id/tvNoRequestFound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No student requests found."
+        android:text="@string/no_student_requests_found"
         android:gravity="center"
         android:visibility="gone"
         android:layout_marginTop="20dp"

@@ -29,7 +29,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
     private Context context;
     private List<Question> list;
     private OnQuestionClickListener listener;
-    private DatabaseReference userDbRef; // To fetch avatars
+    private DatabaseReference userDbRef; // To fetch user details
 
     public interface OnQuestionClickListener {
         void onQuestionClick(Question question);
@@ -39,6 +39,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
         this.context = context;
         this.list = list;
         this.listener = listener;
+        // Use the correct database URL
         this.userDbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
     }
 
@@ -55,7 +56,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
 
         holder.tvTitle.setText(q.getTitle());
         holder.tvPreview.setText(q.getContent());
-        holder.tvAuthorDate.setText(q.getUserName() + " • " + TimeHelper.getMalaysiaTime(q.getTimestamp()));
+
+        // 1. Set a placeholder text while loading the real name
+        holder.tvAuthorDate.setText("Loading... • " + TimeHelper.getMalaysiaTime(q.getTimestamp()));
 
         // Status Logic
         if (q.isSolved()) {
@@ -66,44 +69,74 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             holder.tvStatus.setTextColor(Color.parseColor("#FF6B6B")); // Red
         }
 
-        // --- FIX: FETCH AVATAR MANUALLY ---
-        loadAvatar(q.getUserId(), holder.ivAvatar);
+        // 2. Fetch Name AND Avatar dynamically using userId
+        // This ensures if the user changes their name later, it updates here automatically.
+        loadUserProfile(q.getUserId(), holder.tvAuthorDate, holder.ivAvatar, q.getTimestamp());
 
         // Click Listeners
         holder.itemView.setOnClickListener(v -> listener.onQuestionClick(q));
         holder.btnView.setOnClickListener(v -> listener.onQuestionClick(q));
     }
 
-    private void loadAvatar(String userId, ImageView imageView) {
-        if (userId == null) return;
+    /**
+     * Searches both 'student_profiles' and 'tutor_profiles' for the given userId.
+     */
+    private void loadUserProfile(String userId, TextView tvAuthorDate, ImageView ivAvatar, long timestamp) {
+        if (userId == null) {
+            tvAuthorDate.setText("Unknown User • " + TimeHelper.getMalaysiaTime(timestamp));
+            return;
+        }
 
-        // Try finding user in 'student_profiles'
-        userDbRef.child("student_profiles").child(userId).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+        // A. Check Student Profile First
+        userDbRef.child("student_profiles").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists() && snapshot.getValue() != null) {
-                    setAvatarImage(snapshot.getValue(String.class), imageView);
+                if (snapshot.exists()) {
+                    // It is a Student
+                    String name = snapshot.child("username").getValue(String.class);
+                    String imgUrl = snapshot.child("profileImageUrl").getValue(String.class);
+                    updateUI(name, imgUrl, tvAuthorDate, ivAvatar, timestamp);
                 } else {
-                    // If not found, try 'tutor_profiles'
-                    userDbRef.child("tutor_profiles").child(userId).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                    // B. If not found in Student, Check Tutor Profile
+                    userDbRef.child("tutor_profiles").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot s2) {
-                            if (s2.exists() && s2.getValue() != null) {
-                                setAvatarImage(s2.getValue(String.class), imageView);
+                        public void onDataChange(@NonNull DataSnapshot tutorSnapshot) {
+                            if (tutorSnapshot.exists()) {
+                                // It is a Tutor
+                                String name = tutorSnapshot.child("username").getValue(String.class);
+                                String imgUrl = tutorSnapshot.child("profileImageUrl").getValue(String.class);
+                                updateUI(name, imgUrl, tvAuthorDate, ivAvatar, timestamp);
+                            } else {
+                                // User ID exists in question but not in any profile (Account Deleted?)
+                                updateUI("Unknown User", null, tvAuthorDate, ivAvatar, timestamp);
                             }
                         }
-                        @Override public void onCancelled(@NonNull DatabaseError error) {}
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {}
                     });
                 }
             }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    private void setAvatarImage(String imageName, ImageView iv) {
-        if (imageName != null) {
-            int resId = AvatarManager.getAvatarResourceId(imageName);
+    // Helper to update the Views on the main thread once data is found
+    private void updateUI(String name, String imgUrl, TextView tv, ImageView iv, long timestamp) {
+        if (name == null || name.isEmpty()) name = "Unknown User";
+
+        // Update the TextView with the fetched Name + existing Timestamp
+        tv.setText(name + " • " + TimeHelper.getMalaysiaTime(timestamp));
+
+        // Update Avatar
+        if (imgUrl != null) {
+            int resId = AvatarManager.getAvatarResourceId(imgUrl);
             if (resId != 0) iv.setImageResource(resId);
+        } else {
+            // Optional: Reset to default if no image found
+            iv.setImageResource(R.drawable.avatar_1);
         }
     }
 
@@ -119,7 +152,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             super(itemView);
             ivAvatar = itemView.findViewById(R.id.ivQuestionAvatar);
             tvTitle = itemView.findViewById(R.id.tvQuestionTitle);
-            tvAuthorDate = itemView.findViewById(R.id.tvAuthorDate);
+            tvAuthorDate = itemView.findViewById(R.id.tvAuthorDate); // This now holds Name + Date
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvPreview = itemView.findViewById(R.id.tvQuestionPreview);
             btnView = itemView.findViewById(R.id.btnViewQuestion);

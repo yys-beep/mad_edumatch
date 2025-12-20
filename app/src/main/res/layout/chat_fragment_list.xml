@@ -20,7 +20,7 @@
         android:id="@+id/tvNoChats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No active chats yet. Find a tutor or student to start a conversation!"
+        android:text="@string/no_active_chats_yet_find_a_tutor_or_student_to_start_a_conversation"
         android:textSize="16sp"
         android:gravity="center"
         android:padding="16dp"
