@@ -7,7 +7,7 @@
     android:background="@drawable/rounded_dialog_bg"> <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Upload Material"
+    android:text="@string/upload_material"
     android:textSize="20sp"
     android:textStyle="bold"
     android:layout_gravity="center_horizontal"
@@ -18,7 +18,7 @@
         android:id="@+id/tvUploadStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a PDF, Image, or Video to help others."
+        android:text="@string/select_a_pdf_image_or_video_to_help_others"
         android:gravity="center"
         android:layout_marginBottom="24dp"/>
 
@@ -34,7 +34,7 @@
         android:id="@+id/btnChooseFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select File"
+        android:text="@string/select_file"
         android:backgroundTint="#6200EE"
         android:textColor="@android:color/white"/>
 
@@ -42,7 +42,7 @@
         android:id="@+id/btnCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:backgroundTint="@android:color/transparent"
         android:textColor="#6200EE"
         android:layout_marginTop="8dp"

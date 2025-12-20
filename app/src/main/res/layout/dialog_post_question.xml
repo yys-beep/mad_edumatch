@@ -10,7 +10,7 @@
         android:id="@+id/tvDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post New Question"
+        android:text="@string/post_new_question"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -20,7 +20,7 @@
         android:id="@+id/etQuestionTitleInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Question Title"
+        android:hint="@string/question_title"
         android:background="@android:drawable/edit_text"
         android:padding="10dp"
         android:layout_marginBottom="12dp"/>
@@ -29,7 +29,7 @@
         android:id="@+id/etQuestionContentInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Describe your question..."
+        android:hint="@string/describe_your_question"
         android:background="@android:drawable/edit_text"
         android:padding="10dp"
         android:minLines="3"
@@ -47,7 +47,7 @@
             android:id="@+id/btnAttachFile"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Attach File"
+            android:text="@string/attach_file"
             android:textSize="12sp"
             android:backgroundTint="#CCCCCC"
             android:textColor="@color/black"/>
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:text="No file selected"
+            android:text="@string/no_file_selected"
             android:textSize="14sp"
             android:ellipsize="middle"
             android:singleLine="true"/>
@@ -68,7 +68,7 @@
         android:id="@+id/btnSubmitQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post Question"
+        android:text="@string/post_question"
         android:backgroundTint="@color/pastelYellow"
         android:textColor="@color/black"/>
 

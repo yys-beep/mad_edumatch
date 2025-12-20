@@ -27,7 +27,7 @@
             android:id="@+id/tvChatListName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="@string/username"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -36,7 +36,7 @@
             android:id="@+id/tvLastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Last message..."
+            android:text="@string/last_message"
             android:textSize="14sp"
             android:textColor="#777"
             android:maxLines="1"
@@ -47,7 +47,7 @@
         android:id="@+id/tvChatListTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10:30 AM"
+        android:text="@string/_10_30_am"
         android:textSize="12sp"
         android:textColor="#999"/>
 </LinearLayout>

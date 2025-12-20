@@ -177,20 +177,28 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
         String uid = CurrentUser.getInstance().getUid();
         if (uid == null) return;
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("student_profiles").child(uid);
+        // Generate Key
+        String key = dbRef.push().getKey();
 
-        userRef.child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = "User";
-                if (snapshot.exists() && snapshot.getValue() != null) name = snapshot.getValue(String.class);
+        // Create Question with placeholder name (e.g., empty string)
+        // We only care about 'uid' now.
+        Question q = new Question(key, uid, "", title, content, System.currentTimeMillis(), false, tempFileUrl, tempFileName);
 
-                String key = dbRef.push().getKey();
-                Question q = new Question(key, uid, name, title, content, System.currentTimeMillis(), false, tempFileUrl, tempFileName);
-                dbRef.child(key).setValue(q).addOnSuccessListener(v -> dialog.dismiss());
-            }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        dbRef.child(key).setValue(q).addOnSuccessListener(v -> {
+            dialog.dismiss();
+        });
+    }
+
+    // Helper method to actually save the data to keep code clean
+    private void pushQuestionToDatabase(String uid, String name, String title, String content, AlertDialog dialog) {
+        String key = dbRef.push().getKey();
+        // Create the Question object with the correct Name
+        Question q = new Question(key, uid, name, title, content, System.currentTimeMillis(), false, tempFileUrl, tempFileName);
+
+        dbRef.child(key).setValue(q).addOnSuccessListener(v -> {
+            dialog.dismiss();
+            // Optional: Show success message
+            // Toast.makeText(getContext(), "Question posted!", Toast.LENGTH_SHORT).show();
         });
     }
 

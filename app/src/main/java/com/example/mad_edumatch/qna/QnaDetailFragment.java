@@ -105,9 +105,8 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
 
             tvTitle.setText(getArguments().getString("title"));
             tvContent.setText(getArguments().getString("content"));
-            String uName = getArguments().getString("username");
             long time = getArguments().getLong("timestamp");
-            tvInfo.setText(uName + " • " + TimeHelper.getMalaysiaTime(time));
+            loadQuestionUserProfile(questionUserId, time);
 
             qFileUrl = getArguments().getString("fileUrl");
             qFileName = getArguments().getString("fileName");
@@ -160,6 +159,56 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
             UploadMaterialBottom uploadDialog = new UploadMaterialBottom();
             uploadDialog.show(getChildFragmentManager(), "UploadAnswer");
         });
+    }
+
+    private void loadQuestionUserProfile(String uid, long timestamp) {
+        if (uid == null) return;
+
+        DatabaseReference db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+
+        // Check Student First
+        db.child("student_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String name = snapshot.child("username").getValue(String.class);
+                    String imgUrl = snapshot.child("profileImageUrl").getValue(String.class);
+                    updateHeaderUI(name, imgUrl, timestamp);
+                } else {
+                    // Check Tutor Second
+                    db.child("tutor_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot tutorSnap) {
+                            if (tutorSnap.exists()) {
+                                String name = tutorSnap.child("username").getValue(String.class);
+                                String imgUrl = tutorSnap.child("profileImageUrl").getValue(String.class);
+                                updateHeaderUI(name, imgUrl, timestamp);
+                            } else {
+                                updateHeaderUI("Unknown User", null, timestamp);
+                            }
+                        }
+                        @Override public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void updateHeaderUI(String name, String imgUrl, long timestamp) {
+        if (!isAdded()) return;
+
+        // Update Text
+        tvInfo.setText(name + " • " + TimeHelper.getMalaysiaTime(timestamp));
+
+        // Update Avatar
+        if (imgUrl != null) {
+            int resId = getResources().getIdentifier(imgUrl, "drawable", requireContext().getPackageName());
+            if (resId != 0) ivAvatar.setImageResource(resId);
+            else ivAvatar.setImageResource(R.drawable.ic_launcher_foreground);
+        } else {
+            ivAvatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
     }
 
     // --- UPLOAD CALLBACK ---

@@ -28,7 +28,6 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
     private List<Answer> list;
     private OnAnswerClickListener listener;
 
-    // Interface for click events
     public interface OnAnswerClickListener {
         void onAnswerClick(Answer answer);
     }
@@ -50,15 +49,12 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Answer answer = list.get(position);
 
-        // --- FIX: Use getUserName() to match your new Model/Database ---
-        holder.tvUser.setText(answer.getUserName());
-
         holder.tvContent.setText(answer.getContent());
 
         String timeStr = TimeHelper.getMalaysiaTime(answer.getTimestamp());
         holder.tvDate.setText(timeStr);
 
-        // Show attachment indicator if exists
+        // Attachment Logic
         if (answer.getAttachmentUrl() != null && !answer.getAttachmentUrl().isEmpty()) {
             holder.tvAttachment.setVisibility(View.VISIBLE);
             holder.tvAttachment.setText("📎 Attachment Available");
@@ -66,29 +62,38 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
             holder.tvAttachment.setVisibility(View.GONE);
         }
 
-        // Load Avatar (By Resource Name)
-        loadAvatar(answer.getUserId(), holder.ivAvatar);
+        // --- NEW: Set placeholder & Fetch Live Profile ---
+        holder.tvUser.setText("Loading...");
+        loadUserProfile(answer.getUserId(), holder.tvUser, holder.ivAvatar);
 
-        // CLICK LISTENER: Go to Solution Detail
         holder.itemView.setOnClickListener(v -> listener.onAnswerClick(answer));
     }
 
-    private void loadAvatar(String uid, ImageView iv) {
+    // --- NEW METHOD: Fetches BOTH Name and Avatar ---
+    private void loadUserProfile(String uid, TextView tvName, ImageView ivAvatar) {
         if (uid == null) return;
         DatabaseReference db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
-        // Check Student Profile first
-        db.child("student_profiles").child(uid).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+        // 1. Check Student Profile
+        db.child("student_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    setDrawableAvatar(snapshot.getValue(String.class), iv);
+                    String name = snapshot.child("username").getValue(String.class);
+                    String imgUrl = snapshot.child("profileImageUrl").getValue(String.class);
+                    updateUI(name, imgUrl, tvName, ivAvatar);
                 } else {
-                    // Check Tutor Profile
-                    db.child("tutor_profiles").child(uid).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+                    // 2. Check Tutor Profile
+                    db.child("tutor_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot s2) {
-                            if (s2.exists()) setDrawableAvatar(s2.getValue(String.class), iv);
+                            if (s2.exists()) {
+                                String name = s2.child("username").getValue(String.class);
+                                String imgUrl = s2.child("profileImageUrl").getValue(String.class);
+                                updateUI(name, imgUrl, tvName, ivAvatar);
+                            } else {
+                                updateUI("Unknown User", null, tvName, ivAvatar);
+                            }
                         }
                         @Override public void onCancelled(@NonNull DatabaseError e) {}
                     });
@@ -98,14 +103,19 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
         });
     }
 
-    private void setDrawableAvatar(String imageName, ImageView iv) {
-        if (imageName != null && !imageName.isEmpty()) {
-            int resId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+    private void updateUI(String name, String imgUrl, TextView tvName, ImageView ivAvatar) {
+        if (name == null) name = "Unknown";
+        tvName.setText(name);
+
+        if (imgUrl != null && !imgUrl.isEmpty()) {
+            int resId = context.getResources().getIdentifier(imgUrl, "drawable", context.getPackageName());
             if (resId != 0) {
-                iv.setImageResource(resId);
+                ivAvatar.setImageResource(resId);
             } else {
-                iv.setImageResource(R.drawable.ic_launcher_foreground);
+                ivAvatar.setImageResource(R.drawable.ic_launcher_foreground);
             }
+        } else {
+            ivAvatar.setImageResource(R.drawable.ic_launcher_foreground);
         }
     }
 
@@ -121,10 +131,8 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
             tvUser = itemView.findViewById(R.id.tvAnswerUser);
             tvContent = itemView.findViewById(R.id.tvAnswerContent);
             tvAttachment = itemView.findViewById(R.id.tvAnswerAttachment);
-
-            // Make sure this ID matches what is in your qna_item_answer.xml
+            // Ensure this ID matches your XML. Your previous code had 'tvAnswerDetailDate'
             tvDate = itemView.findViewById(R.id.tvAnswerDetailDate);
-
             ivAvatar = itemView.findViewById(R.id.ivAnswerAvatar);
         }
     }

@@ -65,7 +65,7 @@ public class QnaAnswerCommentFragment extends Fragment {
         tvAuthor = view.findViewById(R.id.tvAnswerDetailAuthor);
         tvDate = view.findViewById(R.id.tvAnswerDetailDate);
         tvContent = view.findViewById(R.id.tvAnswerDetailContent);
-        tvLink = view.findViewById(R.id.tvAnswerDetailLink); // Ensure this ID exists in XML
+        tvLink = view.findViewById(R.id.tvAnswerDetailLink);
         ivAnswerAvatar = view.findViewById(R.id.ivAnswerDetailAvatar);
         tvNoComments = view.findViewById(R.id.tvNoComments);
 
@@ -81,9 +81,11 @@ public class QnaAnswerCommentFragment extends Fragment {
             answerId = args.getString("answerId");
             answerUserId = args.getString("answerUserId");
 
-            tvAuthor.setText(args.getString("answerUser"));
             tvContent.setText(args.getString("answerContent"));
             tvDate.setText(TimeHelper.getMalaysiaTime(args.getLong("answerTime")));
+
+            // --- NEW: Fetch Name & Avatar Live ---
+            loadAnswerUserProfile(answerUserId);
 
             // Handle Link
             answerLink = args.getString("answerLink");
@@ -104,8 +106,6 @@ public class QnaAnswerCommentFragment extends Fragment {
             } else {
                 btnDownloadAttachment.setVisibility(View.GONE);
             }
-
-            loadAvatar(answerUserId, ivAnswerAvatar);
 
             // Delete Logic
             String currentUid = CurrentUser.getInstance().getUid();
@@ -134,6 +134,56 @@ public class QnaAnswerCommentFragment extends Fragment {
         etCommentInput = view.findViewById(R.id.etCommentInput);
         btnPostComment = view.findViewById(R.id.btnPostComment);
         btnPostComment.setOnClickListener(v -> postComment());
+    }
+
+    private void loadAnswerUserProfile(String uid) {
+        if (uid == null) return;
+
+        DatabaseReference db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+
+        // 1. Check Student Profile
+        db.child("student_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String name = snapshot.child("username").getValue(String.class);
+                    String imgUrl = snapshot.child("profileImageUrl").getValue(String.class);
+                    updateUI(name, imgUrl);
+                } else {
+                    // 2. Check Tutor Profile
+                    db.child("tutor_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot tutorSnap) {
+                            if (tutorSnap.exists()) {
+                                String name = tutorSnap.child("username").getValue(String.class);
+                                String imgUrl = tutorSnap.child("profileImageUrl").getValue(String.class);
+                                updateUI(name, imgUrl);
+                            } else {
+                                updateUI("Unknown User", null);
+                            }
+                        }
+                        @Override public void onCancelled(@NonNull DatabaseError error) {}
+                    });
+                }
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void updateUI(String name, String imgUrl) {
+        if (!isAdded()) return;
+
+        // Set Name
+        tvAuthor.setText(name);
+
+        // Set Avatar
+        if (imgUrl != null) {
+            int resId = getResources().getIdentifier(imgUrl, "drawable", requireContext().getPackageName());
+            if (resId != 0) ivAnswerAvatar.setImageResource(resId);
+            else ivAnswerAvatar.setImageResource(R.drawable.ic_launcher_foreground);
+        } else {
+            ivAnswerAvatar.setImageResource(R.drawable.ic_launcher_foreground);
+        }
     }
 
     private void deleteSolution() {

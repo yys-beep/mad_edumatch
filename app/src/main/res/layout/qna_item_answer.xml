@@ -44,7 +44,7 @@
                 android:id="@+id/tvAnswerDetailDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date/Time"
+                android:text="@string/date_or_time"
                 android:textSize="10sp"
                 android:textColor="#666666"/>
         </LinearLayout>
@@ -54,7 +54,7 @@
         android:id="@+id/tvAnswerContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Solution content..."
+        android:text="@string/solution_content"
         android:textColor="#333"
         android:textSize="14sp"
         android:layout_marginBottom="4dp"/>
@@ -63,7 +63,7 @@
         android:id="@+id/tvAnswerAttachment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="📎 Attachment Available"
+        android:text="@string/attachment_available"
         android:textColor="#2196F3"
         android:visibility="gone"
         android:textStyle="bold"

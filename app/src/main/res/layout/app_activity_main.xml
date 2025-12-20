@@ -20,7 +20,7 @@
             android:id="@+id/tvAppTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EduMatch"
+            android:text="@string/edumatch"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:fontFamily="sans-serif-black"
@@ -38,7 +38,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/baseline_logout_24"
             app:tint="#FF5252"
-            android:contentDescription="Logout"
+            android:contentDescription="@string/logout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
