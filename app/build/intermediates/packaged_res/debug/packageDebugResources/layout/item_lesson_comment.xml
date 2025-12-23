@@ -35,7 +35,7 @@
                 android:id="@+id/tvCommentAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
+                android:text="@string/user_name"
                 android:textStyle="bold"
                 android:textSize="13sp"
                 android:textColor="@color/black"/>
@@ -44,7 +44,7 @@
                 android:id="@+id/tvCommentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Just now"
+                android:text="@string/just_now"
                 android:textSize="10sp"
                 android:textColor="#666666"/>
         </LinearLayout>
@@ -56,7 +56,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_revert"
             app:tint="@color/pastelBlue"
-            android:contentDescription="Reply"
+            android:contentDescription="@string/reply"
             android:padding="4dp"
             android:layout_marginEnd="8dp"/>
 
@@ -68,14 +68,14 @@
             android:src="@android:drawable/ic_menu_delete"
             android:visibility="gone"
             app:tint="#FF6B6B"
-            android:contentDescription="Delete Comment"/>
+            android:contentDescription="@string/delete_comment"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvCommentContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Comment content..."
+        android:text="@string/comment_content"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:layout_marginBottom="8dp"/>
@@ -85,7 +85,7 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
-        android:text="📎 View Attachment"
+        android:text="@string/view_attachment"
         android:textColor="@color/pastelGreen"
         android:textSize="12sp"
         android:paddingTop="0dp"

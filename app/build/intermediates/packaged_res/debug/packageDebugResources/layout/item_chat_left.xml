@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="12dp"
-        android:text="Hello"
+        android:text="@string/hello"
         android:textSize="16sp"
         android:textColor="@color/black"
         android:maxWidth="240dp"

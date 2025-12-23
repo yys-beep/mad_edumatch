@@ -21,7 +21,7 @@
                 android:id="@+id/tvTutorEditTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Profile"
+                android:text="@string/edit_profile"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"

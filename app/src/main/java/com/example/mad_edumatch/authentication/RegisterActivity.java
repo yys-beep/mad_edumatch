@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
     private LinearLayout layoutStudentFields, layoutTutorFields;
     private Button btnRegister;
     private TextView tvLoginLink;
+    private ImageButton btnBack;
     private RecyclerView rvAvatarSelect;
     private FirebaseAuth mAuth;
     private String selectedAvatarName = AvatarManager.getAvatarName(0); // Default avatar
@@ -60,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
         layoutTutorFields = findViewById(R.id.layoutTutorFields);
         btnRegister = findViewById(R.id.btnRegister);
         tvLoginLink = findViewById(R.id.tvLoginLink);
+        btnBack = findViewById(R.id.btnBack);
 
         // Initialize Avatar RecyclerView
         rvAvatarSelect = findViewById(R.id.rvAvatarSelect);
@@ -80,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
 
         btnRegister.setOnClickListener(v -> registerUser());
         tvLoginLink.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> finish());
     }
 
     @Override

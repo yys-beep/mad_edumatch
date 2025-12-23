@@ -17,7 +17,7 @@
     android:layout_height="match_parent"
     android:src="@drawable/avatar_1"
     android:scaleType="centerCrop"
-    android:contentDescription="Avatar Option"/>
+    android:contentDescription="@string/avatar_option"/>
 
 </com.google.android.material.card.MaterialCardView>
 

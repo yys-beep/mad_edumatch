@@ -6,12 +6,11 @@
     android:orientation="vertical"
     android:background="@color/lightSkyBlue">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:focusable="false"
-        android:focusableInTouchMode="false">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +31,7 @@
                     android:id="@+id/tvDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lesson Title"
+                    android:text="@string/lesson_title"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -42,7 +41,7 @@
                     android:id="@+id/tvDetailDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lesson description goes here..."
+                    android:text="@string/lesson_description_goes_here"
                     android:textSize="16sp"
                     android:textColor="#333"
                     android:layout_marginBottom="16dp"/>
@@ -51,7 +50,7 @@
                     android:id="@+id/btnWatchVideo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Watch Video"
+                    android:text="@string/watch_video"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/pastelRed"
                     app:icon="@drawable/baseline_smart_display_24"
@@ -65,7 +64,7 @@
                     android:id="@+id/btnDownloadMaterial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Download Material"
+                    android:text="@string/download_material"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/pastelGreen"
                     app:icon="@drawable/outline_file_present_24"
@@ -90,7 +89,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="0 Kudos"
+                        android:text="@string/_0_kudos"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:textColor="@color/black"/>
@@ -99,7 +98,7 @@
                         android:id="@+id/btnGiveKudos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Like"
+                        android:text="@string/like"
                         android:textColor="@color/black"
                         android:backgroundTint="@color/white"
                         app:icon="@drawable/outline_thumb_up_24"
@@ -111,7 +110,7 @@
                     android:id="@+id/tvTimerStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Study time required: 05:00"
+                    android:text="@string/study_time_required_05_00"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="#666"
@@ -145,12 +144,13 @@
                         android:id="@+id/btnMarkComplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Mark Lesson as Complete"
+                        android:text="@string/mark_lesson_as_complete"
                         android:backgroundTint="@color/pastelGreen"
                         android:textColor="@color/black"
                         android:enabled="false"
                         android:alpha="0.6"/>
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/layoutOwnerActions"
                     android:layout_width="match_parent"
@@ -163,25 +163,37 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comments &amp; Questions"
+                android:text="@string/comments_amp_questions"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:layout_marginBottom="8dp"/>
 
+            <TextView
+                android:id="@+id/tvNoComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_comments_yet_be_the_first_to_ask"
+                android:textColor="#888888"
+                android:gravity="center"
+                android:padding="24dp"
+                android:visibility="gone"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvLessonComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="80dp"/>
+
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/tvAttachmentPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="📎 File selected"
+        android:text="@string/file_selected"
         android:textColor="#4CAF50"
         android:padding="8dp"
         android:background="#F0F0F0"
@@ -203,7 +215,7 @@
             android:src="@drawable/outline_file_present_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="#666666"
-            android:contentDescription="Attach File"
+            android:contentDescription="@string/attach_file"
             android:layout_marginEnd="8dp"/>
 
         <EditText
@@ -211,7 +223,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Type a question or comment..."
+            android:hint="@string/type_a_question_or_comment"
             android:background="@android:color/transparent"
             android:padding="12dp"
             android:textSize="14sp"
@@ -224,7 +236,7 @@
             android:src="@drawable/baseline_send_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="@color/pastelGreen"
-            android:contentDescription="Send Comment"/>
+            android:contentDescription="@string/send_comment"/>
     </LinearLayout>
 
 </LinearLayout>

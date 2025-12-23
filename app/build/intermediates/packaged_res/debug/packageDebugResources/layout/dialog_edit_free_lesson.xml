@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Lesson"
+        android:text="@string/edit_lesson"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -23,7 +23,7 @@
             android:id="@+id/etEditLessonTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Lesson Title"/>
+            android:hint="@string/lesson_title"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,7 +34,7 @@
             android:id="@+id/etEditLessonDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:minLines="3"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,14 +46,14 @@
             android:id="@+id/etEditVideoUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Video URL"/>
+            android:hint="@string/video_url"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvEditCurrentMaterialName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current Material: File.pdf"
+        android:text="@string/current_material_file_pdf"
         android:textStyle="italic"
         android:padding="4dp"
         android:layout_marginBottom="4dp"
@@ -64,7 +64,7 @@
         android:id="@+id/btnEditChooseMaterial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose NEW Material File (PDF/Image/Video)"
+        android:text="@string/choose_new_material_file_pdf_image_video"
         app:icon="@drawable/outline_file_present_24"
         android:layout_marginBottom="12dp"/>
 
@@ -81,14 +81,14 @@
         android:id="@+id/tvEditMaterialStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a file to replace the current material."
+        android:text="@string/select_a_file_to_replace_the_current_material"
         android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnEditSaveChanges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Changes"
+        android:text="@string/save_changes"
         android:backgroundTint="@color/pastelGreen"
         android:textColor="@color/black"
         android:padding="12dp"/>

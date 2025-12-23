@@ -17,16 +17,31 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/tvRegisterTitle"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create Account"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_marginTop="32dp"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/back"
+                    android:layout_gravity="start|center_vertical" />
+
+                <TextView
+                    android:id="@+id/tvRegisterTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_account"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -44,7 +59,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Select Your Avatar"
+                        android:text="@string/select_your_avatar"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:layout_marginBottom="8dp"/>
@@ -65,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="I am a:"
+                        android:text="@string/i_am_a"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
 
@@ -81,7 +96,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Student"
+                            android:text="@string/student"
                             android:buttonTint="@color/pastelBlue"/>
 
                         <RadioButton
@@ -89,7 +104,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tutor"
+                            android:text="@string/tutor"
                             android:buttonTint="@color/pastelBlue"/>
                     </RadioGroup>
 
@@ -97,7 +112,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Full Name"
+                        android:hint="@string/full_name"
                         android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etName"
@@ -110,7 +125,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Email"
+                        android:hint="@string/email"
                         android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEmail"
@@ -123,7 +138,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         app:endIconMode="password_toggle"
                         android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
@@ -144,7 +159,7 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Academic Level (e.g. SPM)"
+                            android:hint="@string/academic_level_e_g_spm"
                             android:layout_marginBottom="16dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etAcademicLevel"
@@ -162,7 +177,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="* You can complete your tutor profile details after registration."
+                            android:text="@string/you_can_complete_your_tutor_profile_details_after_registration"
                             android:textColor="#888"
                             android:textSize="12sp"
                             android:layout_marginBottom="16dp"/>
@@ -172,7 +187,7 @@
                         android:id="@+id/btnRegister"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="Create Account"
+                        android:text="@string/create_account"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:cornerRadius="8dp"
@@ -187,7 +202,7 @@
                 android:id="@+id/tvLoginLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account? Login"
+                android:text="@string/already_have_an_account_login"
                 android:textColor="@color/black"
                 android:layout_marginTop="24dp"
                 android:clickable="true"

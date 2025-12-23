@@ -39,6 +39,14 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        android.content.SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "en");
+        java.util.Locale locale = new java.util.Locale(language);
+        java.util.Locale.setDefault(locale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_activity_main);
 
@@ -88,6 +96,7 @@ public class HomeActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_settings) {
                 // Settings logic (e.g., SettingsFragment or Activity)
                 // For now, leaving it null or creating a placeholder
+                fragmentToLoad = new SettingsFragment();
             }
 
             if (fragmentToLoad != null) {
@@ -101,6 +110,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private void loadFragment(Fragment fragment, int itemId) {
         currentFragment = fragment;
+
+        if (fragment instanceof SettingsFragment) {
+            tvAppTitle.setText(R.string.settings_title);
+        } else {
+            tvAppTitle.setText("EduMatch");
+        }
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

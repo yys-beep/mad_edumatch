@@ -21,7 +21,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/outline_notifications_active_24"
-            android:contentDescription="Notification Icon"
+            android:contentDescription="@string/notification_icon"
             android:layout_marginEnd="12dp"/>
 
         <!-- Notification Text -->
@@ -35,7 +35,7 @@
                 android:id="@+id/tvNotificationTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Tutor Application"
+                android:text="@string/new_tutor_application"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
@@ -44,7 +44,7 @@
                 android:id="@+id/tvNotificationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="John Doe applied for your tuition request."
+                android:text="@string/john_doe_applied_for_your_tuition_request"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:paddingTop="2dp"/>
@@ -53,7 +53,7 @@
                 android:id="@+id/tvNotificationTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 hours ago"
+                android:text="@string/_2_hours_ago"
                 android:textColor="@color/pastelBlue"
                 android:textSize="12sp"
                 android:paddingTop="2dp"/>

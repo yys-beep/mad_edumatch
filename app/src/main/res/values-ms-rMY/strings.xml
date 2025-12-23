@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">mad_eduMatch</string>
+
+    <string name="settings_title">Tetapan</string>
+    <string name="language_option">Bahasa Aplikasi</string>
+    <string name="current_language">Bahasa Melayu</string>
+
+    <string name="welcome_back">Selamat Kembali!</string>
+    <string name="login_to_continue_learning">Log masuk untuk terus belajar</string>
+    <string name="email_address">Alamat Emel</string>
+    <string name="password">Kata Laluan</string>
+    <string name="login">Log Masuk</string>
+    <string name="logout">Log Keluar</string>
+    <string name="register_here">Daftar di Sini</string>
+    <string name="student">Pelajar</string>
+    <string name="tutor">Tutor</string>
+    <string name="full_name">Nama Penuh</string>
+    <string name="academic_level">Tahap Akademik</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="search">Cari</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Padam</string>
+    <string name="loading">Memuatkan...</string>
+</resources>
