@@ -24,7 +24,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Welcome back,\nTutor"
+                android:text="@string/welcome_back_ntutor"
                 android:textColor="@color/black"
                 android:textSize="26sp"
                 android:textStyle="bold"/>
@@ -70,8 +70,20 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="16dp">
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/outline_person_search_24" app:tint="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Search\nStudents" android:textAlignment="center" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/outline_person_search_24"
+                        app:tint="@color/black"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_nstudents"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -92,8 +104,18 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="16dp">
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/outline_post_add_24" app:tint="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Post\nListing" android:textAlignment="center" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/outline_post_add_24"
+                        app:tint="@color/black"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/post_nlisting"
+                        android:textAlignment="center"
+                        android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -102,8 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="32dp">
-
+            android:layout_marginBottom="24dp">
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardViewListings"
                 android:layout_width="0dp"
@@ -121,8 +142,20 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="16dp">
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/outline_checklist_24" app:tint="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="My\nListings" android:textAlignment="center" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/outline_checklist_24"
+                        app:tint="@color/black"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_nlistings"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -143,16 +176,35 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="16dp">
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/outline_video_library_24" app:tint="@color/black" android:layout_marginBottom="8dp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Upload\nLesson" android:textAlignment="center" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/outline_video_library_24"
+                        app:tint="@color/black"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/upload_nlesson"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
+        <include
+            android:id="@+id/layoutDashboard"
+            layout="@layout/item_tutor_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Free Lessons"
+            android:text="Free new lessons"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -174,7 +226,7 @@
                 android:id="@+id/etSearchLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search lesson title..."
+                android:hint="@string/search_lesson_title"
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -182,7 +234,7 @@
             android:id="@+id/tvNoLessons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No lessons found."
+            android:text="@string/no_lessons_found"
             android:textAlignment="center"
             android:textColor="#757575"
             android:textSize="16sp"
@@ -201,7 +253,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="View More"
+            android:text="@string/view_more"
             android:textColor="@color/black"
             android:layout_marginTop="8dp"
             android:visibility="gone"/>

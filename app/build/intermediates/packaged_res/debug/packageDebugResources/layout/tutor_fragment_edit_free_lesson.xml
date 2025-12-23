@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Lesson"
+        android:text="@string/edit_lesson"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -19,7 +19,7 @@
         android:id="@+id/etEditTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Lesson Title"
+        android:hint="@string/lesson_title"
         android:padding="12dp"
         android:background="@drawable/card_background"
         android:layout_marginBottom="16dp"/>
@@ -28,7 +28,7 @@
         android:id="@+id/etEditDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description"
+        android:hint="@string/description"
         android:padding="12dp"
         android:background="@drawable/card_background"
         android:minLines="3"
@@ -39,7 +39,7 @@
         android:id="@+id/etEditVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Video Link"
+        android:hint="@string/video_link"
         android:padding="12dp"
         android:background="@drawable/card_background"
         android:layout_marginBottom="16dp"/>
@@ -48,7 +48,7 @@
         android:id="@+id/btnEditUploadMaterial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="📄 Replace Material (PDF/Img)"
+        android:text="@string/replace_material_pdf_img"
         android:backgroundTint="#FF9800"
         android:textColor="@color/white"
         android:layout_marginBottom="4dp"/>
@@ -57,7 +57,7 @@
         android:id="@+id/tvEditFileStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current File: None"
+        android:text="@string/current_file_none"
         android:gravity="center"
         android:textSize="12sp"
         android:textColor="#555"
@@ -67,7 +67,7 @@
         android:id="@+id/btnSaveChanges"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Save Changes"
+        android:text="@string/save_changes"
         android:textColor="@color/black"
         android:backgroundTint="@color/pastelGreen"/>
 

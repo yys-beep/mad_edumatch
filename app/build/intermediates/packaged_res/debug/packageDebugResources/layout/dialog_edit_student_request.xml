@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Request"
+            android:text="@string/edit_request"
             android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
@@ -22,7 +22,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Subject"
+            android:hint="@string/subject"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditSubject"
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Academic Level"
+            android:text="@string/academic_level"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
@@ -43,19 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             app:singleSelection="true">
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Primary" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Lower Secondary" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="SPM" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="STPM / A-Level" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="IGCSE" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="University" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/primary" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/lower_secondary_f1_f3" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/spm" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/stpm_a_level" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/igcse" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/university" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </com.google.android.material.chip.ChipGroup>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Area"
+            android:hint="@string/area"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditArea"
@@ -67,7 +67,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Budget (RM/hr)"
+            android:hint="@string/budget_rm_hr"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditBudget"
@@ -80,7 +80,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditDescription"
@@ -94,7 +94,7 @@
             android:id="@+id/btnSaveChanges"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save Changes"
+            android:text="@string/save_changes"
             android:backgroundTint="@color/pastelBlue"
             android:textColor="@color/black"/>
 

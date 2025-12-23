@@ -35,7 +35,7 @@
                 android:id="@+id/tvCommentAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
+                android:text="@string/user_name"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
                 android:id="@+id/tvCommentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Just now"
+                android:text="@string/just_now"
                 android:textColor="@color/black"
                 android:alpha="0.6"
                 android:textSize="10sp" />
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Comment content..."
+        android:text="@string/comment_content"
         android:textColor="@color/black"
         android:textSize="14sp" />
 

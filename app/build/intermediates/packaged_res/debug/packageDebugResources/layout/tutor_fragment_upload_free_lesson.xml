@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload Free Lesson"
+            android:text="@string/upload_free_lesson"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -39,7 +39,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Lesson Title"
+                    android:hint="@string/lesson_title"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLessonTitle"
@@ -51,7 +51,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Required Study Time (Minutes)"
+                    android:hint="@string/required_study_time_minutes"
                     android:layout_marginBottom="16dp"
                     app:startIconDrawable="@drawable/outline_timer_24"> <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDuration"
@@ -65,7 +65,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Description / Topic"
+                    android:hint="@string/description_topic"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLessonDesc"
@@ -79,7 +79,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Video Link (YouTube/Zoom/Drive)"
+                    android:hint="@string/video_link_youtube_zoom_drive"
                     android:layout_marginBottom="16dp"
                     app:startIconDrawable="@drawable/outline_video_camera_back_24"> <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etVideoLink"
@@ -93,7 +93,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lesson Materials"
+            android:text="@string/lesson_materials"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -103,7 +103,7 @@
             android:id="@+id/btnUploadMaterial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Attach Material (PDF/Img)"
+            android:text="@string/attach_material_pdf_img"
             android:backgroundTint="#FF9800"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -116,14 +116,14 @@
             android:id="@+id/tvMaterialStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No file selected"
+            android:text="@string/no_file_selected"
             android:gravity="center"
             android:layout_marginBottom="32dp"
             android:visibility="visible"/> <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPostLesson"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Post Lesson"
+        android:text="@string/post_lesson"
         android:textSize="18sp"
         android:textStyle="bold"
         app:cornerRadius="12dp"

@@ -33,7 +33,7 @@
                 android:id="@+id/tvChatUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading..."
+                android:text="@string/loading"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
@@ -42,7 +42,7 @@
                 android:id="@+id/tvChatUserRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loading..."
+                android:text="@string/loading"
                 android:textSize="12sp"
                 android:textColor="#666"/>
         </LinearLayout>
@@ -68,7 +68,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Type a message..."
+            android:hint="@string/type_a_message"
             android:background="@null"
             android:padding="12dp"/>
         <ImageButton

@@ -21,7 +21,7 @@
                 android:id="@+id/tvStudentEditTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Profile"
+                android:text="@string/edit_profile"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Update Avatar"
+                android:text="@string/update_avatar"
                 android:textStyle="bold"
                 android:textColor="@color/pastelBlue"
                 android:layout_marginBottom="8dp"/>
@@ -46,7 +46,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Full Name"
+                android:hint="@string/full_name"
                 android:layout_marginBottom="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etStudentName"
@@ -58,7 +58,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:layout_marginBottom="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etStudentEmail"
@@ -78,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Age"
+                    android:hint="@string/age"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
@@ -93,7 +93,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Academic Level"
+                    android:hint="@string/academic_level"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.textfield.TextInputEditText
@@ -107,7 +107,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Contact Info"
+                android:hint="@string/contact_info"
                 android:layout_marginBottom="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etStudentContact"
@@ -120,7 +120,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description / Bio"
+                android:hint="@string/description_bio"
                 android:layout_marginBottom="24dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etStudentDescription"
@@ -141,7 +141,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Achievements"
+                    android:text="@string/achievements"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
                 <Button
@@ -149,7 +149,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add"
+                    android:text="@string/add"
                     android:textColor="@color/pastelBlue"/>
             </LinearLayout>
             <LinearLayout
@@ -172,7 +172,7 @@
                 android:id="@+id/btnSaveProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save Profile"
+                android:text="@string/save_profile"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
