@@ -140,4 +140,5 @@ public class GamificationHelper {
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+
 }

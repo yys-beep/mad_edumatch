@@ -3605,6 +3605,7 @@ int drawable btn_radio_off_to_on_mtrl_animation 0x7f070095
 int drawable btn_radio_on_mtrl 0x7f070096
 int drawable btn_radio_on_to_off_mtrl_animation 0x7f070097
 int drawable card_background 0x7f070098
+int drawable chat_bg 0x7f07013b
 int drawable circle_background_white 0x7f070099
 int drawable circle_bg_light 0x7f07009a
 int drawable circular_bg 0x7f07009b
@@ -3760,12 +3761,15 @@ int drawable outline_thumb_up_24 0x7f070130
 int drawable outline_timer_24 0x7f070131
 int drawable outline_video_camera_back_24 0x7f070132
 int drawable outline_video_library_24 0x7f070133
+int drawable qna_bg 0x7f07013a
 int drawable rounded_card_light 0x7f070134
 int drawable rounded_dialog_bg 0x7f070135
 int drawable shadow_gradient_top 0x7f070136
+int drawable student_bg 0x7f07013c
 int drawable test_level_drawable 0x7f070137
 int drawable tooltip_frame_dark 0x7f070138
 int drawable tooltip_frame_light 0x7f070139
+int drawable tutor_bg 0x7f07013d
 int id ALT 0x7f080000
 int id BOTTOM_END 0x7f080001
 int id BOTTOM_START 0x7f080002

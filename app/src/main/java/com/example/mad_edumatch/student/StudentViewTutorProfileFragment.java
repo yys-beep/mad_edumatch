@@ -254,6 +254,7 @@ public class StudentViewTutorProfileFragment extends Fragment {
         FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
         Bundle args = new Bundle();
         args.putString("lessonId", lesson.getLessonId());
+        args.putString("tutorName", lesson.getTutorName());
         fragment.setArguments(args);
         getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
     }

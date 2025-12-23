@@ -20,32 +20,28 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\student_fragment_home.xml"
     },
     {
-        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_avatar_7.png.flat",
-        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_7.png"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_card_free_lesson.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_card_free_lesson.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_avatar_7.png.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_7.png"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-mdpi/ic_launcher_round.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_download_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\outline_download_24.xml"
     },
     {
-        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_student_fragment_search_tutor.xml.flat",
-        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\student_fragment_search_tutor.xml"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_shadow_gradient_top.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\shadow_gradient_top.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_student_fragment_search_tutor.xml.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\student_fragment_search_tutor.xml"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
@@ -56,16 +52,20 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\app_bottom_nav.xml"
     },
     {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_student_bg.jpg.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\student_bg.jpg"
+    },
+    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_baseline_send_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_send_24.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-mdpi/ic_launcher_foreground.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_background_replace_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\outline_background_replace_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_chat_bg.png.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\chat_bg.png"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_check_circle_24.xml.flat",
@@ -112,16 +112,12 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\default_avatar.xml"
     },
     {
-        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_chat_right.xml.flat",
-        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_chat_right.xml"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_chat_fragment_list.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\chat_fragment_list.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xhdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_chat_right.xml.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_chat_right.xml"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_app_fragment_notifications.xml.flat",
@@ -146,6 +142,10 @@
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_app_activity_splash.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\app_activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-mdpi\\ic_launcher_foreground.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_tutor_view_listing.xml.flat",
@@ -208,12 +208,16 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_perm_contact_calendar_24.xml"
     },
     {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_tutor_bg.png.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\tutor_bg.png"
+    },
+    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_qna_bg.png.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\qna_bg.png"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_tutor_fragment_search_student_requests.xml.flat",
@@ -244,10 +248,6 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_6.png"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-hdpi/ic_launcher_foreground.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_edittext_background.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\edittext_background.xml"
     },
@@ -266,6 +266,10 @@
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_baseline_home_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_home_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-xxhdpi\\ic_launcher_foreground.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_video_camera_back_24.xml.flat",
@@ -288,6 +292,10 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\qna_fragment_question_detail.xml"
     },
     {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-xhdpi\\ic_launcher_foreground.webp"
+    },
+    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_circle_bg_light.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\circle_bg_light.xml"
     },
@@ -296,12 +304,24 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\dialog_upload_material.xml"
     },
     {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_tutor_bg.jpg.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\tutor_bg.jpg"
+    },
+    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_avatar_3.png.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_3.png"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-xxxhdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_student_bg.png.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\student_bg.png"
+    },
+    {
+        "merged": "com.example.mad_edumatch.app-debug-59:/drawable_tutor_bg.jpg.flat",
+        "source": "com.example.mad_edumatch.app-main-61:/drawable/tutor_bg.jpg"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_tutor_fragment_home.xml.flat",
@@ -320,24 +340,12 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_email_24.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxxhdpi/ic_launcher.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_baseline_menu_book_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_menu_book_24.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-hdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-hdpi\\ic_launcher_round.webp"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_delete_24.xml.flat",
@@ -368,10 +376,6 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_tutor_dashboard.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxhdpi/ic_launcher_round.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_card_background.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\card_background.xml"
     },
@@ -382,14 +386,6 @@
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_avatar_4.png.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_4.png"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xhdpi/ic_launcher_round.webp"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_baseline_logout_24.xml.flat",
@@ -432,6 +428,10 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_smart_display_24.xml"
     },
     {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_chat_bg.jpg.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\chat_bg.jpg"
+    },
+    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_baseline_monetization_on_24.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\baseline_monetization_on_24.xml"
     },
@@ -440,8 +440,8 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\avatar_10.png"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "com.example.mad_edumatch.app-debug-59:/layout_tutor_fragment_home.xml.flat",
+        "source": "com.example.mad_edumatch.app-main-61:/layout/tutor_fragment_home.xml"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_tutor_fragment_post_tutor_listing.xml.flat",
@@ -464,16 +464,12 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-mdpi\\ic_launcher_round.webp"
     },
     {
-        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_tutor_fragment_edit_free_lesson.xml.flat",
-        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\tutor_fragment_edit_free_lesson.xml"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-mdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-mdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_tutor_fragment_edit_free_lesson.xml.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\tutor_fragment_edit_free_lesson.xml"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_person_24.xml.flat",
@@ -490,10 +486,6 @@
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_custom_progress.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\custom_progress.xml"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_settings_24.xml.flat",
@@ -540,20 +532,12 @@
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_chat_list.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-hdpi/ic_launcher.webp"
-    },
-    {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_badge.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_badge.xml"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\menu_bottom_nav_menu.xml.flat",
@@ -566,6 +550,10 @@
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_auth_activity_register.xml.flat",
         "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\auth_activity_register.xml"
+    },
+    {
+        "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\mipmap-hdpi\\ic_launcher_foreground.webp"
     },
     {
         "merged": "C:\\Users\\winsl\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_qna_fragment_comment_detail.xml.flat",

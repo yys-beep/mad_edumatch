@@ -344,6 +344,7 @@ public class TutorProfileFragment extends Fragment {
         FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
         Bundle args = new Bundle();
         args.putString("lessonId", lesson.getLessonId());
+        args.putString("tutorName", lesson.getTutorName());
         args.putString("tutorId", lesson.getTutorId());
         args.putString("title", lesson.getTitle());
         args.putString("desc", lesson.getDescription());

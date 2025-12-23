@@ -3606,6 +3606,7 @@ drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
 drawable card_background
+drawable chat_bg
 drawable circle_background_white
 drawable circle_bg_light
 drawable circular_bg
@@ -3761,12 +3762,15 @@ drawable outline_thumb_up_24
 drawable outline_timer_24
 drawable outline_video_camera_back_24
 drawable outline_video_library_24
+drawable qna_bg
 drawable rounded_card_light
 drawable rounded_dialog_bg
 drawable shadow_gradient_top
+drawable student_bg
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
+drawable tutor_bg
 id ALT
 id BOTTOM_END
 id BOTTOM_START

@@ -18,8 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -53,6 +55,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -66,6 +70,7 @@ public class FreeLessonDetailFragment extends Fragment {
 
     // --- VIEWS ---
     private TextView tvTitle, tvDesc, tvTimerStatus, tvKudosCount;
+    private TextView tvTutorName;
     private ProgressBar progressBar;
     private MaterialButton btnMarkComplete, btnWatchVideo, btnDownloadMaterial, btnGiveKudos;
     private LinearLayout layoutOwnerActions;
@@ -78,6 +83,7 @@ public class FreeLessonDetailFragment extends Fragment {
 
     // --- DATA ---
     private String lessonId, videoUrl, materialUrl, materialName, tutorId; // Added materialName
+    private String tutorName;
     private boolean isCompleted = false;
     private boolean isLiked = false;
     private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
@@ -115,6 +121,8 @@ public class FreeLessonDetailFragment extends Fragment {
         }
     };
 
+
+
     // --- FILE PICKER ---
     private final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -130,6 +138,7 @@ public class FreeLessonDetailFragment extends Fragment {
             }
     );
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -142,6 +151,7 @@ public class FreeLessonDetailFragment extends Fragment {
 
         // 1. Bind Views
         tvTitle = view.findViewById(R.id.tvDetailTitle);
+        tvTutorName = view.findViewById(R.id.tvTutorName);
         tvDesc = view.findViewById(R.id.tvDetailDesc);
         tvKudosCount = view.findViewById(R.id.tvKudosCount);
         btnGiveKudos = view.findViewById(R.id.btnGiveKudos);
@@ -163,6 +173,7 @@ public class FreeLessonDetailFragment extends Fragment {
         // 2. Get Arguments
         if (getArguments() != null) {
             lessonId = getArguments().getString("lessonId");
+            tutorId = getArguments().getString("tutorId");
             tvTitle.setText(getArguments().getString("title"));
             videoUrl = getArguments().getString("videoUrl");
             materialUrl = getArguments().getString("materialUrl");
@@ -229,6 +240,13 @@ public class FreeLessonDetailFragment extends Fragment {
                     // Update main details
                     String dbTitle = snapshot.child("title").getValue(String.class);
                     if (dbTitle != null) tvTitle.setText(dbTitle);
+
+                    // Load tutor name from snapshot
+                    String dbTutorName = snapshot.child("tutorName").getValue(String.class);
+                    if (dbTutorName != null && !dbTutorName.isEmpty()) {
+                        tutorName = dbTutorName;
+                        tvTutorName.setText("by " + tutorName);
+                    }
 
                     videoUrl = snapshot.child("videoLink").getValue(String.class);
                     materialUrl = snapshot.child("materialUrl").getValue(String.class);
@@ -794,6 +812,39 @@ public class FreeLessonDetailFragment extends Fragment {
         } catch (Exception e) {
             Toast.makeText(getContext(), "Could not open link", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+
+    /**
+     * Navigate to tutor profile page - Delayed version (most stable)
+     */
+    private void navigateToTutorProfile(String tutorId) {
+        if (getActivity() == null || !isAdded() || tutorId == null) {
+            return;
+        }
+
+        // Use Handler to delay navigation slightly
+        new Handler(Looper.getMainLooper()).post(() -> {
+            try {
+                if (getActivity() == null || !isAdded()) return;
+
+                Fragment profileFragment = new com.example. mad_edumatch.student. StudentViewTutorProfileFragment();
+                Bundle args = new Bundle();
+                args.putString("tutorId", tutorId);
+                profileFragment.setArguments(args);
+
+                ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+                        .beginTransaction()
+                        . replace(R.id.fragment_container, profileFragment)
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
+
+            } catch (Exception e) {
+                Log.e("FreeLessonDetail", "Error:  " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
 }
