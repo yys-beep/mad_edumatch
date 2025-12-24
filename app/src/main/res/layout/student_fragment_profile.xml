@@ -281,6 +281,24 @@
             android:textStyle="bold"
             app:backgroundTint="@color/pastelBlue"
             app:cornerRadius="12dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChangeLanguageProfile"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="12dp"
+            android:paddingVertical="12dp"
+            android:text="@string/language_option"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:strokeColor="@color/pastelBlue"
+            app:strokeWidth="2dp"
+            app:backgroundTint="@color/lightApricot"
+            app:cornerRadius="12dp"
+            app:icon="@android:drawable/ic_menu_manage"
+            app:iconGravity="textStart"
+            app:iconTint="@color/black" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

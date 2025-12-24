@@ -38,8 +38,11 @@ public class StudentProfileFragment extends Fragment {
     private TextView tvStudentName, tvStudentAge, tvStudentAcademic, tvStudentDescription, tvStudentEmail, tvStudentContact;
     private TextView tvStudentAchievementsTitle, tvStudentFreeLessonsTitle;
     private RecyclerView rvAchievements, rvStudentFreeLessons;
-    private Button btnEditProfile;
+    private Button btnEditProfile, btnChangeLanguage;
     private ImageView imgStudentProfilePic;
+
+
+
 
     // Toggles and Empty Messages
     private TextView tvAchievementCollapseToggle;
@@ -80,12 +83,14 @@ public class StudentProfileFragment extends Fragment {
 
             // HIDE EDIT BUTTON because it's not our profile
             btnEditProfile.setVisibility(View.GONE);
+            btnChangeLanguage.setVisibility(View.GONE);
         } else {
             // Case B: Viewing my own profile (Default)
             profileUserId = CurrentUser.getInstance().getUid();
 
             // SHOW EDIT BUTTON
             btnEditProfile.setVisibility(View.VISIBLE);
+            btnChangeLanguage.setVisibility(View.VISIBLE);
         }
 
         setupRecyclerViews();
@@ -97,7 +102,7 @@ public class StudentProfileFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
+        btnChangeLanguage.setOnClickListener(v -> showLanguageDialog());
         loadStudentProfile();
 
         return view;
@@ -114,7 +119,7 @@ public class StudentProfileFragment extends Fragment {
         tvStudentAchievementsTitle = view.findViewById(R.id.tvStudentAchievementsTitle);
         tvStudentFreeLessonsTitle = view.findViewById(R.id.tvStudentFreeLessonsTitle);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
-
+        btnChangeLanguage = view.findViewById(R.id.btnChangeLanguageProfile);
         rvAchievements = view.findViewById(R.id.rvStudentAchievements);
         rvStudentFreeLessons = view.findViewById(R.id.rvStudentFreeLessons);
 
@@ -319,5 +324,39 @@ public class StudentProfileFragment extends Fragment {
             tvLessonsCollapseToggle.setText("Collapse");
             isLessonsExpanded = true;
         }
+    }
+    private void showLanguageDialog() {
+        String[] languages = {"English", "Bahasa Melayu"};
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.language_option))
+                .setSingleChoiceItems(languages, -1, (dialog, which) -> {
+                    if (which == 0) {
+                        setLocale("en");
+                    } else if (which == 1) {
+                        setLocale("ms");
+                    }
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private void setLocale(String langCode) {
+        java.util.Locale locale = new java.util.Locale(langCode);
+        java.util.Locale.setDefault(locale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.setLocale(locale);
+
+        requireActivity().getResources().updateConfiguration(config,
+                requireActivity().getResources().getDisplayMetrics());
+
+        // Save language choice in SharedPreferences
+        android.content.SharedPreferences prefs = requireActivity().getSharedPreferences("Settings", android.content.Context.MODE_PRIVATE);
+        prefs.edit().putString("My_Lang", langCode).apply();
+
+        // RESTART HomeActivity to apply changes everywhere
+        android.content.Intent intent = requireActivity().getIntent();
+        requireActivity().finish();
+        startActivity(intent);
     }
 }

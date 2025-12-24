@@ -37,7 +37,7 @@ public class TutorProfileFragment extends Fragment {
     // Views
     private ImageView imgProfile;
     private TextView tvName, tvQual, tvDesc, tvSubjects, tvFee, tvArea, tvContact, tvEmail;
-    private Button btnEdit;
+    private Button btnEdit, btnChangeLanguage;
 
     // Headers (Use these to show counts!)
     private TextView tvHeaderLessons, tvHeaderExperience, tvHeaderAchievements;
@@ -85,10 +85,12 @@ public class TutorProfileFragment extends Fragment {
             // Viewing someone else
             profileUserId = getArguments().getString("targetUserId");
             btnEdit.setVisibility(View.GONE); // Hide Edit button
+            btnChangeLanguage.setVisibility(View.GONE); // Hide Language button for others
         } else {
             // Viewing myself
             profileUserId = CurrentUser.getInstance().getUid();
             btnEdit.setVisibility(View.VISIBLE); // Show Edit button
+            btnChangeLanguage.setVisibility(View.VISIBLE); // Show Language button for own profile
         }
 
         btnEdit.setOnClickListener(v -> {
@@ -98,7 +100,8 @@ public class TutorProfileFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
+        // Language Click Listener
+        btnChangeLanguage.setOnClickListener(v -> showLanguageDialog());
         loadHostedLessons();
         loadProfile();
 
@@ -116,7 +119,7 @@ public class TutorProfileFragment extends Fragment {
         tvContact = view.findViewById(R.id.tvTutorContact);
         tvEmail = view.findViewById(R.id.tvTutorEmail);
         btnEdit = view.findViewById(R.id.btnEditProfile);
-
+        btnChangeLanguage = view.findViewById(R.id.btnChangeLanguageTutor);
         // Bind Headers for Counts
         tvHeaderLessons = view.findViewById(R.id.tvHeaderLessons);
         tvHeaderExperience = view.findViewById(R.id.tvHeaderExperience);
@@ -325,5 +328,39 @@ public class TutorProfileFragment extends Fragment {
         args.putString("matName", lesson.getMaterialName());
         fragment.setArguments(args);
         getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+    }
+    private void showLanguageDialog() {
+        String[] languages = {"English", "Bahasa Melayu"};
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.language_option))
+                .setSingleChoiceItems(languages, -1, (dialog, which) -> {
+                    if (which == 0) {
+                        setLocale("en");
+                    } else if (which == 1) {
+                        setLocale("ms");
+                    }
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private void setLocale(String langCode) {
+        java.util.Locale locale = new java.util.Locale(langCode);
+        java.util.Locale.setDefault(locale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.setLocale(locale);
+
+        requireActivity().getResources().updateConfiguration(config,
+                requireActivity().getResources().getDisplayMetrics());
+
+        // Save selection in SharedPreferences
+        android.content.SharedPreferences prefs = requireActivity().getSharedPreferences("Settings", android.content.Context.MODE_PRIVATE);
+        prefs.edit().putString("My_Lang", langCode).apply();
+
+        // Refresh the Activity to apply changes
+        android.content.Intent intent = requireActivity().getIntent();
+        requireActivity().finish();
+        startActivity(intent);
     }
 }
