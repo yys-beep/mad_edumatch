@@ -38,8 +38,9 @@ public class StudentProfileFragment extends Fragment {
     private TextView tvStudentName, tvStudentAge, tvStudentAcademic, tvStudentDescription, tvStudentEmail, tvStudentContact;
     private TextView tvStudentAchievementsTitle, tvStudentFreeLessonsTitle;
     private RecyclerView rvAchievements, rvStudentFreeLessons;
-    private Button btnEditProfile, btnChangeLanguage;
+    private Button btnEditProfile, btnChangeLanguage, btnBackToHome;
     private ImageView imgStudentProfilePic;
+
 
 
 
@@ -84,6 +85,8 @@ public class StudentProfileFragment extends Fragment {
             // HIDE EDIT BUTTON because it's not our profile
             btnEditProfile.setVisibility(View.GONE);
             btnChangeLanguage.setVisibility(View.GONE);
+            btnBackToHome.setVisibility(View.VISIBLE);
+
         } else {
             // Case B: Viewing my own profile (Default)
             profileUserId = CurrentUser.getInstance().getUid();
@@ -91,6 +94,7 @@ public class StudentProfileFragment extends Fragment {
             // SHOW EDIT BUTTON
             btnEditProfile.setVisibility(View.VISIBLE);
             btnChangeLanguage.setVisibility(View.VISIBLE);
+            btnBackToHome.setVisibility(View.VISIBLE);
         }
 
         setupRecyclerViews();
@@ -103,6 +107,12 @@ public class StudentProfileFragment extends Fragment {
                     .commit();
         });
         btnChangeLanguage.setOnClickListener(v -> showLanguageDialog());
+
+        btnBackToHome.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
         loadStudentProfile();
 
         return view;
@@ -120,6 +130,7 @@ public class StudentProfileFragment extends Fragment {
         tvStudentFreeLessonsTitle = view.findViewById(R.id.tvStudentFreeLessonsTitle);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnChangeLanguage = view.findViewById(R.id.btnChangeLanguageProfile);
+        btnBackToHome = view.findViewById(R.id.btnBackToHome);
         rvAchievements = view.findViewById(R.id.rvStudentAchievements);
         rvStudentFreeLessons = view.findViewById(R.id.rvStudentFreeLessons);
 

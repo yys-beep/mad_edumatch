@@ -38,6 +38,7 @@ drawable circular_bg
 drawable default_avatar
 drawable edittext_background
 drawable ic_arrow_back
+drawable ic_home_local
 drawable ic_launcher_foreground
 drawable outline_attach_file_24
 drawable outline_attach_money_24
@@ -73,6 +74,7 @@ id btnAddSubject
 id btnAttachFile
 id btnAttachFileToAnswer
 id btnBack
+id btnBackToHome
 id btnCancel
 id btnCancelEdit
 id btnChangeLanguageProfile

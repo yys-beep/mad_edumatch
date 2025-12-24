@@ -37,7 +37,7 @@ public class TutorProfileFragment extends Fragment {
     // Views
     private ImageView imgProfile;
     private TextView tvName, tvQual, tvDesc, tvSubjects, tvFee, tvArea, tvContact, tvEmail;
-    private Button btnEdit, btnChangeLanguage;
+    private Button btnEdit, btnChangeLanguage, btnBackToHome;
 
     // Headers (Use these to show counts!)
     private TextView tvHeaderLessons, tvHeaderExperience, tvHeaderAchievements;
@@ -86,11 +86,13 @@ public class TutorProfileFragment extends Fragment {
             profileUserId = getArguments().getString("targetUserId");
             btnEdit.setVisibility(View.GONE); // Hide Edit button
             btnChangeLanguage.setVisibility(View.GONE); // Hide Language button for others
+            btnBackToHome.setVisibility(View.VISIBLE);
         } else {
             // Viewing myself
             profileUserId = CurrentUser.getInstance().getUid();
             btnEdit.setVisibility(View.VISIBLE); // Show Edit button
             btnChangeLanguage.setVisibility(View.VISIBLE); // Show Language button for own profile
+            btnBackToHome.setVisibility(View.VISIBLE);
         }
 
         btnEdit.setOnClickListener(v -> {
@@ -102,6 +104,13 @@ public class TutorProfileFragment extends Fragment {
         });
         // Language Click Listener
         btnChangeLanguage.setOnClickListener(v -> showLanguageDialog());
+        // --- ADD THE NEW CODE HERE ---
+        btnBackToHome.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                // This triggers HomeActivity to swap back to the TutorHomeFragment
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
         loadHostedLessons();
         loadProfile();
 
@@ -120,6 +129,7 @@ public class TutorProfileFragment extends Fragment {
         tvEmail = view.findViewById(R.id.tvTutorEmail);
         btnEdit = view.findViewById(R.id.btnEditProfile);
         btnChangeLanguage = view.findViewById(R.id.btnChangeLanguageTutor);
+        btnBackToHome = view.findViewById(R.id.btnBackToHome);
         // Bind Headers for Counts
         tvHeaderLessons = view.findViewById(R.id.tvHeaderLessons);
         tvHeaderExperience = view.findViewById(R.id.tvHeaderExperience);
