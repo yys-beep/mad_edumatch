@@ -93,10 +93,6 @@ public class HomeActivity extends AppCompatActivity {
                 fragmentToLoad = new ChatListFragment();
             } else if (itemId == R.id.nav_qna) {
                 fragmentToLoad = new QnaForumFragment();
-            } else if (itemId == R.id.nav_settings) {
-                // Settings logic (e.g., SettingsFragment or Activity)
-                // For now, leaving it null or creating a placeholder
-                fragmentToLoad = new SettingsFragment();
             }
 
             if (fragmentToLoad != null) {
@@ -111,11 +107,9 @@ public class HomeActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment, int itemId) {
         currentFragment = fragment;
 
-        if (fragment instanceof SettingsFragment) {
-            tvAppTitle.setText(R.string.settings_title);
-        } else {
+
             tvAppTitle.setText("EduMatch");
-        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

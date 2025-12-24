@@ -123,8 +123,6 @@ id btnViewMore
 id btnViewQuestion
 id btnWatchLesson
 id btnWatchVideo
-id btn_change_language
-id btn_logout_settings
 id cardAvatar
 id cardPostListing
 id cardPostRequest
@@ -189,7 +187,6 @@ id etTutorQualification
 id etTutorSubjects
 id etVideoLink
 id fragment_container
-id icon_lang
 id imgAvatar
 id imgChatListProfile
 id imgHomeAvatar
@@ -219,7 +216,6 @@ id nav_chat
 id nav_home
 id nav_notifications
 id nav_qna
-id nav_settings
 id progressBar
 id progressBarEditUpload
 id progressBarTimer
@@ -259,7 +255,6 @@ id rvTutorExperience
 id rvTutorHostedLessons
 id rvTutorListings
 id rvTutorResults
-id settings_header
 id topBarContainer
 id tvAchievementCollapseToggle
 id tvAchievementDescription
@@ -366,7 +361,6 @@ id tvTutorQualification
 id tvTutorSubjects
 id tvTutorWelcome
 id tvUploadStatus
-id tv_current_lang_name
 id uploadProgressBar
 layout activity_upload_material
 layout app_activity_main
@@ -418,7 +412,6 @@ layout tutor_fragment_profile
 layout tutor_fragment_search_student_requests
 layout tutor_fragment_upload_free_lesson
 layout tutor_listing_fragment
-layout user_fragment_settings
 menu bottom_nav_menu
 string _012_3456789
 string _0_kudos

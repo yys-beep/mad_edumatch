@@ -3930,8 +3930,6 @@ int id btnViewMore 0x7f0800a4
 int id btnViewQuestion 0x7f0800a5
 int id btnWatchLesson 0x7f0800a6
 int id btnWatchVideo 0x7f0800a7
-int id btn_change_language 0x7f0800a8
-int id btn_logout_settings 0x7f0800a9
 int id buttonPanel 0x7f0800aa
 int id cache_measures 0x7f0800ab
 int id callMeasure 0x7f0800ac
@@ -4120,7 +4118,6 @@ int id horizontal 0x7f080162
 int id horizontal_only 0x7f080163
 int id icon 0x7f080164
 int id icon_group 0x7f080165
-int id icon_lang 0x7f080166
 int id icon_only 0x7f080167
 int id ifRoom 0x7f080168
 int id ignore 0x7f080169
@@ -4236,7 +4233,6 @@ int id nav_chat 0x7f0801d6
 int id nav_home 0x7f0801d7
 int id nav_notifications 0x7f0801d8
 int id nav_qna 0x7f0801d9
-int id nav_settings 0x7f0801da
 int id navigation_bar_item_active_indicator_view 0x7f0801db
 int id navigation_bar_item_content_container 0x7f0801dc
 int id navigation_bar_item_icon_container 0x7f0801dd
@@ -4373,7 +4369,6 @@ int id search_voice_btn 0x7f08025f
 int id select_dialog_listview 0x7f080260
 int id selected 0x7f080261
 int id selection_type 0x7f080262
-int id settings_header 0x7f080263
 int id sharedValueSet 0x7f080264
 int id sharedValueUnset 0x7f080265
 int id shortcut 0x7f080266
@@ -4571,7 +4566,6 @@ int id tvTutorQualification 0x7f080325
 int id tvTutorSubjects 0x7f080326
 int id tvTutorWelcome 0x7f080327
 int id tvUploadStatus 0x7f080328
-int id tv_current_lang_name 0x7f080329
 int id unchecked 0x7f08032a
 int id uniform 0x7f08032b
 int id unlabeled 0x7f08032c
@@ -4851,7 +4845,6 @@ int layout tutor_fragment_profile 0x7f0b009d
 int layout tutor_fragment_search_student_requests 0x7f0b009e
 int layout tutor_fragment_upload_free_lesson 0x7f0b009f
 int layout tutor_listing_fragment 0x7f0b00a0
-int layout user_fragment_settings 0x7f0b00a1
 int menu bottom_nav_menu 0x7f0d0000
 int plurals mtrl_badge_content_description 0x7f0e0000
 int raw firebase_common_keep 0x7f0f0000

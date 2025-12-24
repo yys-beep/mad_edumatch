@@ -3931,8 +3931,6 @@ id btnViewMore
 id btnViewQuestion
 id btnWatchLesson
 id btnWatchVideo
-id btn_change_language
-id btn_logout_settings
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -4121,7 +4119,6 @@ id horizontal
 id horizontal_only
 id icon
 id icon_group
-id icon_lang
 id icon_only
 id ifRoom
 id ignore
@@ -4237,7 +4234,6 @@ id nav_chat
 id nav_home
 id nav_notifications
 id nav_qna
-id nav_settings
 id navigation_bar_item_active_indicator_view
 id navigation_bar_item_content_container
 id navigation_bar_item_icon_container
@@ -4374,7 +4370,6 @@ id search_voice_btn
 id select_dialog_listview
 id selected
 id selection_type
-id settings_header
 id sharedValueSet
 id sharedValueUnset
 id shortcut
@@ -4572,7 +4567,6 @@ id tvTutorQualification
 id tvTutorSubjects
 id tvTutorWelcome
 id tvUploadStatus
-id tv_current_lang_name
 id unchecked
 id uniform
 id unlabeled
@@ -4852,7 +4846,6 @@ layout tutor_fragment_profile
 layout tutor_fragment_search_student_requests
 layout tutor_fragment_upload_free_lesson
 layout tutor_listing_fragment
-layout user_fragment_settings
 menu bottom_nav_menu
 plurals mtrl_badge_content_description
 raw firebase_common_keep
