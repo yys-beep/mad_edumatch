@@ -88,6 +88,9 @@ public class LoginActivity extends AppCompatActivity {
 
             User user = task.getResult().getValue(User.class);
             if (user != null) {
+                // POPULATE HELPER CLASS
+                com.example.mad_edumatch.helper.CurrentUser.getInstance().setUid(uid);
+                com.example.mad_edumatch.helper.CurrentUser.getInstance().setName(user.getName());
                 // Pass role and name to HomeActivity
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 intent.putExtra("userName", user.getName());

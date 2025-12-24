@@ -6,7 +6,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class CurrentUser {
     private static CurrentUser instance;
     // Removed the "private FirebaseUser firebaseUser;" field
-
+    private String uid;
+    private String name;
     private CurrentUser() { }
 
     public static CurrentUser getInstance() {
@@ -21,6 +22,12 @@ public class CurrentUser {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return user != null ? user.getUid() : null;
     }
+
+    public void setUid(String uid) { this.uid = uid; }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
 
     public String getEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

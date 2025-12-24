@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.appcheck.debug)
+    implementation("com.google.firebase:firebase-messaging")
 
     // AndroidX / UI libraries
     implementation(libs.appcompat)

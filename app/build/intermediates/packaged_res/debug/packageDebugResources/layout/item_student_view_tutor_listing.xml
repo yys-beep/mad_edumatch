@@ -20,7 +20,7 @@
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tutor Name"
+            android:text="@string/tutor_name"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -30,7 +30,7 @@
             android:id="@+id/tvTimestamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Posted: 2 hours ago"
+            android:text="@string/posted_2_hours_ago"
             android:textSize="11sp"
             android:textColor="#888"
             android:layout_marginBottom="12dp"/>
@@ -42,7 +42,7 @@
             android:layout_marginBottom="12dp"/>
 
         <TextView
-            android:text="Subjects:"
+            android:text="@string/profile_subjects"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -51,12 +51,12 @@
             android:id="@+id/tvSubjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mathematics, Science"
+            android:text="@string/mathematics_science"
             android:textColor="#444"
             android:layout_marginBottom="8dp"/>
 
         <TextView
-            android:text="Levels:"
+            android:text="@string/profile_levels"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             android:id="@+id/tvLevels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Primary, Lower Secondary"
+            android:text="@string/primary_lower_secondary"
             android:textColor="#444"
             android:layout_marginBottom="8dp"/>
 
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/tvFee"
-                    android:text="RM 50/hr"
+                    android:text="@string/rm_50_hr"
                     android:textColor="#444"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -101,14 +101,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Area:"
+                    android:text="@string/profile_area"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/tvArea"
-                    android:text="Subang Jaya"
+                    android:text="@string/subang_jaya"
                     android:textColor="#444"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -116,7 +116,7 @@
         </LinearLayout>
 
         <TextView
-            android:text="Qualification:"
+            android:text="@string/qualification"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
             android:id="@+id/tvQualification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bachelor in Education"
+            android:text="@string/bachelor_in_education"
             android:textColor="#444"
             android:layout_marginBottom="16dp"/>
 
@@ -133,7 +133,7 @@
             android:id="@+id/btnContactTutor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact Tutor"
+            android:text="@string/contact_tutor"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="@drawable/baseline_perm_contact_calendar_24"

@@ -63,9 +63,17 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
         fullList = new ArrayList<>();
         displayList = new ArrayList<>();
 
-        // Pass Context and Listener
         adapter = new QuestionAdapter(getContext(), displayList, this::openQuestionDetail);
         recyclerView.setAdapter(adapter);
+
+        // --- STEP 1: CATCH NAVIGATION FLAGS FROM NOTIFICATION ---
+        if (getArguments() != null) {
+            // Check if we should auto-filter to "My Questions"
+            if (getArguments().getBoolean("showMyQuestions", false)) {
+                isShowingMyQuestions = true;
+                btnMyQuestions.setText("Show All");
+            }
+        }
 
         dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("forum_questions");
@@ -77,12 +85,10 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
         btnMyQuestions.setOnClickListener(v -> toggleMyQuestions());
     }
 
-    // === CRITICAL: Sending Data Correctly ===
     private void openQuestionDetail(Question q) {
         QnaDetailFragment detailFragment = new QnaDetailFragment();
         Bundle args = new Bundle();
 
-        // Using standard keys
         args.putString("questionId", q.getQuestionId());
         args.putString("title", q.getTitle());
         args.putString("content", q.getContent());
@@ -90,7 +96,6 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
         args.putString("userId", q.getUserId());
         args.putLong("timestamp", q.getTimestamp());
         args.putBoolean("solved", q.isSolved());
-
         args.putString("fileUrl", q.getFileUrl());
         args.putString("fileName", q.getFileName());
 
@@ -102,11 +107,13 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
                 .commit();
     }
 
-    // Standard Loading Logic
     private void loadQuestions() {
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Crash guard: stop if fragment is gone
+                if (!isAdded()) return;
+
                 fullList.clear();
                 displayList.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
@@ -114,28 +121,42 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
                     if (q != null) fullList.add(q);
                 }
 
-                // --- UPDATED SORTING LOGIC ---
+                // Sorting: Unsolved first, then latest time
                 Collections.sort(fullList, (q1, q2) -> {
-                    // Priority 1: Status (Unsolved comes FIRST)
-                    // If q1 is solved and q2 is not, q1 goes to the bottom (return 1)
                     if (q1.isSolved() && !q2.isSolved()) return 1;
-                    // If q1 is not solved and q2 is solved, q1 goes to the top (return -1)
                     if (!q1.isSolved() && q2.isSolved()) return -1;
-
-                    // Priority 2: Timestamp (Latest comes FIRST)
-                    // Compare q2 vs q1 for Descending order
                     return Long.compare(q2.getTimestamp(), q1.getTimestamp());
                 });
-                // -----------------------------
 
-                displayList.addAll(fullList);
+                // --- STEP 2: APPLY FILTER ---
+                if (isShowingMyQuestions) {
+                    String uid = CurrentUser.getInstance().getUid();
+                    for (Question q : fullList) {
+                        if (uid != null && uid.equals(q.getUserId())) displayList.add(q);
+                    }
+                } else {
+                    displayList.addAll(fullList);
+                }
+
                 adapter.notifyDataSetChanged();
+
+                if (getArguments() != null && getArguments().containsKey("targetQuestionId")) {
+                    String targetId = getArguments().getString("targetQuestionId");
+
+                    for (int i = 0; i < displayList.size(); i++) {
+                        if (displayList.get(i).getQuestionId().equals(targetId)) {
+                            // This line brings your post (with solutions) into view
+                            recyclerView.scrollToPosition(i);
+                            getArguments().remove("targetQuestionId"); // Stop scrolling after it's done
+                            break;
+                        }
+                    }
+                }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    // Upload & Post Logic
     @Override
     public void onUploadSuccess(String fileUrl, String fileName) {
         this.tempFileUrl = fileUrl;
@@ -176,33 +197,11 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
     private void saveQuestion(String title, String content, AlertDialog dialog) {
         String uid = CurrentUser.getInstance().getUid();
         if (uid == null) return;
-
-        // Generate Key
         String key = dbRef.push().getKey();
-
-        // Create Question with placeholder name (e.g., empty string)
-        // We only care about 'uid' now.
         Question q = new Question(key, uid, "", title, content, System.currentTimeMillis(), false, tempFileUrl, tempFileName);
-
-        dbRef.child(key).setValue(q).addOnSuccessListener(v -> {
-            dialog.dismiss();
-        });
+        dbRef.child(key).setValue(q).addOnSuccessListener(v -> dialog.dismiss());
     }
 
-    // Helper method to actually save the data to keep code clean
-    private void pushQuestionToDatabase(String uid, String name, String title, String content, AlertDialog dialog) {
-        String key = dbRef.push().getKey();
-        // Create the Question object with the correct Name
-        Question q = new Question(key, uid, name, title, content, System.currentTimeMillis(), false, tempFileUrl, tempFileName);
-
-        dbRef.child(key).setValue(q).addOnSuccessListener(v -> {
-            dialog.dismiss();
-            // Optional: Show success message
-            // Toast.makeText(getContext(), "Question posted!", Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    // Search & Filter
     private void performSearch() {
         String query = etSearch.getText().toString().trim().toLowerCase();
         displayList.clear();

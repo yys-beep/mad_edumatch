@@ -57,14 +57,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatMessage chat = chatList.get(position);
-        holder.tvMessage.setText(chat.getMessage());
 
-        // --- FIX 1: USE TIMEHELPER ---
+        // Safety check for null message
+        holder.tvMessage.setText(chat.getMessage() != null ? chat.getMessage() : "");
+
+        // --- FIXED TIME LOGIC ---
         if (holder.tvTime != null) {
             holder.tvTime.setText(TimeHelper.getMalaysiaTime(chat.getTimestamp()));
         }
 
-        // --- FIX 2: IMAGE LOGIC ---
+        // --- FIXED IMAGE LOGIC ---
         String imageName = (getItemViewType(position) == MSG_TYPE_RIGHT) ? myProfileImageName : targetProfileImageName;
 
         if (holder.imgProfile != null) {
@@ -82,7 +84,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (chatList.get(position).getSenderId().equals(currentUserId)) {
+        ChatMessage chat = chatList.get(position);
+        String myUid = CurrentUser.getInstance().getUid();
+
+        if (chat.getSenderId() != null && myUid != null && chat.getSenderId().equals(myUid)) {
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;
@@ -91,18 +96,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvMessage;
-        public TextView tvTime; // The timestamp in the chat bubble
+        public TextView tvTime;
         public ImageView imgProfile;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvMessage = itemView.findViewById(R.id.tvMessage);
 
-            // --- CRITICAL FIX: CHECK YOUR XML ID ---
-            // In item_chat_left.xml and item_chat_right.xml, this ID MUST be "tvTime"
-            // DO NOT use "tvChatListTime" here.
-            tvTime = itemView.findViewById(R.id.tvChatListTime);
+            // Use the correct ID from XML
+            tvTime = itemView.findViewById(R.id.tvTime);
 
+            // Fallback for image IDs to cover both left and right XMLs
             imgProfile = itemView.findViewById(R.id.imgProfileRight);
             if (imgProfile == null) {
                 imgProfile = itemView.findViewById(R.id.imgProfileLeft);

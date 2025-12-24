@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class TutorListing {
 
+    public String key;
     public String tutorId;
     public String name;
     public String subject;
@@ -44,7 +45,8 @@ public class TutorListing {
     }
 
     // --- Getters ---
-
+    public String getKey() { return key; }
+    public void setKey(String key) { this.key = key; }
     public String getTutorId() { return tutorId; }
     public String getName() { return name; }
     public String getSubject() { return subject; }
