@@ -75,6 +75,8 @@ id btnAttachFileToAnswer
 id btnBack
 id btnCancel
 id btnCancelEdit
+id btnChangeLanguageProfile
+id btnChangeLanguageTutor
 id btnChooseFile
 id btnCommentAttachment
 id btnContactStudent

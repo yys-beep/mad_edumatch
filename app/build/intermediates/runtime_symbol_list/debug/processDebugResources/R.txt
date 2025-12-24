@@ -3882,6 +3882,8 @@ int id btnAttachFileToAnswer 0x7f080076
 int id btnBack 0x7f080077
 int id btnCancel 0x7f080078
 int id btnCancelEdit 0x7f080079
+int id btnChangeLanguageProfile 0x7f080346
+int id btnChangeLanguageTutor 0x7f080347
 int id btnChooseFile 0x7f08007a
 int id btnCommentAttachment 0x7f08007b
 int id btnContactStudent 0x7f08007c

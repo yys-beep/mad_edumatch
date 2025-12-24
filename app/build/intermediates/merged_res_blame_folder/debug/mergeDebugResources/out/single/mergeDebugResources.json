@@ -36,6 +36,10 @@
         "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\app_fragment_notifications.xml"
     },
     {
+        "merged": "com.example.mad_edumatch.app-debug-59:/layout_tutor_fragment_profile.xml.flat",
+        "source": "com.example.mad_edumatch.app-main-61:/layout/tutor_fragment_profile.xml"
+    },
+    {
         "merged": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_chat_bubble_24.xml.flat",
         "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\outline_chat_bubble_24.xml"
     },
@@ -196,6 +200,10 @@
         "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\outline_thumb_up_24.xml"
     },
     {
+        "merged": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_user_fragment_settings.xml.flat",
+        "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\user_fragment_settings.xml"
+    },
+    {
         "merged": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_card_achievement.xml.flat",
         "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\layout\\item_card_achievement.xml"
     },
@@ -282,10 +290,6 @@
     {
         "merged": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\drawable_outline_attach_file_24.xml.flat",
         "source": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-61:\\drawable\\outline_attach_file_24.xml"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-59:/layout_user_fragment_settings.xml.flat",
-        "source": "com.example.mad_edumatch.app-main-61:/layout/user_fragment_settings.xml"
     },
     {
         "merged": "C:\\Users\\User\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-59:\\layout_item_avatar.xml.flat",

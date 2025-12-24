@@ -2435,9 +2435,9 @@
   </plurals>
     <string name="_012_3456789" translatable="false">012-3456789</string>
     <string name="_0_kudos" translatable="false">0 Kudos</string>
-    <string name="_10_30_am" translatable="false">10:30 AM</string>
-    <string name="_12_kudos" translatable="false">❤️ 12 Kudos</string>
-    <string name="_2_hours_ago" translatable="false">2 hours ago</string>
+    <string name="_10_30_am">10:30 AM</string>
+    <string name="_12_kudos">❤️ 12 Kudos</string>
+    <string name="_2_hours_ago">2 hours ago</string>
     <string name="abc_action_bar_home_description">Navigate home</string>
     <string name="abc_action_bar_up_description">Navigate up</string>
     <string name="abc_action_menu_overflow_description">More options</string>
@@ -2465,45 +2465,45 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with <ns2:g example="Mail" id="application_name">%s</ns2:g></string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="about_me" translatable="false">About Me</string>
+    <string name="about_me">About Me</string>
     <string name="academic_level">Academic Level</string>
-    <string name="academic_level_e_g_spm" translatable="false">Academic Level (e.g. SPM)</string>
-    <string name="academic_levels_taught" translatable="false">Academic Levels Taught</string>
-    <string name="achievement_description" translatable="false">Achievement Description</string>
-    <string name="achievement_title" translatable="false">Achievement Title</string>
-    <string name="achievements" translatable="false">Achievements</string>
-    <string name="add" translatable="false">+ Add</string>
-    <string name="add_a_comment" translatable="false">Add a comment...</string>
-    <string name="add_post_question" translatable="false">+ Post Question</string>
-    <string name="age" translatable="false">Age</string>
-    <string name="age_18" translatable="false">Age: 18</string>
-    <string name="age_icon" translatable="false">Age Icon</string>
-    <string name="already_have_an_account_login" translatable="false">Already have an account? Login</string>
+    <string name="academic_level_e_g_spm">Academic Level (e.g. SPM)</string>
+    <string name="academic_levels_taught">Academic Levels Taught</string>
+    <string name="achievement_description">Achievement Description</string>
+    <string name="achievement_title">Achievement Title</string>
+    <string name="achievements">Achievements</string>
+    <string name="add">+ Add</string>
+    <string name="add_a_comment">Add a comment...</string>
+    <string name="add_post_question">+ Post Question</string>
+    <string name="age">Age</string>
+    <string name="age_18">Age: 18</string>
+    <string name="age_icon">Age Icon</string>
+    <string name="already_have_an_account_login">Already have an account? Login</string>
     <string name="android.credentials.TYPE_PASSWORD_CREDENTIAL">Password</string>
     <string name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">Passkey</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="any_specific_requirements_or_preferred_times" translatable="false">Any specific requirements or preferred times?</string>
-    <string name="app_logo" translatable="false">App Logo</string>
+    <string name="any_specific_requirements_or_preferred_times">Any specific requirements or preferred times?</string>
+    <string name="app_logo">App Logo</string>
     <string name="app_name">mad_eduMatch</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="area" translatable="false">Area</string>
-    <string name="area_icon" translatable="false">Area Icon</string>
+    <string name="area">Area</string>
+    <string name="area_icon">Area Icon</string>
     <string name="area_kuala_lumpur" translatable="false">Area: Kuala Lumpur</string>
-    <string name="area_location" translatable="false">Area / Location</string>
-    <string name="attach" translatable="false">Attach</string>
-    <string name="attach_file" translatable="false">Attach File</string>
-    <string name="attach_material_pdf_img" translatable="false">Attach Material (PDF/Img)</string>
-    <string name="attachment_available" translatable="false">📎 Attachment Available</string>
-    <string name="avatar_option" translatable="false">Avatar Option</string>
-    <string name="bachelor_in_education" translatable="false">Bachelor in Education</string>
-    <string name="back" translatable="false">Back</string>
+    <string name="area_location">Area / Location</string>
+    <string name="attach">Attach</string>
+    <string name="attach_file">Attach File</string>
+    <string name="attach_material_pdf_img">Attach Material (PDF/Img)</string>
+    <string name="attachment_available">📎 Attachment Available</string>
+    <string name="avatar_option">Avatar Option</string>
+    <string name="bachelor_in_education">Bachelor in Education</string>
+    <string name="back">Back</string>
     <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
     <string description="A description of an accessibility action to collapse the bottom sheet [CHAR LIMIT=NONE]" name="bottomsheet_action_collapse">Collapse the bottom sheet</string>
     <string description="A description of an accessibility action to expand the bottom sheet [CHAR LIMIT=NONE]" name="bottomsheet_action_expand">Expand the bottom sheet</string>
     <string description="A description of an action that a user of an accessibility service can perform to expand a bottomsheet halfway to its full height. [CHAR LIMIT=25]" name="bottomsheet_action_expand_halfway">Expand halfway</string>
     <string description="The content description of bottom sheet drag handles [CHAR LIMIT=NONE]" name="bottomsheet_drag_handle_content_description">Drag handle</string>
-    <string name="budget_rm_hr" translatable="false">Budget (RM/hr)</string>
-    <string name="by_tutor_alex_2_hours_ago" translatable="false">By Tutor Alex • 2 hours ago</string>
+    <string name="budget_rm_hr">Budget (RM/hr)</string>
+    <string name="by_tutor_alex_2_hours_ago">By Tutor Alex • 2 hours ago</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -2515,11 +2515,11 @@
     <string name="character_counter_content_description">Characters entered %1$d of %2$d</string>
     <string name="character_counter_overflowed_content_description">Character limit exceeded %1$d of %2$d</string>
     <string name="character_counter_pattern" translatable="false">%1$d/%2$d</string>
-    <string name="choose_new_material_file_pdf_image_video" translatable="false">Choose NEW Material File (PDF/Image/Video)</string>
+    <string name="choose_new_material_file_pdf_image_video">Choose NEW Material File (PDF/Image/Video)</string>
     <string name="clear_text_end_icon_content_description">Clear text</string>
-    <string name="comment_content" translatable="false">Comment content...</string>
-    <string name="comments" translatable="false">Comments</string>
-    <string name="comments_amp_questions" translatable="false"><![CDATA[Comments & Questions]]></string>
+    <string name="comment_content">Comment content...</string>
+    <string name="comments">Comments</string>
+    <string name="comments_amp_questions"><![CDATA[Comments & Questions]]></string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable</string>
     <string msgid="227660514972886228" name="common_google_play_services_enable_text"><ns2:g id="app_name">%1$s</ns2:g> won\'t work unless you enable Google Play services.</string>
     <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
@@ -2538,61 +2538,61 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <string name="contact_012_3456789" translatable="false">Contact: 012-3456789</string>
-    <string name="contact_info" translatable="false">Contact Info</string>
-    <string name="contact_student" translatable="false">Contact Student</string>
-    <string name="contact_tutor" translatable="false">Contact Tutor</string>
-    <string name="content_goes_here" translatable="false">Content goes here...</string>
+    <string name="contact_012_3456789">Contact: 012-3456789</string>
+    <string name="contact_info">Contact Info</string>
+    <string name="contact_student">Contact Student</string>
+    <string name="contact_tutor">Contact Tutor</string>
+    <string name="content_goes_here">Content goes here...</string>
     <string name="copy_toast_msg">Link copied to clipboard</string>
-    <string name="create_account" translatable="false">Create Account</string>
-    <string name="current_file_none" translatable="false">Current File: None</string>
+    <string name="create_account">Create Account</string>
+    <string name="current_file_none">Current File: None</string>
     <string name="current_language">English</string>
-    <string name="current_material_file_pdf" translatable="false">Current Material: File.pdf</string>
-    <string name="date_or_time" translatable="false">Date/Time</string>
-    <string name="date_time" translatable="false">Date • Time</string>
+    <string name="current_material_file_pdf">Current Material: File.pdf</string>
+    <string name="date_or_time">Date/Time</string>
+    <string name="date_time">Date • Time</string>
     <string name="delete">Delete</string>
-    <string name="delete_comment" translatable="false">Delete Comment</string>
-    <string name="delete_solution" translatable="false">Delete Solution</string>
-    <string name="delivery_mode" translatable="false">Delivery Mode</string>
-    <string name="describe_your_question" translatable="false">Describe your question...</string>
-    <string name="description" translatable="false">Description</string>
-    <string name="description_bio" translatable="false">Description / Bio</string>
-    <string name="description_goes_here" translatable="false">Description goes here...</string>
-    <string name="description_preferences" translatable="false">Description / Preferences</string>
-    <string name="description_topic" translatable="false">Description / Topic</string>
-    <string name="download_attachment" translatable="false">Download Attachment</string>
-    <string name="download_material" translatable="false">Download Material</string>
+    <string name="delete_comment">Delete Comment</string>
+    <string name="delete_solution">Delete Solution</string>
+    <string name="delivery_mode">Delivery Mode</string>
+    <string name="describe_your_question">Describe your question...</string>
+    <string name="description">Description</string>
+    <string name="description_bio">Description / Bio</string>
+    <string name="description_goes_here">Description goes here...</string>
+    <string name="description_preferences">Description / Preferences</string>
+    <string name="description_topic">Description / Topic</string>
+    <string name="download_attachment">Download Attachment</string>
+    <string name="download_material">Download Material</string>
     <string name="e_g_40" translatable="false">e.g. 40</string>
     <string name="e_g_cheras" translatable="false">e.g. Cheras</string>
     <string name="e_g_mathematics" translatable="false">e.g. Mathematics</string>
     <string name="edit">Edit</string>
-    <string name="edit_lesson" translatable="false">Edit Lesson</string>
-    <string name="edit_profile" translatable="false">Edit Profile</string>
-    <string name="edit_request" translatable="false">Edit Request</string>
-    <string name="edit_tutor_listing" translatable="false">Edit Tutor Listing</string>
-    <string name="edumatch" translatable="false">EduMatch</string>
-    <string name="email" translatable="false">Email</string>
+    <string name="edit_lesson">Edit Lesson</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_request">Edit Request</string>
+    <string name="edit_tutor_listing">Edit Tutor Listing</string>
+    <string name="edumatch">EduMatch</string>
+    <string name="email">Email</string>
     <string name="email_address">Email Address</string>
-    <string name="email_icon" translatable="false">Email Icon</string>
-    <string name="email_student_email_com" translatable="false">Email: student@email.com</string>
-    <string name="email_tutor_email_com" translatable="false">Email: tutor@email.com</string>
+    <string name="email_icon">Email Icon</string>
+    <string name="email_student_email_com">Email: student@email.com</string>
+    <string name="email_tutor_email_com">Email: tutor@email.com</string>
     <string description="Screen reader announcement for when a checkbox is on error. [CHAR LIMIT=NONE]" name="error_a11y_label">
     Error: invalid
   </string>
     <string name="error_icon_content_description">Error</string>
-    <string name="experience" translatable="false">Experience</string>
+    <string name="experience">Experience</string>
     <string name="exposed_dropdown_menu_content_description">Show dropdown menu</string>
     <string name="fab_transformation_scrim_behavior" translatable="false">com.google.android.material.transformation.FabTransformationScrimBehavior</string>
     <string name="fab_transformation_sheet_behavior" translatable="false">com.google.android.material.transformation.FabTransformationSheetBehavior</string>
     <string name="fallback_menu_item_copy_link">Copy link</string>
     <string name="fallback_menu_item_open_in_browser">Open in browser</string>
     <string name="fallback_menu_item_share_link">Share link</string>
-    <string name="fee_icon" translatable="false">Fee Icon</string>
-    <string name="fee_rm_hr" translatable="false">Fee (RM/hr)</string>
-    <string name="file_selected" translatable="false">📎 File selected</string>
-    <string name="filter_by_level" translatable="false">Filter by Level:</string>
-    <string name="find_a_tutor" translatable="false">Find a Tutor</string>
-    <string name="find_students" translatable="false">Find Students</string>
+    <string name="fee_icon">Fee Icon</string>
+    <string name="fee_rm_hr">Fee (RM/hr)</string>
+    <string name="file_selected">📎 File selected</string>
+    <string name="filter_by_level">Filter by Level:</string>
+    <string name="find_a_tutor">Find a Tutor</string>
+    <string name="find_students">Find Students</string>
     <string name="free_lesson_algebra_basics" translatable="false">Free Lesson: Algebra Basics</string>
     <string name="full_name">Full Name</string>
     <string name="gcm_defaultSenderId" translatable="false">674700121118</string>
@@ -2600,37 +2600,37 @@
     <string name="google_app_id" translatable="false">1:674700121118:android:db606041a9e6369dd74a0f</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
     <string name="google_storage_bucket" translatable="false">edumatch-74070.firebasestorage.app</string>
-    <string name="group" translatable="false">Group</string>
-    <string name="hello" translatable="false">Hello</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="hi_there" translatable="false">Hi there</string>
+    <string name="group">Group</string>
+    <string name="hello">Hello</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hi_there">Hi there</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
-    <string name="hosted_free_lessons" translatable="false">Hosted Free Lessons</string>
-    <string name="hourly_fee_rm_50_hr" translatable="false">Hourly Fee: RM 50/hr</string>
-    <string name="i_am_a" translatable="false">I am a:</string>
+    <string name="hosted_free_lessons">Hosted Free Lessons</string>
+    <string name="hourly_fee_rm_50_hr">Hourly Fee: RM 50/hr</string>
+    <string name="i_am_a">I am a:</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
     <string name="igcse" translatable="false">IGCSE</string>
-    <string name="introduction_to_motion" translatable="false">Introduction to motion...</string>
+    <string name="introduction_to_motion">Introduction to motion...</string>
     <string name="item_view_role_description">Tab</string>
-    <string name="john_doe_applied_for_your_tuition_request" translatable="false">John Doe applied for your tuition request.</string>
-    <string name="just_now" translatable="false">Just now</string>
+    <string name="john_doe_applied_for_your_tuition_request">John Doe applied for your tuition request.</string>
+    <string name="just_now">Just now</string>
     <string name="language_option">App Language</string>
-    <string name="last_message" translatable="false">Last message...</string>
-    <string name="last_updated_just_now" translatable="false">Last updated: Just now</string>
-    <string name="learning_mode" translatable="false">Learning Mode</string>
-    <string name="lesson_description_goes_here" translatable="false">Lesson description goes here...</string>
-    <string name="lesson_materials" translatable="false">Lesson Materials</string>
-    <string name="lesson_title" translatable="false">Lesson Title</string>
-    <string name="level" translatable="false">Level:</string>
+    <string name="last_message">Last message...</string>
+    <string name="last_updated_just_now">Last updated: Just now</string>
+    <string name="learning_mode">Learning Mode</string>
+    <string name="lesson_description_goes_here">Lesson description goes here...</string>
+    <string name="lesson_materials">Lesson Materials</string>
+    <string name="lesson_title">Lesson Title</string>
+    <string name="level">Level:</string>
     <string name="like" translatable="false">Like</string>
     <string name="link_http" translatable="false">Link: http://</string>
-    <string name="link_http_optional" translatable="false">Link (http://...) - Optional</string>
+    <string name="link_http_optional">Link (http://...) - Optional</string>
     <string name="loading">Loading...</string>
     <string name="login">Login</string>
     <string name="login_to_continue_learning">Login to continue learning</string>
     <string name="logout">Logout</string>
-    <string name="looking_for_a_tutor_on_weekends" translatable="false">Looking for a tutor on weekends.</string>
-    <string name="lower_secondary_f1_f3" translatable="false">Lower Secondary (F1-F3)</string>
+    <string name="looking_for_a_tutor_on_weekends">Looking for a tutor on weekends.</string>
+    <string name="lower_secondary_f1_f3">Lower Secondary (F1-F3)</string>
     <string name="m3_exceed_max_badge_text_suffix" translatable="false"><ns2:g example="Some te" id="part of a long text">%1$s</ns2:g><ns2:g example="…" id="suffix">%2$s</ns2:g></string>
     <string description="Content description for a loading indicator [CHAR LIMIT=NONE]" name="m3_loading_indicator_content_description">
     Loading
@@ -2650,7 +2650,7 @@
     <string name="m3_sys_motion_easing_standard" translatable="false">cubic-bezier(0.2, 0, 0, 1)</string>
     <string name="m3_sys_motion_easing_standard_accelerate" translatable="false">cubic-bezier(0.3, 0, 1, 1)</string>
     <string name="m3_sys_motion_easing_standard_decelerate" translatable="false">cubic-bezier(0, 0, 0, 1)</string>
-    <string name="mark_lesson_as_complete" translatable="false">Mark Lesson as Complete</string>
+    <string name="mark_lesson_as_complete">Mark Lesson as Complete</string>
     <string name="material_clock_display_divider" translatable="false">:</string>
     <string description="Description for the toggle to choose between AM and PM [CHAR_LIMIT=NONE]" name="material_clock_toggle_content_description">Select AM or PM</string>
     <string description="Spoken suffix for an hour in the 24-hour clock [CHAR_LIMIT=10]" name="material_hour_24h_suffix"><ns2:g id="number">%1$s</ns2:g> hours</string>
@@ -2673,9 +2673,9 @@
     <string description="Suffix for time in 12-hour standard, after noon. [CHAR_LIMIT=2]" name="material_timepicker_pm">PM</string>
     <string description="Title for the dialog with a time picker. [CHAR_LIMIT=32]" name="material_timepicker_select_time">Select time</string>
     <string name="material_timepicker_text_input_mode_description">Switch to text input mode for the time input.</string>
-    <string name="mathematics" translatable="false">Mathematics</string>
+    <string name="mathematics">Mathematics</string>
     <string name="mathematics_science" translatable="false">Mathematics, Science</string>
-    <string name="mode_online" translatable="false">Mode: Online</string>
+    <string name="mode_online">Mode: Online</string>
     <string description="Content description for new notification (no number count) [CHAR_LIMIT=NONE]" name="mtrl_badge_numberless_content_description">New notification</string>
     <string description="An announcement for the collapsed menu state of the trailing button in split button [CHAR LIMIT=NONE]" name="mtrl_button_collapsed_content_description">Collapsed</string>
     <string description="An announcement for the expanded menu state of the trailing button in split button [CHAR LIMIT=NONE]" name="mtrl_button_expanded_content_description">Expanded</string>
@@ -2748,158 +2748,158 @@
     <string name="mtrl_switch_track_path" translatable="false">M0,16 A16,16 0 0,1 16,0 H36 A16,16 0 0,1 36,32 H16 A16,16 0 0,1 0,16</string>
     <string description="Button text to indicate that the widget will ignore the user&apos;s selection [CHAR_LIMIT=16]" name="mtrl_timepicker_cancel">Cancel</string>
     <string description="Button text to indicate that the widget will save the user&apos;s selection [CHAR_LIMIT=16]" name="mtrl_timepicker_confirm">OK</string>
-    <string name="my_listings" translatable="false">My Listings</string>
-    <string name="my_nlistings" translatable="false">My\nListings</string>
-    <string name="my_posted_requests" translatable="false">My Posted Requests</string>
-    <string name="my_questions" translatable="false">My Questions</string>
+    <string name="my_listings">My Listings</string>
+    <string name="my_nlistings">My\nListings</string>
+    <string name="my_posted_requests">My Posted Requests</string>
+    <string name="my_questions">My Questions</string>
     <string description="Screen reader announcement for when navigation rail is collapsed [CHAR LIMIT=NONE]" name="nav_rail_collapsed_a11y_label">
     Collapsed
   </string>
     <string description="Screen reader announcement for when navigation rail is expanded [CHAR LIMIT=NONE]" name="nav_rail_expanded_a11y_label">
     Expanded
   </string>
-    <string name="new_free_lessons" translatable="false">New Free Lessons</string>
-    <string name="new_to_edumatch" translatable="false">New to EduMatch?</string>
-    <string name="new_tutor_application" translatable="false">New Tutor Application</string>
-    <string name="no_achievements_recorded" translatable="false">No achievements recorded.</string>
-    <string name="no_active_chats_yet_find_a_tutor_or_student_to_start_a_conversation" translatable="false">No active chats yet. Find a tutor or student to start a conversation!</string>
-    <string name="no_comments_yet" translatable="false">No comments yet.</string>
-    <string name="no_comments_yet_be_the_first_to_ask" translatable="false">No comments yet. Be the first to ask!</string>
-    <string name="no_experience_recorded" translatable="false">No experience recorded.</string>
-    <string name="no_file_selected" translatable="false">No file selected</string>
-    <string name="no_free_lessons_found" translatable="false">No free lessons found.</string>
-    <string name="no_lessons_found" translatable="false">No lessons found.</string>
-    <string name="no_lessons_recorded" translatable="false">No lessons recorded.</string>
-    <string name="no_solution_yet" translatable="false">No solution yet.</string>
-    <string name="no_student_requests_found" translatable="false">No student requests found.</string>
-    <string name="no_tutors_found_matching_your_criteria_ntry_broadening_your_search" translatable="false">No tutors found matching your criteria.\nTry broadening your search.</string>
-    <string name="no_tutors_found_try_a_different_keyword" translatable="false">No tutors found. Try a different keyword.</string>
-    <string name="notification_icon" translatable="false">Notification Icon</string>
-    <string name="one_to_many" translatable="false">One-to-Many</string>
-    <string name="one_to_one" translatable="false">One-to-One</string>
-    <string name="online" translatable="false">Online</string>
-    <string name="participated_free_lessons" translatable="false">Participated Free Lessons</string>
+    <string name="new_free_lessons">New Free Lessons</string>
+    <string name="new_to_edumatch">New to EduMatch?</string>
+    <string name="new_tutor_application">New Tutor Application</string>
+    <string name="no_achievements_recorded">No achievements recorded.</string>
+    <string name="no_active_chats_yet_find_a_tutor_or_student_to_start_a_conversation">No active chats yet. Find a tutor or student to start a conversation!</string>
+    <string name="no_comments_yet">No comments yet.</string>
+    <string name="no_comments_yet_be_the_first_to_ask">No comments yet. Be the first to ask!</string>
+    <string name="no_experience_recorded">No experience recorded.</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="no_free_lessons_found">No free lessons found.</string>
+    <string name="no_lessons_found">No lessons found.</string>
+    <string name="no_lessons_recorded">No lessons recorded.</string>
+    <string name="no_solution_yet">No solution yet.</string>
+    <string name="no_student_requests_found">No student requests found.</string>
+    <string name="no_tutors_found_matching_your_criteria_ntry_broadening_your_search">No tutors found matching your criteria.\nTry broadening your search.</string>
+    <string name="no_tutors_found_try_a_different_keyword">No tutors found. Try a different keyword.</string>
+    <string name="notification_icon">Notification Icon</string>
+    <string name="one_to_many">One-to-Many</string>
+    <string name="one_to_one">One-to-One</string>
+    <string name="online">Online</string>
+    <string name="participated_free_lessons">Participated Free Lessons</string>
     <string name="password">Password</string>
     <string name="password_toggle_content_description">Show password</string>
     <string name="path_password_eye" translatable="false">M12,4.5C7,4.5 2.73,7.61 1,12c1.73,4.39 6,7.5 11,7.5s9.27,-3.11 11,-7.5c-1.73,-4.39 -6,-7.5 -11,-7.5zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5zM12,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3 3,-1.34 3,-3 -1.34,-3 -3,-3z</string>
     <string name="path_password_eye_mask_strike_through" translatable="false">M2,4.27 L19.73,22 L22.27,19.46 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
     <string name="path_password_eye_mask_visible" translatable="false">M2,4.27 L2,4.27 L4.54,1.73 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
-    <string name="phone_icon" translatable="false">Phone Icon</string>
-    <string name="physical" translatable="false">Physical</string>
-    <string name="physical_one_to_one" translatable="false">Physical (One-to-One)</string>
-    <string name="physics_newton_s_laws" translatable="false">Physics: Newton\'s Laws</string>
-    <string name="post" translatable="false">Post</string>
-    <string name="post_a_request" translatable="false">Post a Request</string>
-    <string name="post_lesson" translatable="false">Post Lesson</string>
-    <string name="post_listing" translatable="false">Post Listing</string>
-    <string name="post_new_listing" translatable="false">Post New Listing</string>
-    <string name="post_new_question" translatable="false">Post New Question</string>
-    <string name="post_nlisting" translatable="false">Post\nListing</string>
-    <string name="post_nrequest" translatable="false">Post\nRequest</string>
-    <string name="post_question" translatable="false">Post Question</string>
-    <string name="post_request" translatable="false">Post Request</string>
+    <string name="phone_icon">Phone Icon</string>
+    <string name="physical">Physical</string>
+    <string name="physical_one_to_one">Physical (One-to-One)</string>
+    <string name="physics_newton_s_laws">Physics: Newton\'s Laws</string>
+    <string name="post">Post</string>
+    <string name="post_a_request">Post a Request</string>
+    <string name="post_lesson">Post Lesson</string>
+    <string name="post_listing">Post Listing</string>
+    <string name="post_new_listing">Post New Listing</string>
+    <string name="post_new_question">Post New Question</string>
+    <string name="post_nlisting">Post\nListing</string>
+    <string name="post_nrequest">Post\nRequest</string>
+    <string name="post_question">Post Question</string>
+    <string name="post_request">Post Request</string>
     <string name="posted_2_hours_ago" translatable="false">Posted: 2 hours ago</string>
-    <string name="preferred_mode" translatable="false">Preferred Mode:</string>
-    <string name="primary" translatable="false">Primary</string>
+    <string name="preferred_mode">Preferred Mode:</string>
+    <string name="primary">Primary</string>
     <string name="primary_lower_secondary" translatable="false">Primary, Lower Secondary</string>
-    <string name="profile_area" translatable="false">Area:</string>
-    <string name="profile_avatar" translatable="false">Profile Avatar</string>
-    <string name="profile_budget" translatable="false">Budget:</string>
-    <string name="profile_contact" translatable="false">Contact:</string>
-    <string name="profile_description" translatable="false">Description:</string>
-    <string name="profile_fee" translatable="false">Fee:</string>
-    <string name="profile_level" translatable="false">Level:</string>
-    <string name="profile_levels" translatable="false">Levels:</string>
-    <string name="profile_mode" translatable="false">Mode:</string>
-    <string name="profile_qualification" translatable="false">Qualification:</string>
-    <string name="profile_subjects" translatable="false">Subjects:</string>
+    <string name="profile_area">Area:</string>
+    <string name="profile_avatar">Profile Avatar</string>
+    <string name="profile_budget">Budget:</string>
+    <string name="profile_contact">Contact:</string>
+    <string name="profile_description">Description:</string>
+    <string name="profile_fee">Fee:</string>
+    <string name="profile_level">Level:</string>
+    <string name="profile_levels">Levels:</string>
+    <string name="profile_mode">Mode:</string>
+    <string name="profile_qualification">Qualification:</string>
+    <string name="profile_subjects">Subjects:</string>
     <string name="project_id" translatable="false">edumatch-74070</string>
-    <string name="q_amp_a_forum" translatable="false"><![CDATA[Q&A Forum]]></string>
-    <string name="qualification" translatable="false">Qualification</string>
-    <string name="qualification_e_g_degree_in_math" translatable="false">Qualification (e.g. Degree in Math)</string>
-    <string name="question_preview" translatable="false">Question preview...</string>
-    <string name="question_title" translatable="false">Question Title</string>
+    <string name="q_amp_a_forum"><![CDATA[Q&A Forum]]></string>
+    <string name="qualification">Qualification</string>
+    <string name="qualification_e_g_degree_in_math">Qualification (e.g. Degree in Math)</string>
+    <string name="question_preview">Question preview...</string>
+    <string name="question_title">Question Title</string>
     <string name="register_here">Register Here</string>
-    <string name="register_password" translatable="false">Password</string>
-    <string name="replace_material_pdf_img" translatable="false">📄 Replace Material (PDF/Img)</string>
-    <string name="reply" translatable="false">Reply</string>
-    <string name="required_study_time_minutes" translatable="false">Required Study Time (Minutes)</string>
-    <string name="rm_50_hr" translatable="false">RM 50/hr</string>
+    <string name="register_password">Password</string>
+    <string name="replace_material_pdf_img">📄 Replace Material (PDF/Img)</string>
+    <string name="reply">Reply</string>
+    <string name="required_study_time_minutes">Required Study Time (Minutes)</string>
+    <string name="rm_50_hr">RM 50/hr</string>
     <string name="save">Save</string>
-    <string name="save_changes" translatable="false">Save Changes</string>
-    <string name="save_profile" translatable="false">Save Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="save_profile">Save Profile</string>
     <string name="search">Search</string>
-    <string name="search_by_subject" translatable="false">Search by Subject</string>
-    <string name="search_lesson_title" translatable="false">Search lesson title...</string>
+    <string name="search_by_subject">Search by Subject</string>
+    <string name="search_lesson_title">Search lesson title...</string>
     <string name="search_menu_title">Search</string>
-    <string name="search_nstudents" translatable="false">Search\nStudents</string>
-    <string name="search_ntutor" translatable="false">Search\nTutor</string>
-    <string name="search_questions" translatable="false">Search questions...</string>
-    <string name="search_results" translatable="false">Search Results</string>
-    <string name="search_subject_e_g_math" translatable="false">Search Subject (e.g. Math)</string>
+    <string name="search_nstudents">Search\nStudents</string>
+    <string name="search_ntutor">Search\nTutor</string>
+    <string name="search_questions">Search questions...</string>
+    <string name="search_results">Search Results</string>
+    <string name="search_subject_e_g_math">Search Subject (e.g. Math)</string>
     <string name="searchbar_scrolling_view_behavior" translatable="false">
     com.google.android.material.search.SearchBar$ScrollingViewBehavior
   </string>
     <string description="Content description for the X button to clear text [CHAR_LIMIT=NONE]" name="searchview_clear_text_content_description">Clear text</string>
     <string description="Content description for the navigation button to return to the previous screen [CHAR_LIMIT=NONE]" name="searchview_navigation_content_description">Back</string>
-    <string name="select_a_file_to_replace_the_current_material" translatable="false">Select a file to replace the current material.</string>
-    <string name="select_a_file_to_upload_to_the_qna_bucket_n_nsupported_formats_n_pdf_documents_n_images_jpg_png_n_videos_mp4" translatable="false">Select a file to upload to the QnA bucket.\n\nSupported formats:\n• PDF Documents\n• Images (JPG, PNG)\n• Videos (MP4)</string>
-    <string name="select_a_pdf_image_or_video_to_help_others" translatable="false">Select a PDF, Image, or Video to help others.</string>
-    <string name="select_file" translatable="false">Select File</string>
-    <string name="select_your_avatar" translatable="false">Select Your Avatar</string>
-    <string name="send_comment" translatable="false">Send Comment</string>
+    <string name="select_a_file_to_replace_the_current_material">Select a file to replace the current material.</string>
+    <string name="select_a_file_to_upload_to_the_qna_bucket_n_nsupported_formats_n_pdf_documents_n_images_jpg_png_n_videos_mp4">Select a file to upload to the QnA bucket.\n\nSupported formats:\n• PDF Documents\n• Images (JPG, PNG)\n• Videos (MP4)</string>
+    <string name="select_a_pdf_image_or_video_to_help_others">Select a PDF, Image, or Video to help others.</string>
+    <string name="select_file">Select File</string>
+    <string name="select_your_avatar">Select Your Avatar</string>
+    <string name="send_comment">Send Comment</string>
     <string name="settings_title">Settings</string>
     <string description="Title of the side sheet&apos;s accessibility pane that is spoken by TalkBack when the side sheet appears on screen. [CHAR_LIMIT=NONE]" name="side_sheet_accessibility_pane_title">Side Sheet</string>
     <string name="side_sheet_behavior" translatable="false">com.google.android.material.sidesheet.SideSheetBehavior</string>
-    <string name="solution_content" translatable="false">Solution content...</string>
-    <string name="solution_details" translatable="false">Solution Details</string>
-    <string name="solutions" translatable="false">Solutions</string>
+    <string name="solution_content">Solution content...</string>
+    <string name="solution_details">Solution Details</string>
+    <string name="solutions">Solutions</string>
     <string name="spm" translatable="false">SPM</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="stpm_a_level" translatable="false">STPM / A-Level</string>
     <string name="student">Student</string>
-    <string name="student_description_goes_here" translatable="false">Student description goes here...</string>
-    <string name="student_name" translatable="false">Student Name</string>
-    <string name="study_time_required_05_00" translatable="false">Study time required: 05:00</string>
-    <string name="subang_jaya" translatable="false">Subang Jaya</string>
-    <string name="subject" translatable="false">Subject</string>
-    <string name="subject_icon" translatable="false">Subject Icon</string>
-    <string name="subjects" translatable="false">Subjects</string>
+    <string name="student_description_goes_here">Student description goes here...</string>
+    <string name="student_name">Student Name</string>
+    <string name="study_time_required_05_00">Study time required: 05:00</string>
+    <string name="subang_jaya">Subang Jaya</string>
+    <string name="subject">Subject</string>
+    <string name="subject_icon">Subject Icon</string>
+    <string name="subjects">Subjects</string>
     <string name="subjects_e_g_math_science" translatable="false">Subjects (e.g. Math, Science)</string>
     <string name="subjects_math_science" translatable="false">Subjects: Math, Science</string>
     <string name="tutor">Tutor</string>
     <string name="tutor_john_doe" translatable="false">Tutor: John Doe</string>
-    <string name="tutor_name" translatable="false">Tutor Name</string>
-    <string name="type_a_message" translatable="false">Type a message...</string>
-    <string name="type_a_question_or_comment" translatable="false">Type a question or comment...</string>
-    <string name="type_your_solution" translatable="false">Type your solution...</string>
-    <string name="university" translatable="false">University</string>
-    <string name="unsolved" translatable="false">UNSOLVED</string>
-    <string name="update_avatar" translatable="false">Update Avatar</string>
-    <string name="upload_free_lesson" translatable="false">Upload Free Lesson</string>
-    <string name="upload_material" translatable="false">Upload Material</string>
-    <string name="upload_nlesson" translatable="false">Upload\nLesson</string>
-    <string name="upload_qna_material" translatable="false">Upload QnA Material</string>
-    <string name="user_2_mins_ago" translatable="false">User • 2 mins ago</string>
-    <string name="user_date" translatable="false">User • Date</string>
-    <string name="user_name" translatable="false">User Name</string>
-    <string name="username" translatable="false">Username</string>
-    <string name="video_link" translatable="false">Video Link</string>
-    <string name="video_link_youtube_zoom_drive" translatable="false">Video Link (YouTube/Zoom/Drive)</string>
-    <string name="video_url" translatable="false">Video URL</string>
-    <string name="view_all" translatable="false">View All</string>
-    <string name="view_attachment" translatable="false">📎 View Attachment</string>
-    <string name="view_details" translatable="false">View Details</string>
-    <string name="view_more" translatable="false">View More</string>
-    <string name="view_my_requests" translatable="false">View My Requests</string>
-    <string name="watch_lesson" translatable="false">Watch Lesson</string>
-    <string name="watch_video" translatable="false">Watch Video</string>
+    <string name="tutor_name">Tutor Name</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="type_a_question_or_comment">Type a question or comment...</string>
+    <string name="type_your_solution">Type your solution...</string>
+    <string name="university">University</string>
+    <string name="unsolved">UNSOLVED</string>
+    <string name="update_avatar">Update Avatar</string>
+    <string name="upload_free_lesson">Upload Free Lesson</string>
+    <string name="upload_material">Upload Material</string>
+    <string name="upload_nlesson">Upload\nLesson</string>
+    <string name="upload_qna_material">Upload QnA Material</string>
+    <string name="user_2_mins_ago">User • 2 mins ago</string>
+    <string name="user_date">User • Date</string>
+    <string name="user_name">User Name</string>
+    <string name="username">Username</string>
+    <string name="video_link">Video Link</string>
+    <string name="video_link_youtube_zoom_drive">Video Link (YouTube/Zoom/Drive)</string>
+    <string name="video_url">Video URL</string>
+    <string name="view_all">View All</string>
+    <string name="view_attachment">📎 View Attachment</string>
+    <string name="view_details">View Details</string>
+    <string name="view_more">View More</string>
+    <string name="view_my_requests">View My Requests</string>
+    <string name="watch_lesson">Watch Lesson</string>
+    <string name="watch_video">Watch Video</string>
     <string name="welcome_back">Welcome Back!</string>
-    <string name="welcome_back_nstudent" translatable="false">Welcome back,\nStudent</string>
-    <string name="welcome_back_ntutor" translatable="false">Welcome back,\nTutor</string>
-    <string name="you_can_complete_your_tutor_profile_details_after_registration" translatable="false">* You can complete your tutor profile details after registration.</string>
-    <string name="your_free_lessons" translatable="false">Your Free Lessons</string>
+    <string name="welcome_back_nstudent">Welcome back,\nStudent</string>
+    <string name="welcome_back_ntutor">Welcome back,\nTutor</string>
+    <string name="you_can_complete_your_tutor_profile_details_after_registration">* You can complete your tutor profile details after registration.</string>
+    <string name="your_free_lessons">Your Free Lessons</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
