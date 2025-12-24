@@ -27,4 +27,12 @@
         android:textColor="@color/black"
         android:maxWidth="240dp"
         android:elevation="1dp"/>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="#808080"
+        android:text="10:00 AM"/>
 </LinearLayout>

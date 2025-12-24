@@ -107,6 +107,7 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
                 for (DataSnapshot data : snapshot.getChildren()) {
                     StudentRequest request = data.getValue(StudentRequest.class);
                     if (request != null) {
+                        request.setRequestId(data.getKey());
                         fullRequestList.add(request);
                     }
                 }

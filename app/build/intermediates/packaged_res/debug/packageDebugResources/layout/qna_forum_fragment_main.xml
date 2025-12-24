@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Q&amp;A Forum"
+        android:text="@string/q_amp_a_forum"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Search questions..."
+            android:hint="@string/search_questions"
             android:padding="12dp"
             android:background="@color/white"/>
 
@@ -34,7 +34,7 @@
             android:id="@+id/btnSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:text="@string/search"
             android:backgroundTint="@color/pastelBlue"
             android:textColor="@color/black"
             android:layout_marginStart="8dp"/>
@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="+ Post Question"
+            android:text="@string/add_post_question"
             android:backgroundTint="@color/pastelYellow"
             android:textColor="@color/black"
             android:layout_marginEnd="4dp"/>
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="My Questions"
+            android:text="@string/my_questions"
             android:backgroundTint="#FF9800"
             android:textColor="@color/white"
             android:layout_marginStart="4dp"/>

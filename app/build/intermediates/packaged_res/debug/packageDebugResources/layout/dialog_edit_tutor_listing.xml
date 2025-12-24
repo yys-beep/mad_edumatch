@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Tutor Listing"
+            android:text="@string/edit_tutor_listing"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -23,7 +23,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Subjects"
+            android:hint="@string/subjects"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditSubjects"
@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Academic Levels"
+            android:text="@string/academic_level"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
@@ -45,19 +45,19 @@
             android:layout_marginBottom="16dp"
             app:chipSpacingHorizontal="8dp"
             app:chipSpacingVertical="8dp">
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="Lower Secondary (F1-F3)" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="SPM" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="STPM / A-Level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="IGCSE" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
-            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="University" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/primary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/lower_secondary_f1_f3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/spm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/stpm_a_level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/igcse" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
+            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Filter" android:text="@string/university" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false"/>
         </com.google.android.material.chip.ChipGroup>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fee (RM/hr)"
+            android:hint="@string/fee_rm_hr"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditFee"
@@ -70,7 +70,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Area"
+            android:hint="@string/area"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditArea"
@@ -82,7 +82,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Qualification"
+            android:hint="@string/qualification"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditQualification"
@@ -94,7 +94,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contact Info"
+            android:hint="@string/contact_info"
             android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEditContact"
@@ -102,26 +102,26 @@
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView android:text="Learning Mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+        <TextView android:text="@string/learning_mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
         <RadioGroup
             android:id="@+id/rgEditLearningMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
-            <RadioButton android:id="@+id/rbEditOneToOne" android:text="One-to-One" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <RadioButton android:id="@+id/rbEditOneToMany" android:text="Group" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditOneToOne" android:text="@string/one_to_one" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditOneToMany" android:text="@string/group" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </RadioGroup>
 
-        <TextView android:text="Delivery Mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
+        <TextView android:text="@string/delivery_mode" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp"/>
         <RadioGroup
             android:id="@+id/rgEditDeliveryMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp">
-            <RadioButton android:id="@+id/rbEditPhysical" android:text="Physical" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-            <RadioButton android:id="@+id/rbEditOnline" android:text="Online" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditPhysical" android:text="@string/physical" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <RadioButton android:id="@+id/rbEditOnline" android:text="@string/online" android:layout_marginStart="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
         </RadioGroup>
 
         <LinearLayout
@@ -137,7 +137,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="#555"/>
 
             <Button
@@ -145,7 +145,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Save"
+                android:text="@string/save"
                 android:backgroundTint="@color/pastelBlue"
                 android:textColor="@color/black"
                 android:layout_marginStart="8dp"/>

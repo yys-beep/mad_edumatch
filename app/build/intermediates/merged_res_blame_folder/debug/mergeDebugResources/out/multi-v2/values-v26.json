@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-57:/values-v26/values-v26.xml",
+            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-v26/values-v26.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\8.13\\transforms\\fce5fb0cd8abddf6b487be94a0922114\\transformed\\appcompat-1.7.1\\res\\values-v26\\values-v26.xml",
+                    "source": "C:\\Users\\natas\\.gradle\\caches\\9.0-milestone-1\\transforms\\7a53c00295c495e02d9c746efc07c41f\\transformed\\appcompat-1.7.1\\res\\values-v26\\values-v26.xml",
                     "from": {
                         "startLines": "2,3,4,8,12,16",
                         "startColumns": "4,4,4,4,4,4",

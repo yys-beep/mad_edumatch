@@ -72,24 +72,22 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
         holder.btnContact.setOnClickListener(v -> {
             String currentUid = CurrentUser.getInstance().getUid();
 
-            // A. Check Login
             if (currentUid == null) {
                 Toast.makeText(context, "Please login to contact tutors", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // B. Prevent Self-Contact
             if (currentUid.equals(tutor.getTutorId())) {
                 Toast.makeText(context, "You cannot chat with yourself!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // C. Open Chat
-            openChatFragment(tutor.getTutorId(), tutor.getName());
+            // Pass the Tutor's ID, Name, Subject, and the Listing Key
+            openChatFragment(tutor.getTutorId(), tutor.getName(), tutor.getSubject(), tutor.getKey());
         });
     }
 
-    private void openChatFragment(String targetUserId, String targetUserName) {
+    private void openChatFragment(String targetUserId, String targetUserName, String subject, String listingId) {
         // Create Fragment
         ChatDetailFragment chatFragment = new ChatDetailFragment();
 
@@ -97,17 +95,18 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
         Bundle args = new Bundle();
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
+
+        args.putString("listingId", listingId);
+        args.putString("listingTitle", "Tutor Listing: " + subject);
+
         chatFragment.setArguments(args);
 
         // Perform Navigation
         if (context instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) context;
-            activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, chatFragment) // Verify your container ID (e.g., fragment_container)
+            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, chatFragment)
                     .addToBackStack(null)
                     .commit();
-        } else {
-            Toast.makeText(context, "Error: Navigation context not found", Toast.LENGTH_SHORT).show();
         }
     }
 

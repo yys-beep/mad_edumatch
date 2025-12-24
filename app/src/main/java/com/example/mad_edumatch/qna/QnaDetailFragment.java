@@ -60,6 +60,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     private AnswerAdapter adapter;
     private List<Answer> answerList;
 
+    private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
     private static final String PROJECT_ID = "693c16f700198f0a2ed3";
     private static final String BUCKET_ID = "693c1807002ab38e1751";
     private static final String ENDPOINT = "https://sgp.cloud.appwrite.io/v1";
@@ -95,37 +96,43 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         tvAnswerFileName = view.findViewById(R.id.tvAnswerFileName);
 
         // References
-        answerRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("forum_answers");
-        questionRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("forum_questions");
+        answerRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("forum_answers");
+        questionRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("forum_questions");
 
-        // Load Question Data
+        // --- ENHANCED DATA LOADING (Supports Deep Links) ---
         if (getArguments() != null) {
-            questionId = getArguments().getString("questionId");
-            questionUserId = getArguments().getString("userId");
+            // 1. Resolve the ID from either 'sourceId' (notification) or 'questionId' (internal)
+            questionId = getArguments().containsKey("sourceId") ?
+                    getArguments().getString("sourceId") : getArguments().getString("questionId");
 
-            tvTitle.setText(getArguments().getString("title"));
-            tvContent.setText(getArguments().getString("content"));
-            long time = getArguments().getLong("timestamp");
-            loadQuestionUserProfile(questionUserId, time);
+            // 2. Logic to determine if we fetch from Firebase or use passed data
+            if (getArguments().containsKey("title") && !getArguments().containsKey("sourceId")) {
+                // Normal Path: Data passed from list
+                questionUserId = getArguments().getString("userId");
+                tvTitle.setText(getArguments().getString("title"));
+                tvContent.setText(getArguments().getString("content"));
+                long time = getArguments().getLong("timestamp");
+                qFileUrl = getArguments().getString("fileUrl");
+                qFileName = getArguments().getString("fileName");
+                isSolved = getArguments().getBoolean("solved", false);
 
-            qFileUrl = getArguments().getString("fileUrl");
-            qFileName = getArguments().getString("fileName");
-
-            // Default to false if not found
-            isSolved = getArguments().getBoolean("solved", false);
-            updateSolvedUI(); // Update button appearance immediately
-            btnMarkSolved.setOnClickListener(v -> toggleSolvedStatus());
-
-            loadAvatar(questionUserId, ivAvatar);
-            checkOwnership();
-
-            updateAttachmentButtonUI(); // Refactored to a method so we can call it after edit
+                loadQuestionUserProfile(questionUserId, time);
+                loadAvatar(questionUserId, ivAvatar);
+                checkOwnership();
+                updateSolvedUI();
+                updateAttachmentButtonUI();
+                loadAnswers(); // Ensure answers load for normal path
+            } else if (questionId != null) {
+                // Notification Path: ONLY the ID is known, so fetch everything
+                fetchQuestionDetailsFromFirebase(questionId);
+            } else {
+                Toast.makeText(getContext(), "Error: Invalid Question ID", Toast.LENGTH_SHORT).show();
+            }
         }
 
         // Setup Answer List
         rvAnswers.setLayoutManager(new LinearLayoutManager(getContext()));
         answerList = new ArrayList<>();
-
         adapter = new AnswerAdapter(getContext(), answerList, answer -> {
             QnaAnswerCommentFragment fragment = new QnaAnswerCommentFragment();
             Bundle args = new Bundle();
@@ -152,37 +159,63 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         btnPostAnswer.setOnClickListener(v -> postAnswer());
         btnDelete.setOnClickListener(v -> deleteQuestion());
         btnEdit.setOnClickListener(v -> showEditQuestionDialog());
+        btnMarkSolved.setOnClickListener(v -> toggleSolvedStatus());
 
-        // Attach for ANSWER
         btnAttachFileToAnswer.setOnClickListener(v -> {
-            isEditMode = false; // Important: Set flag to false
+            isEditMode = false;
             UploadMaterialBottom uploadDialog = new UploadMaterialBottom();
             uploadDialog.show(getChildFragmentManager(), "UploadAnswer");
         });
     }
 
+    // --- NEW: FETCH FOR NOTIFICATION DEEP LINK ---
+    private void fetchQuestionDetailsFromFirebase(String qId) {
+        this.questionId = qId;
+        questionRef.child(qId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded() || !snapshot.exists()) return;
+
+                if (!snapshot.exists()) {
+                    // The question was deleted!
+                    Toast.makeText(getContext(), "This question has been deleted.", Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null) getActivity().onBackPressed();
+                    return;
+                }
+
+                tvTitle.setText(snapshot.child("title").getValue(String.class));
+                tvContent.setText(snapshot.child("content").getValue(String.class));
+                questionUserId = snapshot.child("userId").getValue(String.class);
+                long time = snapshot.child("timestamp").getValue(Long.class);
+                qFileUrl = snapshot.child("fileUrl").getValue(String.class);
+                qFileName = snapshot.child("fileName").getValue(String.class);
+                isSolved = snapshot.child("solved").getValue(Boolean.class);
+
+                loadQuestionUserProfile(questionUserId, time);
+                loadAvatar(questionUserId, ivAvatar);
+                checkOwnership();
+                updateSolvedUI();
+                updateAttachmentButtonUI();
+                loadAnswers(); // Refresh answers once ID is set
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
     private void loadQuestionUserProfile(String uid, long timestamp) {
         if (uid == null) return;
-
-        DatabaseReference db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-
-        // Check Student First
+        DatabaseReference db = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
         db.child("student_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String name = snapshot.child("username").getValue(String.class);
-                    String imgUrl = snapshot.child("profileImageUrl").getValue(String.class);
-                    updateHeaderUI(name, imgUrl, timestamp);
+                    updateHeaderUI(snapshot.child("username").getValue(String.class), snapshot.child("profileImageUrl").getValue(String.class), timestamp);
                 } else {
-                    // Check Tutor Second
                     db.child("tutor_profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot tutorSnap) {
                             if (tutorSnap.exists()) {
-                                String name = tutorSnap.child("username").getValue(String.class);
-                                String imgUrl = tutorSnap.child("profileImageUrl").getValue(String.class);
-                                updateHeaderUI(name, imgUrl, timestamp);
+                                updateHeaderUI(tutorSnap.child("username").getValue(String.class), tutorSnap.child("profileImageUrl").getValue(String.class), timestamp);
                             } else {
                                 updateHeaderUI("Unknown User", null, timestamp);
                             }
@@ -197,11 +230,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
 
     private void updateHeaderUI(String name, String imgUrl, long timestamp) {
         if (!isAdded()) return;
-
-        // Update Text
         tvInfo.setText(name + " • " + TimeHelper.getMalaysiaTime(timestamp));
-
-        // Update Avatar
         if (imgUrl != null) {
             int resId = getResources().getIdentifier(imgUrl, "drawable", requireContext().getPackageName());
             if (resId != 0) ivAvatar.setImageResource(resId);
@@ -211,11 +240,9 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         }
     }
 
-    // --- UPLOAD CALLBACK ---
     @Override
     public void onUploadSuccess(String fileId, String fileName) {
         if (isEditMode) {
-            // Logic for EDIT QUESTION
             this.tempEditFileId = fileId;
             this.tempEditFileName = fileName;
             if (tvEditFileStatus != null) {
@@ -223,7 +250,6 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                 tvEditFileStatus.setVisibility(View.VISIBLE);
             }
         } else {
-            // Logic for POST ANSWER
             this.tempAnswerFileId = fileId;
             this.tempAnswerFileName = fileName;
             if (tvAnswerFileName != null) {
@@ -233,10 +259,8 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         }
     }
 
-    // --- EDIT DIALOG LOGIC ---
     private void showEditQuestionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        // Use the same layout as posting a question
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_post_question, null);
         builder.setView(view);
 
@@ -244,15 +268,10 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         EditText etEditContent = view.findViewById(R.id.etQuestionContentInput);
         Button btnAttach = view.findViewById(R.id.btnAttachFile);
         Button btnSubmit = view.findViewById(R.id.btnSubmitQuestion);
-
-        // This is the TextView inside the dialog
         tvEditFileStatus = view.findViewById(R.id.tvSelectedFileName);
 
-        // 1. Initialize data
         etEditTitle.setText(tvTitle.getText().toString());
         etEditContent.setText(tvContent.getText().toString());
-
-        // Initialize temp edit variables with current data
         tempEditFileId = qFileUrl;
         tempEditFileName = qFileName;
 
@@ -263,57 +282,42 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         }
 
         btnSubmit.setText("Update Question");
-
         AlertDialog dialog = builder.create();
 
-        // 2. Attach File in Edit Mode
         btnAttach.setOnClickListener(v -> {
-            isEditMode = true; // Important: Set flag to true
+            isEditMode = true;
             UploadMaterialBottom uploadDialog = new UploadMaterialBottom();
             uploadDialog.show(getChildFragmentManager(), "UploadEdit");
         });
 
-        // 3. Submit Update
         btnSubmit.setOnClickListener(v -> {
             String newTitle = etEditTitle.getText().toString().trim();
             String newContent = etEditContent.getText().toString().trim();
-
             if (TextUtils.isEmpty(newTitle) || TextUtils.isEmpty(newContent)) {
                 Toast.makeText(getContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
             updateQuestion(newTitle, newContent, dialog);
         });
-
         dialog.show();
     }
 
     private void updateQuestion(String title, String content, AlertDialog dialog) {
         if (questionId == null) return;
-
         Map<String, Object> updates = new HashMap<>();
         updates.put("title", title);
         updates.put("content", content);
-
-        // Add file info (whether it's the old one or a newly uploaded one)
-        // Note: Use keys "fileUrl" and "fileName" as per your database model
         updates.put("fileUrl", tempEditFileId);
         updates.put("fileName", tempEditFileName);
 
         questionRef.child(questionId).updateChildren(updates).addOnSuccessListener(aVoid -> {
-            // Update UI instantly
             tvTitle.setText(title);
             tvContent.setText(content);
-
-            // Update local variables so download button works
             qFileUrl = tempEditFileId;
             qFileName = tempEditFileName;
             updateAttachmentButtonUI();
-
             Toast.makeText(getContext(), "Question Updated", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Update Failed", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -327,12 +331,9 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         }
     }
 
-    // --- EXISTING HELPER METHODS ---
-
     private void postAnswer() {
         String content = etAnswerContent.getText().toString().trim();
         String link = etSolutionLink.getText().toString().trim();
-
         if (TextUtils.isEmpty(content)) {
             etAnswerContent.setError("Content required");
             return;
@@ -341,15 +342,17 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         String uid = CurrentUser.getInstance().getUid();
         if (uid == null) return;
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-
+        DatabaseReference userRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
+        // 1. Try fetching from student_profiles first
         userRef.child("student_profiles").child(uid).child("username").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().getValue() != null) {
-                saveToFirebase(uid, task.getResult().getValue(String.class), content, link);
+                String name = task.getResult().getValue(String.class);
+                saveToFirebase(uid, name, content, link); // Pass real name
             } else {
-                userRef.child("tutor_profiles").child(uid).child("username").get().addOnCompleteListener(task2 -> {
-                    String name = "User";
-                    if (task2.isSuccessful() && task2.getResult().getValue() != null) name = task2.getResult().getValue(String.class);
+                // 2. If not a student, try tutor_profiles
+                userRef.child("tutor_profiles").child(uid).child("username").get().addOnCompleteListener(tutorTask -> {
+                    String name = (tutorTask.isSuccessful() && tutorTask.getResult().getValue() != null)
+                            ? tutorTask.getResult().getValue(String.class) : "A user";
                     saveToFirebase(uid, name, content, link);
                 });
             }
@@ -361,13 +364,42 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         Answer answer = new Answer(key, questionId, uid, username, content, link, System.currentTimeMillis(), tempAnswerFileId, tempAnswerFileName);
 
         answerRef.child(key).setValue(answer).addOnSuccessListener(unused -> {
-            etAnswerContent.setText("");
-            etSolutionLink.setText("");
+            // UI Cleanup
+            if (tvAnswerFileName != null) {
+                tvAnswerFileName.setVisibility(View.GONE);
+                tvAnswerFileName.setText("");
+            }
             tempAnswerFileId = null;
             tempAnswerFileName = null;
-            if(tvAnswerFileName != null) tvAnswerFileName.setText("");
+            etAnswerContent.setText("");
+            etSolutionLink.setText("");
+
+            // NOTIFICATION LOGIC
+            if (questionUserId != null && !questionUserId.equals(uid)) {
+                sendAnswerNotification(questionUserId, username, tvTitle.getText().toString());
+            }
             Toast.makeText(getContext(), "Solution Posted!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void sendAnswerNotification(String recipientId, String answererName, String questionTitle) {
+        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(recipientId);
+
+        // Snippet Logic: 20 chars
+        String snippet = (questionTitle != null && questionTitle.length() > 20)
+                ? questionTitle.substring(0, 20) + "..." : questionTitle;
+
+        String dynamicMessage = answererName + " answered your question: " + snippet;
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", "New Solution!");
+        data.put("message", dynamicMessage);
+        data.put("action_type", "OPEN_QUESTION");
+        data.put("sourceId", questionId);
+        data.put("timestamp", System.currentTimeMillis());
+        data.put("isRead", false);
+
+        ref.push().setValue(data);
     }
 
     private void loadAnswers() {
@@ -381,13 +413,8 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                     if (a != null) answerList.add(a);
                 }
                 adapter.notifyDataSetChanged();
-                if (answerList.isEmpty()) {
-                    tvNoAnswers.setVisibility(View.VISIBLE);
-                    rvAnswers.setVisibility(View.GONE); // Optional: Hide list if empty
-                } else {
-                    tvNoAnswers.setVisibility(View.GONE);
-                    rvAnswers.setVisibility(View.VISIBLE);
-                }
+                tvNoAnswers.setVisibility(answerList.isEmpty() ? View.VISIBLE : View.GONE);
+                rvAnswers.setVisibility(answerList.isEmpty() ? View.GONE : View.VISIBLE);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -395,13 +422,15 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
 
     private void loadAvatar(String uid, ImageView iv) {
         if(uid == null) return;
-        DatabaseReference db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
+        DatabaseReference db = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
         db.child("student_profiles").child(uid).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(@NonNull DataSnapshot s) { if(s.exists()) setDrawableAvatar(s.getValue(String.class), iv);
-            else db.child("tutor_profiles").child(uid).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot s) {
+                if(s.exists()) setDrawableAvatar(s.getValue(String.class), iv);
+                else db.child("tutor_profiles").child(uid).child("profileImageUrl").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override public void onDataChange(@NonNull DataSnapshot s2) { if(s2.exists()) setDrawableAvatar(s2.getValue(String.class), iv); }
                     @Override public void onCancelled(@NonNull DatabaseError e) {}
-                });}
+                });
+            }
             @Override public void onCancelled(@NonNull DatabaseError e) {}
         });
     }
@@ -409,8 +438,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     private void setDrawableAvatar(String name, ImageView iv) {
         if (name != null && isAdded()) {
             int resId = getResources().getIdentifier(name, "drawable", requireContext().getPackageName());
-            if (resId != 0) iv.setImageResource(resId);
-            else iv.setImageResource(R.drawable.ic_launcher_foreground);
+            iv.setImageResource(resId != 0 ? resId : R.drawable.ic_launcher_foreground);
         }
     }
 
@@ -423,18 +451,29 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     }
 
     private void deleteQuestion() {
-        if (questionId != null) {
-            questionRef.child(questionId).removeValue();
-            getParentFragmentManager().popBackStack();
-            Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-        }
+        if (questionId == null) return;
+
+        // Use a listener to confirm deletion was successful in Firebase
+        questionRef.child(questionId).removeValue().addOnSuccessListener(aVoid -> {
+            if (isAdded()) {
+                Toast.makeText(getContext(), "Question Deleted", Toast.LENGTH_SHORT).show();
+
+                // Go back to the forum list
+                if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                    getParentFragmentManager().popBackStack();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            if (isAdded()) {
+                Toast.makeText(getContext(), "Delete failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void downloadFile(String fileId) {
         String fullUrl = ENDPOINT + "/storage/buckets/" + BUCKET_ID + "/files/" + fileId + "/view?project=" + PROJECT_ID;
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl));
-            startActivity(intent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl)));
         } catch (Exception e) {
             Toast.makeText(getContext(), "Cannot open file", Toast.LENGTH_SHORT).show();
         }
@@ -442,48 +481,18 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
 
     private void toggleSolvedStatus() {
         if (questionId == null) return;
-
-        // Toggle local state
         isSolved = !isSolved;
-
-        // Update Firebase
-        questionRef.child(questionId).child("solved").setValue(isSolved)
-                .addOnSuccessListener(aVoid -> {
-                    updateSolvedUI(); // Update UI on success
-                    String msg = isSolved ? "Marked as Solved" : "Marked as Unsolved";
-                    Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // Revert on failure
-                    isSolved = !isSolved;
-                    updateSolvedUI();
-                    Toast.makeText(getContext(), "Failed to update status", Toast.LENGTH_SHORT).show();
-                });
+        questionRef.child(questionId).child("solved").setValue(isSolved).addOnSuccessListener(aVoid -> {
+            updateSolvedUI();
+            String msg = isSolved ? "Marked as Solved" : "Marked as Unsolved";
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void updateSolvedUI() {
         if (btnMarkSolved == null) return;
-
-        if (isSolved) {
-            // STATE: SOLVED
-            btnMarkSolved.setText("Mark as Unsolved");
-            btnMarkSolved.setIconResource(R.drawable.outline_check_circle_24); // Use your outline Icon
-            // Change color to Pastel Green (Success)
-            btnMarkSolved.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(
-                            getResources().getColor(R.color.pastelGreen, null)
-                    )
-            );
-        } else {
-            // STATE: UNSOLVED
-            btnMarkSolved.setText("Mark as Solved");
-            btnMarkSolved.setIconResource(R.drawable.baseline_check_circle_24); // Use your filled Icon
-            // Change color to Light Sky Blue (Actionable) or Grey
-            btnMarkSolved.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(
-                            getResources().getColor(R.color.lightSkyBlue, null)
-                    )
-            );
-        }
+        btnMarkSolved.setText(isSolved ? "Mark as Unsolved" : "Mark as Solved");
+        btnMarkSolved.setIconResource(isSolved ? R.drawable.outline_check_circle_24 : R.drawable.baseline_check_circle_24);
+        btnMarkSolved.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(isSolved ? R.color.pastelGreen : R.color.lightSkyBlue, null)));
     }
 }

@@ -114,6 +114,8 @@ public class StudentSearchTutorFragment extends Fragment {
                     TutorListing tutor = data.getValue(TutorListing.class);
                     if (tutor == null) continue;
 
+                    tutor.setKey(data.getKey());
+
                     int score = 0;
                     String tSubject = tutor.getSubject() != null ? tutor.getSubject().toLowerCase() : ""; // Use Getter
 
