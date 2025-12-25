@@ -235,12 +235,48 @@ public class QnaAnswerCommentFragment extends Fragment {
     private void postComment() {
         String content = etCommentInput.getText().toString().trim();
         if (TextUtils.isEmpty(content)) return;
+
         String uid = CurrentUser.getInstance().getUid();
+        if (uid == null) return;
 
         DatabaseReference db = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
-        db.child("student_profiles").child(uid).child("username").get().addOnCompleteListener(task -> {
-            String name = (task.isSuccessful() && task.getResult().getValue() != null) ? task.getResult().getValue(String.class) : "User";
-            saveComment(uid, name, content);
+
+        // 1. Try fetching from Student Profile
+        db.child("student_profiles").child(uid).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getValue() != null) {
+                    // It is a Student -> Post Comment with their name
+                    String name = snapshot.getValue(String.class);
+                    saveComment(uid, name, content);
+                } else {
+                    // 2. Not a Student? Check Tutor Profile
+                    db.child("tutor_profiles").child(uid).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot tutorSnap) {
+                            String name = "User"; // Fallback default
+                            if (tutorSnap.exists() && tutorSnap.getValue() != null) {
+                                // It is a Tutor -> Post Comment with their name
+                                name = tutorSnap.getValue(String.class);
+                            }
+                            // Save with whatever name we found
+                            saveComment(uid, name, content);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // On error, post as "User" so the app doesn't crash
+                            saveComment(uid, "User", content);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // On error, post as "User"
+                saveComment(uid, "User", content);
+            }
         });
     }
 
@@ -276,13 +312,23 @@ public class QnaAnswerCommentFragment extends Fragment {
     private void sendCommentNotification(String recipientId, String commenterName) {
         DatabaseReference notifRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(recipientId);
         String notifId = notifRef.push().getKey();
+
         HashMap<String, Object> notifData = new HashMap<>();
         notifData.put("title", "New Comment!");
+
+        // This message is now just a fallback/placeholder
         notifData.put("message", commenterName + " commented on your solution.");
+
         notifData.put("action_type", "OPEN_COMMENT");
         notifData.put("sourceId", answerId);
+
+        // --- NEW: SAVE THE SENDER ID ---
+        notifData.put("senderId", CurrentUser.getInstance().getUid());
+        // -------------------------------
+
         notifData.put("timestamp", System.currentTimeMillis());
         notifData.put("isRead", false);
-        notifRef.push().setValue(notifData);
+
+        notifRef.child(notifId).setValue(notifData);
     }
 }

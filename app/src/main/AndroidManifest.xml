@@ -29,6 +29,7 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateVisible" />
 
         <activity
@@ -43,6 +44,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:enabled="false"
             android:exported="false" />
 
         <service

@@ -150,13 +150,13 @@ public class FreeLessonDetailFragment extends Fragment {
 
         // 2. Process Arguments / Notifications
         if (getArguments() != null) {
-            // Check both keys to handle both normal navigation and notification clicks
             lessonId = getArguments().containsKey("sourceId") ?
                     getArguments().getString("sourceId") : getArguments().getString("lessonId");
 
             if (getArguments().containsKey("title") && !getArguments().containsKey("sourceId")) {
-                // Normal Navigation Path
+                // PATH A: Normal Navigation (Data already provided in Bundle)
                 tvTitle.setText(getArguments().getString("title"));
+                tvDesc.setText(getArguments().getString("description")); // Added description sync
                 videoUrl = getArguments().getString("videoUrl");
                 materialUrl = getArguments().getString("materialUrl");
                 materialName = getArguments().getString("materialName", "Download Material");
@@ -164,39 +164,36 @@ public class FreeLessonDetailFragment extends Fragment {
 
                 setupTimerData(getArguments().getLong("duration", 0));
 
-                loadLessonDetails();
+                // Load dynamic items only (Don't call loadLessonDetails here as it resets videoUrl)
                 checkPreviousParticipation();
                 loadKudosStatus();
                 loadComments();
                 countParticipation();
+
+                // Still need tutorId for ownership check
+                fetchTutorIdOnly();
             } else if (lessonId != null) {
-                // Notification/Deep Link Path: Fetch everything from Firebase
+                // PATH B: Notification/Deep Link (Fetch everything from Firebase)
                 fetchLessonDetailsFromFirebase(lessonId);
             }
         }
 
-        // 3. Listeners
+        // 3. Button Listeners
         btnWatchVideo.setOnClickListener(v -> openLink(videoUrl));
         btnDownloadMaterial.setOnClickListener(v -> openLink(materialUrl));
         btnMarkComplete.setOnClickListener(v -> saveParticipationToFirebase());
         btnGiveKudos.setOnClickListener(v -> toggleKudos());
+
         btnAttachFile.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             filePickerLauncher.launch(intent);
         });
+
         btnSendComment.setOnClickListener(v -> {
             if (selectedFileUri != null) uploadFileWithOkHttpAndPost();
             else prepareAndPostComment(null, null);
         });
-
-        // 4. Initial Load
-        if (lessonId != null) {
-            loadLessonDetails();
-            checkPreviousParticipation();
-            loadKudosStatus();
-            loadComments();
-        }
     }
 
     private void setupTimerData(long durationMins) {
@@ -216,26 +213,34 @@ public class FreeLessonDetailFragment extends Fragment {
     // SECTION 0: LOAD DETAILS & SYNC
     // =========================================================
 
+    private void fetchTutorIdOnly() {
+        if (lessonId == null) return;
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons")
+                .child(lessonId).child("tutorId").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        tutorId = snapshot.getValue(String.class);
+                        checkOwnerActions();
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
+    }
+
     private void fetchLessonDetailsFromFirebase(String id) {
-        this.lessonId = id; // Ensure global lessonId is set immediately
+        this.lessonId = id;
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons").child(id);
 
-        // Use ValueEventListener so the screen updates the moment you hit "Save" in the Edit Dialog
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded() || !snapshot.exists()) return;
 
-                // 1. Assign tutorId for ownership check
                 tutorId = snapshot.child("tutorId").getValue(String.class);
-
-                // 2. MAP TO MATCH YOUR EDIT DIALOG KEYS
                 tvTitle.setText(snapshot.child("title").getValue(String.class));
                 tvDesc.setText(snapshot.child("description").getValue(String.class));
 
-                // Changed from 'videoLink' to 'videoUrl' to match your Edit Dialog
+                // SYNC KEY: Ensure this matches EditLessonDialogFragment
                 videoUrl = snapshot.child("videoUrl").getValue(String.class);
-
                 materialUrl = snapshot.child("materialUrl").getValue(String.class);
                 materialName = snapshot.child("materialName").getValue(String.class);
 
@@ -243,10 +248,11 @@ public class FreeLessonDetailFragment extends Fragment {
                     btnDownloadMaterial.setText("Download: " + materialName);
                 }
 
-                // 3. Trigger loaders only after data is ready
-                checkOwnerActions(); // Makes Delete button appear
+                checkOwnerActions();
                 loadKudosStatus();
-                loadComments();      // Now has valid lessonId to find comments
+                loadComments();
+                checkPreviousParticipation();
+                countParticipation();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -257,7 +263,7 @@ public class FreeLessonDetailFragment extends Fragment {
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
                 .getReference("free_lessons").child(lessonId);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded() || !snapshot.exists()) return;
@@ -265,7 +271,6 @@ public class FreeLessonDetailFragment extends Fragment {
                 tvTitle.setText(snapshot.child("title").getValue(String.class));
                 tvDesc.setText(snapshot.child("description").getValue(String.class));
 
-                // SYNC KEYS: Match EditLessonDialogFragment
                 videoUrl = snapshot.child("videoUrl").getValue(String.class);
                 materialUrl = snapshot.child("materialUrl").getValue(String.class);
                 materialName = snapshot.child("materialName").getValue(String.class);
@@ -274,7 +279,7 @@ public class FreeLessonDetailFragment extends Fragment {
                 if (materialName != null && !materialName.isEmpty()) {
                     btnDownloadMaterial.setText("Download: " + materialName);
                 }
-                checkOwnerActions(); // Update buttons now that tutorId exists
+                checkOwnerActions();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -282,14 +287,11 @@ public class FreeLessonDetailFragment extends Fragment {
 
     private void checkOwnerActions() {
         String currentUid = CurrentUser.getInstance().getUid();
-        Log.d("DeleteDebug", "Checking owner. CurrentUID: " + currentUid + " | TutorID: " + tutorId);
-
         if (currentUid != null && currentUid.equals(tutorId)) {
             layoutParticipation.setVisibility(View.GONE);
             layoutOwnerActions.setVisibility(View.VISIBLE);
             layoutOwnerActions.removeAllViews();
 
-            // EDIT BUTTON
             MaterialButton btnEdit = new MaterialButton(getContext());
             btnEdit.setText("Edit Lesson");
             btnEdit.setBackgroundColor(getResources().getColor(R.color.pastelBlue));
@@ -300,22 +302,10 @@ public class FreeLessonDetailFragment extends Fragment {
                 dialog.show(getChildFragmentManager(), "EditLessonDialog");
             });
 
-            // DELETE BUTTON
             MaterialButton btnDelete = new MaterialButton(getContext());
             btnDelete.setText("Delete Lesson");
             btnDelete.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-
-            // CRITICAL FIX: Ensure the listener always uses the current lessonId
-            btnDelete.setOnClickListener(v -> {
-                Log.d("DeleteDebug", "Delete button clicked for ID: " + lessonId);
-                confirmDeleteLesson();
-            });
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-            LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(params);
-            deleteParams.setMarginStart(16);
-            btnEdit.setLayoutParams(params);
-            btnDelete.setLayoutParams(deleteParams);
+            btnDelete.setOnClickListener(v -> confirmDeleteLesson());
 
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
             layoutOwnerActions.addView(btnEdit, p);
@@ -332,15 +322,10 @@ public class FreeLessonDetailFragment extends Fragment {
     }
 
     private void confirmDeleteLesson() {
-        // If this is null, the button click will never reach Firebase
-        if (lessonId == null || lessonId.isEmpty()) {
-            Toast.makeText(getContext(), "Error: Lesson ID is missing. Try reloading.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        if (lessonId == null) return;
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Lesson")
-                .setMessage("Are you sure? All lesson data will be lost.")
+                .setMessage("Are you sure? This cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons").child(lessonId)
                             .removeValue().addOnSuccessListener(aVoid -> {
@@ -372,7 +357,7 @@ public class FreeLessonDetailFragment extends Fragment {
     }
 
     // =========================================================
-    // SECTION 1: KUDOS (DYNAMIC NAME FIX)
+    // SECTION 1: KUDOS
     // =========================================================
     private void loadKudosStatus() {
         if (lessonId == null) return;
@@ -410,11 +395,9 @@ public class FreeLessonDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    snapshot.getRef().removeValue(); // Unlike works fine here
+                    snapshot.getRef().removeValue();
                 } else {
-                    likesRef.child(uid).setValue(true).addOnSuccessListener(aVoid -> {
-                        fetchStudentNameAndNotify();
-                    });
+                    likesRef.child(uid).setValue(true).addOnSuccessListener(aVoid -> fetchStudentNameAndNotify());
                 }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -425,201 +408,106 @@ public class FreeLessonDetailFragment extends Fragment {
         String uid = CurrentUser.getInstance().getUid();
         if (uid == null || tutorId == null) return;
 
-        DatabaseReference profileRef = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("student_profiles").child(uid);
-
-        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Check for studentName in DB, but we will treat it as userName for the message
-                String name = "Someone";
-                if (snapshot.exists()) {
-                    if (snapshot.hasChild("username")) {
-                        name = snapshot.child("username").getValue(String.class);
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("student_profiles").child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String name = "Someone";
+                        if (snapshot.exists() && snapshot.hasChild("username")) {
+                            name = snapshot.child("username").getValue(String.class);
+                        }
+                        sendKudosNotification(name);
                     }
-                }
-                sendKudosNotification(name);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Fallback to generic name if DB fetch fails
-                sendKudosNotification("Someone");
-            }
-        });
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
-    private void sendKudosNotification(String nameToDisplay) {
+    private void sendKudosNotification(String name) {
         if (tutorId == null || CurrentUser.getInstance().getUid().equals(tutorId)) return;
-
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("notifications").child(tutorId);
-
-        // Snippet logic: Lesson Title
-        String lessonTitle = tvTitle.getText().toString();
-        String snippet = (lessonTitle.length() > 20) ? lessonTitle.substring(0, 20) + "..." : lessonTitle;
-
-        // Construct the message: "Name liked your lesson: Title..."
-        String dynamicMessage = nameToDisplay + " liked your lesson: " + snippet;
+        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(tutorId);
+        String title = tvTitle.getText().toString();
+        String snippet = (title.length() > 20) ? title.substring(0, 20) + "..." : title;
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", "New Kudos!");
-        data.put("message", dynamicMessage);
+        data.put("message", name + " liked your lesson: " + snippet);
         data.put("action_type", "OPEN_LESSON");
         data.put("sourceId", lessonId);
         data.put("timestamp", System.currentTimeMillis());
         data.put("isRead", false);
-
         ref.push().setValue(data);
     }
 
     // =========================================================
-    // SECTION 2: COMMENTS (DYNAMIC NAME FIX)
+    // SECTION 2: COMMENTS
     // =========================================================
     private void loadComments() {
         if (lessonId == null) return;
-
         if (commentList == null) {
             commentList = new ArrayList<>();
             commentAdapter = new LessonCommentAdapter(commentList, new LessonCommentAdapter.OnCommentActionListener() {
                 @Override public void onDeleteClick(String id) { deleteCommentFromFirebase(id); }
-                @Override public void onReplyClick(String name) {
-                    etCommentInput.setText("@" + name + " ");
-                    etCommentInput.requestFocus();
-                }
+                @Override public void onReplyClick(String name) { etCommentInput.setText("@" + name + " "); etCommentInput.requestFocus(); }
                 @Override public void onAttachmentClick(String url) { openLink(url); }
             });
             rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
             rvComments.setAdapter(commentAdapter);
         }
 
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments");
-        // This query MUST match the lessonId exactly as seen in image_fe4460.png
-        Query query = ref.orderByChild("lessonId").equalTo(lessonId);
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                commentList.clear();
-                Log.d("CommentsDebug", "Total comments found for this lesson: " + snapshot.getChildrenCount());
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    LessonComment comment = ds.getValue(LessonComment.class);
-                    if (comment != null) {
-                        comment.setCommentId(ds.getKey());
-                        commentList.add(comment);
-                    } else {
-                        Log.e("CommentsDebug", "Failed to map comment data at: " + ds.getKey());
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments")
+                .orderByChild("lessonId").equalTo(lessonId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        commentList.clear();
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            LessonComment c = ds.getValue(LessonComment.class);
+                            if (c != null) { c.setCommentId(ds.getKey()); commentList.add(c); }
+                        }
+                        if (isAdded()) {
+                            commentAdapter.notifyDataSetChanged();
+                            tvNoComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
+                            rvComments.setVisibility(commentList.isEmpty() ? View.GONE : View.VISIBLE);
+                        }
                     }
-                }
-
-                if (isAdded()) {
-                    commentAdapter.notifyDataSetChanged();
-
-                    // Toggle visibility
-                    if (commentList.isEmpty()) {
-                        tvNoComments.setVisibility(View.VISIBLE);
-                        rvComments.setVisibility(View.GONE);
-                    } else {
-                        tvNoComments.setVisibility(View.GONE);
-                        rvComments.setVisibility(View.VISIBLE);
-                        // Smooth scroll to the last comment
-                        rvComments.smoothScrollToPosition(commentList.size() - 1);
-                    }
-                }
-            }
-
-            @Override public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Comments", "Load failed: " + error.getMessage());
-            }
-        });
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void prepareAndPostComment(String attachmentName, String attachmentUrl) {
         String content = etCommentInput.getText().toString().trim();
         if (TextUtils.isEmpty(content) && attachmentUrl == null) return;
-
         String uid = CurrentUser.getInstance().getUid();
 
-        // Changing the path to fetch the profile name
-        DatabaseReference userRef = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("student_profiles").child(uid);
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String retrievedName = "Anonymous";
-                if (snapshot.exists() && snapshot.hasChild("username")) {
-                    retrievedName = snapshot.child("username").getValue(String.class);
-                }
-
-                // Post using the name we found
-                postCommentToFirebase(uid, retrievedName, content, attachmentName, attachmentUrl);
-            }
-            @Override public void onCancelled(@NonNull DatabaseError error) {
-                postCommentToFirebase(uid, "Anonymous", content, attachmentName, attachmentUrl);
-            }
-        });
-    }
-    private void sendCommentNotification(String name) {
-        if (tutorId == null || CurrentUser.getInstance().getUid().equals(tutorId)) return;
-
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(tutorId);
-        String lessonTitle = tvTitle.getText().toString();
-        String snippet = (lessonTitle.length() > 20) ? lessonTitle.substring(0, 20) + "..." : lessonTitle;
-
-        String dynamicMessage = name + " commented on: " + snippet;
-
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("title", "New Comment!");
-        data.put("message", dynamicMessage); // Updated with name
-        data.put("action_type", "OPEN_LESSON");
-        data.put("sourceId", lessonId);
-        data.put("timestamp", System.currentTimeMillis());
-        data.put("isRead", false);
-        ref.push().setValue(data);
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("student_profiles").child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String name = (snapshot.exists() && snapshot.hasChild("username")) ?
+                                snapshot.child("username").getValue(String.class) : "Anonymous";
+                        postCommentToFirebase(uid, name, content, attachmentName, attachmentUrl);
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void postCommentToFirebase(String uid, String realName, String content, String attName, String attUrl) {
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments");
         String commentId = ref.push().getKey();
-
-        LessonComment newComment = new LessonComment(
-                commentId, lessonId, uid, realName, content, System.currentTimeMillis(), attName, attUrl);
-
+        LessonComment newComment = new LessonComment(commentId, lessonId, uid, realName, content, System.currentTimeMillis(), attName, attUrl);
         if (commentId != null) {
             ref.child(commentId).setValue(newComment).addOnSuccessListener(unused -> {
                 etCommentInput.setText("");
                 selectedFileUri = null;
                 tvAttachmentPreview.setVisibility(View.GONE);
-
-                // Refresh the list so the student sees their name immediately
-                loadComments();
-
                 Toast.makeText(getContext(), "Comment Posted!", Toast.LENGTH_SHORT).show();
             });
         }
     }
 
-    private void deleteCommentFromFirebase(String commentId) {
-        if (commentId == null) return;
-
-        // Direct reference to the specific comment ID under the comments node
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("free_lesson_comments").child(commentId);
-
-        ref.removeValue().addOnSuccessListener(aVoid -> {
-            if (isAdded()) {
-                Toast.makeText(getContext(), "Comment deleted", Toast.LENGTH_SHORT).show();
-                // Note: The ValueEventListener in loadComments() will automatically
-                // refresh the UI and remove the item from the list
-            }
-        }).addOnFailureListener(e -> {
-            if (isAdded()) {
-                Toast.makeText(getContext(), "Failed to delete: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void deleteCommentFromFirebase(String id) {
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments").child(id).removeValue();
     }
+
     // =========================================================
     // SECTION 3: UTILS & UPLOAD
     // =========================================================
@@ -628,11 +516,13 @@ public class FreeLessonDetailFragment extends Fragment {
         btnSendComment.setEnabled(false);
         File file = getFileFromUri(selectedFileUri);
         if (file == null) { btnSendComment.setEnabled(true); return; }
+
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("fileId", "unique()")
                 .addFormDataPart("file", file.getName(), RequestBody.create(file, MediaType.parse("application/octet-stream")))
                 .build();
+
         Request request = new Request.Builder().url(APPWRITE_ENDPOINT_FILE).addHeader("X-Appwrite-Project", PROJECT_ID).post(requestBody).build();
         client.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(@NonNull Call call, @NonNull IOException e) { new Handler(Looper.getMainLooper()).post(() -> btnSendComment.setEnabled(true)); }
@@ -671,7 +561,14 @@ public class FreeLessonDetailFragment extends Fragment {
         return res != null ? res : uri.getLastPathSegment();
     }
 
-    @Override public void onResume() { super.onResume(); if (requiredDurationMs > 0 && !isCompleted && !(tutorId != null && CurrentUser.getInstance().getUid().equals(tutorId))) { if (sessionStartTime == 0) sessionStartTime = System.currentTimeMillis(); timerHandler.post(timerRunnable); } }
+    @Override public void onResume() {
+        super.onResume();
+        if (requiredDurationMs > 0 && !isCompleted && !(tutorId != null && CurrentUser.getInstance().getUid().equals(tutorId))) {
+            if (sessionStartTime == 0) sessionStartTime = System.currentTimeMillis();
+            timerHandler.post(timerRunnable);
+        }
+    }
+
     @Override public void onPause() { super.onPause(); timerHandler.removeCallbacks(timerRunnable); }
 
     private void updateTimerUI(long elapsed) {
@@ -708,39 +605,33 @@ public class FreeLessonDetailFragment extends Fragment {
     private void saveParticipationToFirebase() {
         String uid = CurrentUser.getInstance().getUid();
         if (uid == null) return;
-
-        // Fetch the name from the profile first
-        DatabaseReference profileRef = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("student_profiles").child(uid);
-
-        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Try 'studentName' since that's what your DB image showed, but save it as 'userName'
-                String name = snapshot.child("studentName").exists() ?
-                        snapshot.child("studentName").getValue(String.class) : "A Student";
-
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("studentId", uid);
-                map.put("userName", name); // Now using userName
-                map.put("completedAt", System.currentTimeMillis());
-                map.put("isCompleted", true);
-
-                FirebaseDatabase.getInstance(FIREBASE_URL).getReference("lesson_participation")
-                        .child(lessonId).child(uid)
-                        .setValue(map).addOnSuccessListener(aVoid -> {
-                            isCompleted = true;
-                            btnMarkComplete.setText("Completed ✅");
-                            btnMarkComplete.setEnabled(false);
-                            Toast.makeText(getContext(), "Progress Saved!", Toast.LENGTH_SHORT).show();
-                        });
-            }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
-        });
+        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("student_profiles").child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String name = snapshot.child("username").exists() ? snapshot.child("username").getValue(String.class) : "A Student";
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("studentId", uid);
+                        map.put("userName", name);
+                        map.put("completedAt", System.currentTimeMillis());
+                        map.put("isCompleted", true);
+                        FirebaseDatabase.getInstance(FIREBASE_URL).getReference("lesson_participation").child(lessonId).child(uid)
+                                .setValue(map).addOnSuccessListener(aVoid -> {
+                                    isCompleted = true;
+                                    btnMarkComplete.setText("Completed ✅");
+                                    btnMarkComplete.setEnabled(false);
+                                    Toast.makeText(getContext(), "Progress Saved!", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
     private void openLink(String url) {
-        if (url == null || url.isEmpty()) return;
+        if (url == null || url.isEmpty()) {
+            Toast.makeText(getContext(), "Error: Link is not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String fUrl = url.startsWith("http") ? url : String.format(APPWRITE_VIEW_ENDPOINT, url);
         try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fUrl))); }
         catch (Exception e) { Toast.makeText(getContext(), "Link failed", Toast.LENGTH_SHORT).show(); }
