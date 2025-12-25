@@ -51,6 +51,7 @@
         <activity
             android:name="com.example.mad_edumatch.HomeActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
             android:name="com.example.mad_edumatch.authentication.LoginActivity"
@@ -62,6 +63,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.example.mad_edumatch.MainActivity"
+            android:enabled="false"
             android:exported="false" />
 
         <service
