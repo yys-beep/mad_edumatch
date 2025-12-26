@@ -21,6 +21,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:background="#DCF8C6"
+<<<<<<< HEAD
+=======
+        android:padding="12dp"
+        android:text="@string/hi_there"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:maxWidth="240dp"
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
         android:elevation="1dp"
         android:maxWidth="240dp"
         android:padding="12dp"

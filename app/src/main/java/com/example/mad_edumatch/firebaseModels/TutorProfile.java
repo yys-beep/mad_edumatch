@@ -1,6 +1,8 @@
 package com.example.mad_edumatch.firebaseModels;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TutorProfile {
     private String userId;
@@ -18,8 +20,25 @@ public class TutorProfile {
     private String profileImageUrl; // Still stored here
     private boolean isVerified;
 
+    private int contributionScore;
+    private int totalViews;
+    private int studentsHelped;
+    private Map<String, Boolean> badges = new HashMap<>();
+
     // Default constructor required for Firebase
     public TutorProfile() {}
+
+    public int getContributionScore() { return contributionScore; }
+    public void setContributionScore(int contributionScore) { this.contributionScore = contributionScore; }
+
+    public int getTotalViews() { return totalViews; }
+    public void setTotalViews(int totalViews) { this.totalViews = totalViews; }
+
+    public int getStudentsHelped() { return studentsHelped; }
+    public void setStudentsHelped(int studentsHelped) { this.studentsHelped = studentsHelped; }
+
+    public Map<String, Boolean> getBadges() { return badges; }
+    public void setBadges(Map<String, Boolean> badges) { this.badges = badges; }
 
     public TutorProfile(String userId, String username, String email, String contact,
                         ArrayList<String> subjects, String fee, String area, String qualification,
@@ -80,4 +99,7 @@ public class TutorProfile {
 
     public boolean isVerified() { return isVerified; }
     public long getRegisterTime() { return registerTime; }
+
+
+
 }

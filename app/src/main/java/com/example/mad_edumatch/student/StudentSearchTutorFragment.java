@@ -154,7 +154,14 @@ public class StudentSearchTutorFragment extends Fragment {
                     }
                 }
 
-                Collections.sort(scoredList, (o1, o2) -> Integer.compare(o2.score, o1.score));
+                Collections.sort(scoredList, (o1, o2) -> {
+                    // 1. First priority: Filter Score (Subject Match)
+                    int filterComparison = Integer.compare(o2.score, o1.score);
+                    if (filterComparison != 0) return filterComparison;
+
+                    // 2. Second priority: Contribution Score (Reputation)
+                    return Integer.compare(o2.tutor.contributionScore, o1.tutor.contributionScore);
+                });
 
                 for (ScoredTutor st : scoredList) {
                     tutorList.add(st.tutor);

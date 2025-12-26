@@ -1,5 +1,7 @@
 package com.example.mad_edumatch.firebaseModels;
 
+import java.util.HashMap;
+import java.util.Map;
 public class Answer {
     private String answerId;
     private String questionId;
@@ -10,8 +12,12 @@ public class Answer {
     private long timestamp;
     private String attachmentUrl;
     private String attachmentName;
+    private Map<String, Boolean> likes = new HashMap<>();
 
     public Answer() { } // Empty constructor for Firebase
+
+    public Map<String, Boolean> getLikes() { return likes; }
+    public void setLikes(Map<String, Boolean> likes) { this.likes = likes; }
 
     public Answer(String answerId, String questionId, String userId, String userName, String content, String solutionLink, long timestamp, String attachmentUrl, String attachmentName) {
         this.answerId = answerId;
