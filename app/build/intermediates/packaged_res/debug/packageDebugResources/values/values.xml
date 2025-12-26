@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="ic_launcher_background">#B9EBFA</color>
     <color name="lightApricot">#FAEFC3</color>
     <color name="lightSkyBlue">#B9EBFA</color>
     <color name="pastelBlue">#ADD3FA</color>
@@ -261,7 +262,11 @@
     <string name="welcome_back_nstudent">Welcome back,\nStudent</string>
     <string name="welcome_back_ntutor">Welcome back,\nTutor</string>
     <string name="you_can_complete_your_tutor_profile_details_after_registration">* You can complete your tutor profile details after registration.</string>
+<<<<<<< HEAD
     <string name="your_free_lessons">Your Free Lessons</string>
+=======
+    <string name="your_free_lessons">New Free Lessons</string>
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
     <style name="Base.Theme.Mad_eduMatch" parent="Theme.Material3.DayNight.NoActionBar">
         
         

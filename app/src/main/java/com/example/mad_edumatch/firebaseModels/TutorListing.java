@@ -7,7 +7,12 @@ import java.util.ArrayList;
 
 public class TutorListing {
 
+<<<<<<< HEAD
     public String key;
+=======
+    public int contributionScore;
+
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
     public String tutorId;
     public String name;
     public String subject;
@@ -27,9 +32,12 @@ public class TutorListing {
         // Default constructor required for Firebase
     }
 
+
+
     public TutorListing(String tutorId, String name, String subject, String area, String contact,
                         double fee, String learningMode, String deliveryMode,
-                        String qualification, String achievement, long timestamp, List<String> academicLevels) {
+                        String qualification, String achievement, long timestamp, List<String> academicLevels, int contributionScore) {
+
         this.tutorId = tutorId;
         this.name = name;
         this.subject = subject;
@@ -42,6 +50,7 @@ public class TutorListing {
         this.achievement = achievement;
         this.timestamp = timestamp;
         this.academicLevels = academicLevels;
+        this.contributionScore = contributionScore;
     }
 
     // --- Getters ---

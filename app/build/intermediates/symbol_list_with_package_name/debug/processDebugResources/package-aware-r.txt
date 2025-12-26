@@ -1601,6 +1601,7 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
+color ic_launcher_background
 color lightApricot
 color lightSkyBlue
 color m3_appbar_overlay_color
@@ -3590,6 +3591,8 @@ drawable baseline_email_24
 drawable baseline_home_24
 drawable baseline_location_on_24
 drawable baseline_logout_24
+drawable baseline_menu_book_24
+drawable baseline_monetization_on_24
 drawable baseline_perm_contact_calendar_24
 drawable baseline_send_24
 drawable baseline_smart_display_24
@@ -3604,7 +3607,9 @@ drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
 drawable card_background
+drawable chat_bg
 drawable circle_background_white
+drawable circle_bg_light
 drawable circular_bg
 drawable common_full_open_on_phone
 drawable common_google_signin_btn_icon_dark
@@ -3625,6 +3630,7 @@ drawable common_google_signin_btn_text_light
 drawable common_google_signin_btn_text_light_focused
 drawable common_google_signin_btn_text_light_normal
 drawable common_google_signin_btn_text_light_normal_background
+drawable custom_progress
 drawable default_avatar
 drawable design_fab_background
 drawable design_ic_visibility
@@ -3664,6 +3670,7 @@ drawable ic_other_sign_in
 drawable ic_passkey
 drawable ic_password
 drawable ic_search_black_24
+drawable login_background
 drawable m3_avd_hide_password
 drawable m3_avd_show_password
 drawable m3_bottom_sheet_drag_handle
@@ -3760,12 +3767,15 @@ drawable outline_thumb_up_24
 drawable outline_timer_24
 drawable outline_video_camera_back_24
 drawable outline_video_library_24
+drawable qna_bg
 drawable rounded_card_light
 drawable rounded_dialog_bg
 drawable shadow_gradient_top
+drawable student_bg
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
+drawable tutor_bg
 id ALT
 id BOTTOM_END
 id BOTTOM_START
@@ -4153,11 +4163,14 @@ id ivDetailAvatar
 id ivLogo
 id ivNotificationIcon
 id ivQuestionAvatar
+id ivTutorAvatar
 id jumpToEnd
 id jumpToStart
 id labeled
 id layout
 id layoutAchievementsContainer
+id layoutBadgeContainer
+id layoutDashboard
 id layoutOwnerActions
 id layoutParticipation
 id layoutStudentFields
@@ -4291,6 +4304,7 @@ id parent_matrix
 id password_toggle
 id path
 id pathRelative
+id pbContribution
 id peekHeight
 id percent
 id pin
@@ -4348,6 +4362,7 @@ id rvStudentFreeLessons
 id rvStudentRequests
 id rvTutorAchievements
 id rvTutorExperience
+id rvTutorFreeLessons
 id rvTutorHostedLessons
 id rvTutorListings
 id rvTutorResults
@@ -4492,6 +4507,9 @@ id tvCommentAuthor
 id tvCommentContent
 id tvCommentDate
 id tvContact
+id tvDashHelped
+id tvDashScore
+id tvDashViews
 id tvDescription
 id tvDetailContent
 id tvDetailDesc
@@ -4504,6 +4522,7 @@ id tvEditMaterialStatus
 id tvEmptyState
 id tvExperienceCollapseToggle
 id tvFee
+id tvFreeLessonsTitle
 id tvHeader
 id tvHeaderAchievements
 id tvHeaderExperience
@@ -4560,16 +4579,21 @@ id tvTime
 id tvTimerStatus
 id tvTimestamp
 id tvTitle
+id tvTutorAchievements
 id tvTutorArea
 id tvTutorContact
+id tvTutorDesc
 id tvTutorDescription
 id tvTutorEditTitle
 id tvTutorEmail
+id tvTutorExperience
 id tvTutorFee
 id tvTutorListingTitle
 id tvTutorName
 id tvTutorPostTitle
 id tvTutorQualification
+id tvTutorSubHeader
+id tvTutorSubject
 id tvTutorSubjects
 id tvTutorWelcome
 id tvUploadStatus
@@ -4751,10 +4775,12 @@ layout dialog_edit_student_request
 layout dialog_edit_tutor_listing
 layout dialog_post_question
 layout dialog_upload_material
+layout fragment_student_view_tutor
 layout free_lesson_fragment_detail
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout item_avatar
+layout item_badge
 layout item_card_achievement
 layout item_card_free_lesson
 layout item_card_notification
@@ -4767,6 +4793,7 @@ layout item_chat_right
 layout item_edit_dynamic_row
 layout item_lesson_comment
 layout item_student_view_tutor_listing
+layout item_tutor_dashboard
 layout item_tutor_view_listing
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
@@ -4856,6 +4883,7 @@ layout tutor_fragment_upload_free_lesson
 layout tutor_listing_fragment
 menu bottom_nav_menu
 mipmap ic_launcher
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 raw firebase_common_keep
@@ -5009,7 +5037,10 @@ string fab_transformation_sheet_behavior
 string fallback_menu_item_copy_link
 string fallback_menu_item_open_in_browser
 string fallback_menu_item_share_link
+<<<<<<< HEAD
 string fcm_fallback_notification_channel_label
+=======
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 string fee_icon
 string fee_rm_hr
 string file_selected

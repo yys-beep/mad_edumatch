@@ -2,6 +2,7 @@ R_DEF: Internal format may change without notice
 local
 color black
 color bottom_nav_colors
+color ic_launcher_background
 color lightApricot
 color lightSkyBlue
 color pastelBlue
@@ -28,22 +29,31 @@ drawable baseline_email_24
 drawable baseline_home_24
 drawable baseline_location_on_24
 drawable baseline_logout_24
+drawable baseline_menu_book_24
+drawable baseline_monetization_on_24
 drawable baseline_perm_contact_calendar_24
 drawable baseline_send_24
 drawable baseline_smart_display_24
 drawable baseline_subject_24
 drawable baseline_thumb_up_24
 drawable card_background
+drawable chat_bg
 drawable circle_background_white
+drawable circle_bg_light
 drawable circular_bg
+drawable custom_progress
 drawable default_avatar
 drawable edittext_background
 drawable ic_chat_message
 drawable ic_comment_icon
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+<<<<<<< HEAD
 drawable ic_like_heart
 drawable ic_notification
+=======
+drawable login_background
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 drawable outline_attach_file_24
 drawable outline_attach_money_24
 drawable outline_background_replace_24
@@ -67,9 +77,12 @@ drawable outline_thumb_up_24
 drawable outline_timer_24
 drawable outline_video_camera_back_24
 drawable outline_video_library_24
+drawable qna_bg
 drawable rounded_card_light
 drawable rounded_dialog_bg
 drawable shadow_gradient_top
+drawable student_bg
+drawable tutor_bg
 id bottomNavigationView
 id bottom_navigation
 id btnAddAchievement
@@ -207,7 +220,10 @@ id ivDetailAvatar
 id ivLogo
 id ivNotificationIcon
 id ivQuestionAvatar
+id ivTutorAvatar
 id layoutAchievementsContainer
+id layoutBadgeContainer
+id layoutDashboard
 id layoutOwnerActions
 id layoutParticipation
 id layoutStudentFields
@@ -220,6 +236,7 @@ id nav_home
 id nav_notifications
 id nav_qna
 id nav_settings
+id pbContribution
 id progressBar
 id progressBarEditUpload
 id progressBarTimer
@@ -256,6 +273,7 @@ id rvStudentFreeLessons
 id rvStudentRequests
 id rvTutorAchievements
 id rvTutorExperience
+id rvTutorFreeLessons
 id rvTutorHostedLessons
 id rvTutorListings
 id rvTutorResults
@@ -286,6 +304,9 @@ id tvCommentAuthor
 id tvCommentContent
 id tvCommentDate
 id tvContact
+id tvDashHelped
+id tvDashScore
+id tvDashViews
 id tvDescription
 id tvDetailContent
 id tvDetailDesc
@@ -298,6 +319,7 @@ id tvEditMaterialStatus
 id tvEmptyState
 id tvExperienceCollapseToggle
 id tvFee
+id tvFreeLessonsTitle
 id tvHeader
 id tvHeaderAchievements
 id tvHeaderExperience
@@ -354,16 +376,21 @@ id tvTime
 id tvTimerStatus
 id tvTimestamp
 id tvTitle
+id tvTutorAchievements
 id tvTutorArea
 id tvTutorContact
+id tvTutorDesc
 id tvTutorDescription
 id tvTutorEditTitle
 id tvTutorEmail
+id tvTutorExperience
 id tvTutorFee
 id tvTutorListingTitle
 id tvTutorName
 id tvTutorPostTitle
 id tvTutorQualification
+id tvTutorSubHeader
+id tvTutorSubject
 id tvTutorSubjects
 id tvTutorWelcome
 id tvUploadStatus
@@ -382,8 +409,10 @@ layout dialog_edit_student_request
 layout dialog_edit_tutor_listing
 layout dialog_post_question
 layout dialog_upload_material
+layout fragment_student_view_tutor
 layout free_lesson_fragment_detail
 layout item_avatar
+layout item_badge
 layout item_card_achievement
 layout item_card_free_lesson
 layout item_card_notification
@@ -396,6 +425,7 @@ layout item_chat_right
 layout item_edit_dynamic_row
 layout item_lesson_comment
 layout item_student_view_tutor_listing
+layout item_tutor_dashboard
 layout item_tutor_view_listing
 layout qna_forum_fragment_main
 layout qna_fragment_comment_detail
@@ -422,6 +452,7 @@ layout tutor_fragment_upload_free_lesson
 layout tutor_listing_fragment
 menu bottom_nav_menu
 mipmap ic_launcher
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 string _012_3456789
 string _0_kudos
