@@ -10,7 +10,7 @@
         android:id="@+id/tvHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Posted Requests"
+        android:text="@string/my_posted_requests"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"

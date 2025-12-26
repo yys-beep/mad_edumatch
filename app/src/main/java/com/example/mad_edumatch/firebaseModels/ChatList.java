@@ -16,6 +16,7 @@ public class ChatList {
     }
 
     public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public String getLastMessage() { return lastMessage; }
     public long getTimestamp() { return timestamp; }
     public boolean isSeen() { return isSeen; } // Getter

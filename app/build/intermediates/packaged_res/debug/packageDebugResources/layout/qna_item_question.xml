@@ -34,7 +34,7 @@
                 android:id="@+id/tvQuestionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Question Title"
+                android:text="@string/question_title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -42,24 +42,27 @@
                 android:ellipsize="end"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="2dp">
 
                 <TextView
                     android:id="@+id/tvAuthorDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="User • 2 mins ago"
+                    android:layout_weight="1"
+                    android:text="@string/user_2_mins_ago"
                     android:textSize="12sp"
-                    android:textColor="#666666"/>
+                    android:textColor="#666666"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
 
                 <TextView
                     android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UNSOLVED"
+                    android:text="@string/unsolved"
                     android:textSize="10sp"
                     android:textStyle="bold"
                     android:textColor="#FF6B6B"
@@ -72,7 +75,7 @@
         android:id="@+id/tvQuestionPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question preview..."
+        android:text="@string/question_preview"
         android:maxLines="3"
         android:ellipsize="end"
         android:textColor="#444444"
@@ -82,7 +85,7 @@
         android:id="@+id/btnViewQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Details"
+        android:text="@string/view_details"
         android:backgroundTint="@color/pastelBlue"
         android:textColor="@color/black"/>
 

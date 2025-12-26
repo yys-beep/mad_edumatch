@@ -71,6 +71,19 @@ public class ChatDetailFragment extends Fragment {
             targetUserId = getArguments().getString("targetUserId");
             targetUserName = getArguments().getString("targetUserName");
         }
+
+        if (targetUserId == null) {
+            // If we are coming from Bottom Nav, there is no "target".
+            // We should show a "Select a chat" message or go back to the Chat List.
+            Toast.makeText(getContext(), "Please select a conversation from the list.", Toast.LENGTH_SHORT).show();
+
+            // Safety check to ensure we don't crash the activity
+            if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                getParentFragmentManager().popBackStack();
+            }
+            return;
+        }
+
         currentUserId = CurrentUser.getInstance().getUid();
         rootRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
@@ -92,7 +105,7 @@ public class ChatDetailFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         messageList = new ArrayList<>();
-        chatAdapter = new ChatAdapter(getContext(), messageList, myProfileImageName, targetProfileImageName);
+        chatAdapter = new ChatAdapter(getContext(), messageList, "", "");
         recyclerView.setAdapter(chatAdapter);
 
         // Fetch Data
@@ -133,6 +146,8 @@ public class ChatDetailFragment extends Fragment {
         rootRef.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded() || getContext() == null) return;
+
                 if (!snapshot.exists()) return;
 
                 String name = snapshot.child("name").getValue(String.class);
@@ -141,8 +156,8 @@ public class ChatDetailFragment extends Fragment {
                 // --- CAPTURE ROLE ---
                 if (snapshot.hasChild("role")) {
                     targetUserRoleStr = snapshot.child("role").getValue(String.class);
+                    tvUserRole.setText(targetUserRoleStr);
                 }
-                tvUserRole.setText(targetUserRoleStr);
 
                 // --- IMAGE ---
                 if (snapshot.hasChild("profileImageUrl")) {
@@ -173,10 +188,24 @@ public class ChatDetailFragment extends Fragment {
         });
     }
 
-    // ... (sendMessage, loadMessages, seenMessage same as before) ...
     private void sendMessage() {
         String msg = etMessage.getText().toString().trim();
         if (TextUtils.isEmpty(msg)) return;
+
+        // --- ADDED: ID Safety check to prevent crashes ---
+        if (currentUserId == null || targetUserId == null) return;
+
+        // --- ADDED: Fetch listing details from arguments with fallbacks ---
+        String tempListingId = "general";
+        String tempListingTitle = "Chat";
+
+        if (getArguments() != null) {
+            tempListingId = getArguments().getString("listingId", "general");
+            tempListingTitle = getArguments().getString("listingTitle", "Chat");
+        }
+
+        final String finalListingId = tempListingId;
+        final String finalListingTitle = tempListingTitle;
 
         String messagePushId = rootRef.child("chats").child(currentUserId).child(targetUserId).push().getKey();
         if (messagePushId == null) return;
@@ -189,6 +218,8 @@ public class ChatDetailFragment extends Fragment {
         messageMap.put("receiverId", targetUserId);
         messageMap.put("message", msg);
         messageMap.put("timestamp", timestamp);
+        // --- ADDED: Store listingId in the message for tracking ---
+        messageMap.put("listingId", finalListingId);
 
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("chats/" + currentUserId + "/" + targetUserId + "/" + messagePushId, messageMap);
@@ -210,7 +241,30 @@ public class ChatDetailFragment extends Fragment {
         updateMap.put("chatlist/" + targetUserId + "/" + currentUserId, receiverListMap);
 
         rootRef.updateChildren(updateMap).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) etMessage.setText("");
+            if (task.isSuccessful()) {
+                etMessage.setText("");
+
+                // --- ADDED: SMART NOTIFICATION LOGIC ---
+                // Triggers for every different subject listing inquired about
+                if (!"general".equals(finalListingId) && messageList != null) {
+                    boolean alreadyNotifiedForThisListing = false;
+
+                    for (ChatMessage m : messageList) {
+                        if (m != null && m.getMessage() != null && m.getMessage().contains(finalListingTitle)) {
+                            alreadyNotifiedForThisListing = true;
+                            break;
+                        }
+                    }
+
+                    if (!alreadyNotifiedForThisListing) {
+                        // Safe name check to avoid Firebase null value crash
+                        String safeSenderName = CurrentUser.getInstance().getName();
+                        if (safeSenderName == null) safeSenderName = "User";
+
+                        sendChatNotification(targetUserId, safeSenderName, finalListingTitle, finalListingId);
+                    }
+                }
+            }
         });
     }
 
@@ -236,5 +290,20 @@ public class ChatDetailFragment extends Fragment {
         hashMap.put("isSeen", true);
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("chatlist").child(currentUserId).child(targetUserId).updateChildren(hashMap);
+    }
+
+    private void sendChatNotification(String recipientId, String senderName, String listingTitle, String listingId) {
+        DatabaseReference notifRef = rootRef.child("notifications").child(recipientId);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", "Listing Inquiry");
+        data.put("message", senderName + " inquired about " + listingTitle);
+        data.put("action_type", "OPEN_CHAT");
+        data.put("sourceId", listingId); // This is the listing ID
+        data.put("senderId", currentUserId); // Your ID so they can reply
+        data.put("timestamp", System.currentTimeMillis());
+        data.put("isRead", false);
+
+        notifRef.push().setValue(data);
     }
 }

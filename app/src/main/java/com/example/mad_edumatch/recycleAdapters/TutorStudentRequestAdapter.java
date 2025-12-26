@@ -69,36 +69,34 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
             }
 
             // Fetch Student Name before opening chat
-            fetchStudentNameAndOpenChat(request.getStudentId());
-        });
+            fetchStudentNameAndOpenChat(request.getStudentId(), request.getSubject(), request.getRequestId());        });
     }
 
-    private void fetchStudentNameAndOpenChat(String studentId) {
+    private void fetchStudentNameAndOpenChat(String studentId, String listingTitle, String listingId) {
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("users").child(studentId).child("name")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String studentName = "Student";
-                        if (snapshot.exists()) {
-                            studentName = snapshot.getValue(String.class);
-                        }
-                        openChatFragment(studentId, studentName);
+                        String studentName = snapshot.exists() ? snapshot.getValue(String.class) : "Student";
+                        // Pass listing info to the next step
+                        openChatFragment(studentId, studentName, listingTitle, listingId);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        openChatFragment(studentId, "Student");
+                        openChatFragment(studentId, "Student", listingTitle, listingId);
                     }
                 });
     }
 
-    private void openChatFragment(String targetUserId, String targetUserName) {
-        // Create Fragment
+    private void openChatFragment(String targetUserId, String targetUserName, String listingTitle, String listingId) {
         ChatDetailFragment chatFragment = new ChatDetailFragment();
         Bundle args = new Bundle();
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
+        args.putString("listingId", listingId);
+        args.putString("listingTitle", "Student Request: " + listingTitle);
         chatFragment.setArguments(args);
 
         // Perform Transaction (Ensure context is an Activity)

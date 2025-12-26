@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-57:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\8.13\\transforms\\fce5fb0cd8abddf6b487be94a0922114\\transformed\\appcompat-1.7.1\\res\\values-watch-v20\\values-watch-v20.xml",
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\7a53c00295c495e02d9c746efc07c41f\\transformed\\appcompat-1.7.1\\res\\values-watch-v20\\values-watch-v20.xml",
                     "from": {
                         "startLines": "2,5,8",
                         "startColumns": "4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\8.13\\transforms\\b41a03015be0dc69afc67170c14edc4d\\transformed\\play-services-auth-20.7.0\\res\\values-watch-v20\\values.xml",
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\11ee86cda4c4ff4dbcf050ec12841b0b\\transformed\\play-services-auth-20.7.0\\res\\values-watch-v20\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11",
                         "startColumns": "0,0,0,0,0,0,0,0",

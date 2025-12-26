@@ -20,7 +20,7 @@
             android:id="@+id/tvSubject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mathematics"
+            android:text="@string/mathematics"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -33,7 +33,7 @@
             android:layout_marginBottom="12dp"/>
 
         <TextView
-            android:text="Level:"
+            android:text="@string/profile_level"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             android:id="@+id/tvLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SPM"
+            android:text="@string/spm"
             android:textColor="#444"
             android:layout_marginBottom="8dp"/>
 
@@ -59,14 +59,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Budget:"
+                    android:text="@string/profile_budget"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/tvBudget"
-                    android:text="RM 50/hr"
+                    android:text="@string/rm_50_hr"
                     android:textColor="#444"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:text="Area:"
+                    android:text="@string/profile_area"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
         </LinearLayout>
 
         <TextView
-            android:text="Preferred Mode:"
+            android:text="@string/preferred_mode"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
             android:layout_marginBottom="8dp"/>
 
         <TextView
-            android:text="Description:"
+            android:text="@string/profile_description"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
@@ -117,14 +117,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#444"
-            android:text="Looking for a tutor on weekends."
+            android:text="@string/looking_for_a_tutor_on_weekends"
             android:layout_marginBottom="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContactStudent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact Student"
+            android:text="@string/contact_student"
             android:textSize="16sp"
             android:textStyle="bold"
             app:icon="@drawable/baseline_perm_contact_calendar_24"

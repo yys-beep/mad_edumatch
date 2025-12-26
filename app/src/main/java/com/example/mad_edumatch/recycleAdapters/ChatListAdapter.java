@@ -103,10 +103,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     // ... (Keep loadUserInfo, openChatFragment, getItemCount same as before) ...
     private void loadUserInfo(String userId, ViewHolder holder) {
+        if (userId == null || userId.trim().isEmpty()) {
+            holder.tvName.setText("Unknown User");
+            holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+            return; // Prevents the crash at .child(userId)
+        }
         DatabaseReference ref = FirebaseDatabase.getInstance(DB_URL).getReference("Users").child(userId);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (context == null || holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
+
                 if(snapshot.exists()) {
                     String name = "User";
                     if (snapshot.hasChild("name")) name = snapshot.child("name").getValue(String.class);
@@ -115,9 +122,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
                     if(snapshot.hasChild("profileImageUrl")) {
                         String imgName = snapshot.child("profileImageUrl").getValue(String.class);
-                        int resId = context.getResources().getIdentifier(imgName, "drawable", context.getPackageName());
-                        if (resId != 0) Glide.with(context).load(resId).into(holder.imgProfile);
-                        else holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+                        if (imgName != null && !imgName.isEmpty()) {
+                            int resId = context.getResources().getIdentifier(imgName, "drawable", context.getPackageName());
+                            if (resId != 0) Glide.with(context).load(resId).into(holder.imgProfile);
+                            else holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+                        }
                     } else {
                         holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
                     }
