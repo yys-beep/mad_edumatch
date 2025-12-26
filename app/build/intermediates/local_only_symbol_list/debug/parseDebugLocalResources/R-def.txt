@@ -2,7 +2,7 @@ R_DEF: Internal format may change without notice
 local
 color black
 color bottom_nav_colors
-color ic_launcher_background
+color darkPurple
 color lightApricot
 color lightSkyBlue
 color pastelBlue
@@ -26,6 +26,7 @@ drawable avatar_9
 drawable baseline_check_circle_24
 drawable baseline_delete_24
 drawable baseline_email_24
+drawable baseline_favorite_border_24
 drawable baseline_home_24
 drawable baseline_location_on_24
 drawable baseline_logout_24
@@ -36,6 +37,8 @@ drawable baseline_send_24
 drawable baseline_smart_display_24
 drawable baseline_subject_24
 drawable baseline_thumb_up_24
+drawable bg_chat_left
+drawable bg_chat_right
 drawable card_background
 drawable chat_bg
 drawable circle_background_white
@@ -48,20 +51,23 @@ drawable ic_chat_message
 drawable ic_comment_icon
 drawable ic_launcher_background
 drawable ic_launcher_foreground
-<<<<<<< HEAD
 drawable ic_like_heart
 drawable ic_notification
-=======
+drawable ic_splash_logo
 drawable login_background
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+drawable notification_student_bg
+drawable notification_tutor_bg
 drawable outline_attach_file_24
 drawable outline_attach_money_24
+drawable outline_auto_stories_24
+drawable outline_award_star_24
 drawable outline_background_replace_24
 drawable outline_chat_bubble_24
 drawable outline_check_circle_24
 drawable outline_checklist_24
 drawable outline_close_24
 drawable outline_delete_24
+drawable outline_done_all_24
 drawable outline_download_24
 drawable outline_edit_square_24
 drawable outline_file_present_24
@@ -72,15 +78,22 @@ drawable outline_notifications_active_24
 drawable outline_person_24
 drawable outline_person_search_24
 drawable outline_post_add_24
+drawable outline_psychology_alt_24
+drawable outline_school_24
 drawable outline_settings_24
 drawable outline_thumb_up_24
 drawable outline_timer_24
 drawable outline_video_camera_back_24
 drawable outline_video_library_24
+drawable outline_volunteer_activism_24
+drawable outline_workspace_premium_24
+drawable penguin_icon
+drawable penguin_icon_round
 drawable qna_bg
 drawable rounded_card_light
 drawable rounded_dialog_bg
 drawable shadow_gradient_top
+drawable splash_bg
 drawable student_bg
 drawable tutor_bg
 id bottomNavigationView
@@ -139,7 +152,10 @@ id btnViewMore
 id btnViewQuestion
 id btnWatchLesson
 id btnWatchVideo
+id bubble
+id bubbleLeft
 id cardAvatar
+id cardNotification
 id cardPostListing
 id cardPostRequest
 id cardSearchStudent
@@ -217,7 +233,6 @@ id ivAnswerAvatar
 id ivAnswerDetailAvatar
 id ivCommentAvatar
 id ivDetailAvatar
-id ivLogo
 id ivNotificationIcon
 id ivQuestionAvatar
 id ivTutorAvatar
@@ -235,7 +250,6 @@ id nav_chat
 id nav_home
 id nav_notifications
 id nav_qna
-id nav_settings
 id pbContribution
 id progressBar
 id progressBarEditUpload
@@ -251,6 +265,7 @@ id rbOnline
 id rbPhysical
 id rbStudent
 id rbTutor
+id registerScrollView
 id rgDeliveryMode
 id rgEditDeliveryMode
 id rgEditLearningMode
@@ -277,6 +292,7 @@ id rvTutorFreeLessons
 id rvTutorHostedLessons
 id rvTutorListings
 id rvTutorResults
+id splash_logo
 id topBarContainer
 id tvAchievementCollapseToggle
 id tvAchievementDescription
@@ -290,7 +306,6 @@ id tvAnswerDetailDate
 id tvAnswerDetailLink
 id tvAnswerFileName
 id tvAnswerUser
-id tvAppName
 id tvAppTitle
 id tvArea
 id tvAttachmentPreview
@@ -304,7 +319,10 @@ id tvCommentAuthor
 id tvCommentContent
 id tvCommentDate
 id tvContact
+id tvDashCompletions
 id tvDashHelped
+id tvDashHosted
+id tvDashLikes
 id tvDashScore
 id tvDashViews
 id tvDescription
@@ -370,8 +388,8 @@ id tvStudentName
 id tvStudentWelcome
 id tvSubject
 id tvSubjects
+id tvSwipeDeleteChatHint
 id tvSwipeTip
-id tvTagline
 id tvTime
 id tvTimerStatus
 id tvTimestamp
@@ -422,6 +440,7 @@ layout item_card_tutor_view_student_request
 layout item_chat_left
 layout item_chat_list
 layout item_chat_right
+layout item_community_impact
 layout item_edit_dynamic_row
 layout item_lesson_comment
 layout item_student_view_tutor_listing
@@ -455,7 +474,10 @@ mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 string _012_3456789
+string _02_30_pm
+string _0_100
 string _0_kudos
+string _10_00_am
 string _10_30_am
 string _12_kudos
 string _2_hours_ago
@@ -472,7 +494,7 @@ string add_post_question
 string age
 string age_18
 string age_icon
-string already_have_an_account_login
+string already_have_an_account
 string any_specific_requirements_or_preferred_times
 string app_logo
 string app_name
@@ -486,10 +508,14 @@ string attach_material_pdf_img
 string attachment_available
 string avatar_option
 string bachelor_in_education
+string background
+string background_image
+string badges
 string budget_rm_hr
 string by_tutor_alex_2_hours_ago
 string cancel
 string choose_new_material_file_pdf_image_video
+string clear_all
 string comment_content
 string comments
 string comments_amp_questions
@@ -498,6 +524,7 @@ string contact_info
 string contact_student
 string contact_tutor
 string content_goes_here
+string contribution
 string create_account
 string current_file_none
 string current_material_file_pdf
@@ -537,6 +564,7 @@ string filter_by_level
 string find_a_tutor
 string find_students
 string free_lesson_algebra_basics
+string free_new_lessons
 string full_name
 string gcm_defaultSenderId
 string google_api_key
@@ -548,6 +576,7 @@ string hello
 string hello_blank_fragment
 string hi_there
 string hosted_free_lessons
+string hosted_lessons_0
 string hourly_fee_rm_50_hr
 string i_am_a
 string igcse
@@ -570,10 +599,13 @@ string login_to_continue_learning
 string logout
 string looking_for_a_tutor_on_weekends
 string lower_secondary_f1_f3
+string mark_as_solved
 string mark_lesson_as_complete
 string mathematics
 string mathematics_science
+string message_here
 string mode_online
+string my_community_impact
 string my_listings
 string my_nlistings
 string my_posted_requests
@@ -590,11 +622,13 @@ string no_file_selected
 string no_free_lessons_found
 string no_lessons_found
 string no_lessons_recorded
+string no_notifications_yet
 string no_solution_yet
 string no_student_requests_found
 string no_tutors_found_matching_your_criteria_ntry_broadening_your_search
 string no_tutors_found_try_a_different_keyword
 string notification_icon
+string notifications
 string one_to_many
 string one_to_one
 string online
@@ -635,6 +669,8 @@ string qualification
 string qualification_e_g_degree_in_math
 string question_preview
 string question_title
+string questions_answered_0
+string received_message
 string register_here
 string register_password
 string replace_material_pdf_img
@@ -666,6 +702,7 @@ string stpm_a_level
 string student
 string student_description_goes_here
 string student_name
+string students_completed_0
 string study_time_required_05_00
 string subang_jaya
 string subject
@@ -673,6 +710,9 @@ string subject_icon
 string subjects
 string subjects_e_g_math_science
 string subjects_math_science
+string swipe_left_or_right_to_delete
+string swipe_left_to_delete_chat
+string total_likes_received_0
 string tutor
 string tutor_john_doe
 string tutor_name

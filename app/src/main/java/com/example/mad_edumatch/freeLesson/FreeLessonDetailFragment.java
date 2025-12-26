@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -40,10 +37,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -55,8 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,7 +65,6 @@ import okhttp3.Response;
 public class FreeLessonDetailFragment extends Fragment {
 
     private TextView tvTitle, tvDesc, tvTimerStatus, tvKudosCount;
-    private TextView tvTutorName;
     private ProgressBar progressBar;
     private MaterialButton btnMarkComplete, btnWatchVideo, btnDownloadMaterial, btnGiveKudos;
     private LinearLayout layoutOwnerActions, layoutParticipation;
@@ -79,17 +73,13 @@ public class FreeLessonDetailFragment extends Fragment {
     private ImageButton btnSendComment, btnAttachFile;
     private TextView tvAttachmentPreview, tvNoComments;
 
-<<<<<<< HEAD
     private String lessonId, videoUrl, materialUrl, materialName, tutorId;
-=======
-    // --- DATA ---
-    private String lessonId, videoUrl, materialUrl, materialName, tutorId; // Added materialName
-    private String tutorName;
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
     private boolean isCompleted = false;
     private boolean isLiked = false;
-    private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
+    // Flag to prevent double counting views on screen rotation
+    private boolean hasCountedView = false;
 
+    private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
     private Uri selectedFileUri;
     private String selectedFileName;
 
@@ -116,12 +106,6 @@ public class FreeLessonDetailFragment extends Fragment {
         }
     };
 
-<<<<<<< HEAD
-=======
-
-
-    // --- FILE PICKER ---
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
     private final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -136,7 +120,6 @@ public class FreeLessonDetailFragment extends Fragment {
             }
     );
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -149,7 +132,6 @@ public class FreeLessonDetailFragment extends Fragment {
 
         // 1. Bind Views
         tvTitle = view.findViewById(R.id.tvDetailTitle);
-        tvTutorName = view.findViewById(R.id.tvTutorName);
         tvDesc = view.findViewById(R.id.tvDetailDesc);
         tvKudosCount = view.findViewById(R.id.tvKudosCount);
         btnGiveKudos = view.findViewById(R.id.btnGiveKudos);
@@ -169,22 +151,13 @@ public class FreeLessonDetailFragment extends Fragment {
 
         // 2. Process Arguments / Notifications
         if (getArguments() != null) {
-<<<<<<< HEAD
             lessonId = getArguments().containsKey("sourceId") ?
                     getArguments().getString("sourceId") : getArguments().getString("lessonId");
-=======
-            lessonId = getArguments().getString("lessonId");
-            tutorId = getArguments().getString("tutorId");
-            tvTitle.setText(getArguments().getString("title"));
-            videoUrl = getArguments().getString("videoUrl");
-            materialUrl = getArguments().getString("materialUrl");
-            materialName = getArguments().getString("materialName", "Download Material"); // Get material name from args
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 
             if (getArguments().containsKey("title") && !getArguments().containsKey("sourceId")) {
                 // PATH A: Normal Navigation (Data already provided in Bundle)
                 tvTitle.setText(getArguments().getString("title"));
-                tvDesc.setText(getArguments().getString("description")); // Added description sync
+                tvDesc.setText(getArguments().getString("description"));
                 videoUrl = getArguments().getString("videoUrl");
                 materialUrl = getArguments().getString("materialUrl");
                 materialName = getArguments().getString("materialName", "Download Material");
@@ -192,13 +165,12 @@ public class FreeLessonDetailFragment extends Fragment {
 
                 setupTimerData(getArguments().getLong("duration", 0));
 
-                // Load dynamic items only (Don't call loadLessonDetails here as it resets videoUrl)
                 checkPreviousParticipation();
                 loadKudosStatus();
                 loadComments();
                 countParticipation();
 
-                // Still need tutorId for ownership check
+                // Fetch tutor ID to check ownership + increment view count
                 fetchTutorIdOnly();
             } else if (lessonId != null) {
                 // PATH B: Notification/Deep Link (Fetch everything from Firebase)
@@ -249,6 +221,9 @@ public class FreeLessonDetailFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         tutorId = snapshot.getValue(String.class);
                         checkOwnerActions();
+
+                        // --- ANALYTICS: Count View ---
+                        incrementTutorViewCount(tutorId);
                     }
                     @Override public void onCancelled(@NonNull DatabaseError error) {}
                 });
@@ -258,29 +233,15 @@ public class FreeLessonDetailFragment extends Fragment {
         this.lessonId = id;
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons").child(id);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded() || !snapshot.exists()) return;
 
-<<<<<<< HEAD
                 tutorId = snapshot.child("tutorId").getValue(String.class);
                 tvTitle.setText(snapshot.child("title").getValue(String.class));
                 tvDesc.setText(snapshot.child("description").getValue(String.class));
-=======
-                    // Load tutor name from snapshot
-                    String dbTutorName = snapshot.child("tutorName").getValue(String.class);
-                    if (dbTutorName != null && !dbTutorName.isEmpty()) {
-                        tutorName = dbTutorName;
-                        tvTutorName.setText("by " + tutorName);
-                    }
 
-                    videoUrl = snapshot.child("videoLink").getValue(String.class);
-                    materialUrl = snapshot.child("materialUrl").getValue(String.class);
-                    tutorId = snapshot.child("tutorId").getValue(String.class);
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
-
-                // SYNC KEY: Ensure this matches EditLessonDialogFragment
                 videoUrl = snapshot.child("videoUrl").getValue(String.class);
                 materialUrl = snapshot.child("materialUrl").getValue(String.class);
                 materialName = snapshot.child("materialName").getValue(String.class);
@@ -294,33 +255,9 @@ public class FreeLessonDetailFragment extends Fragment {
                 loadComments();
                 checkPreviousParticipation();
                 countParticipation();
-            }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
-        });
-    }
 
-    public void loadLessonDetails() {
-        if (lessonId == null) return;
-        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("free_lessons").child(lessonId);
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!isAdded() || !snapshot.exists()) return;
-
-                tvTitle.setText(snapshot.child("title").getValue(String.class));
-                tvDesc.setText(snapshot.child("description").getValue(String.class));
-
-                videoUrl = snapshot.child("videoUrl").getValue(String.class);
-                materialUrl = snapshot.child("materialUrl").getValue(String.class);
-                materialName = snapshot.child("materialName").getValue(String.class);
-                tutorId = snapshot.child("tutorId").getValue(String.class);
-
-                if (materialName != null && !materialName.isEmpty()) {
-                    btnDownloadMaterial.setText("Download: " + materialName);
-                }
-                checkOwnerActions();
+                // --- ANALYTICS: Count View ---
+                incrementTutorViewCount(tutorId);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -636,7 +573,7 @@ public class FreeLessonDetailFragment extends Fragment {
                     @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists() && Boolean.TRUE.equals(snapshot.child("isCompleted").getValue(Boolean.class))) {
                             isCompleted = true; unlockCompletion();
-                            btnMarkComplete.setText("Completed"); btnMarkComplete.setEnabled(false);
+                            btnMarkComplete.setText("Completed ✅"); btnMarkComplete.setEnabled(false);
                         }
                     }
                     @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -662,6 +599,9 @@ public class FreeLessonDetailFragment extends Fragment {
                                     btnMarkComplete.setText("Completed ✅");
                                     btnMarkComplete.setEnabled(false);
                                     Toast.makeText(getContext(), "Progress Saved!", Toast.LENGTH_SHORT).show();
+
+                                    // --- ANALYTICS: Count Student Helped ---
+                                    incrementStudentsHelpedCount();
                                 });
                     }
                     @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -677,41 +617,77 @@ public class FreeLessonDetailFragment extends Fragment {
         try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fUrl))); }
         catch (Exception e) { Toast.makeText(getContext(), "Link failed", Toast.LENGTH_SHORT).show(); }
     }
-<<<<<<< HEAD
-=======
 
+    // =========================================================
+    // SECTION 4: ANALYTICS & COUNTERS
+    // =========================================================
 
+    private void incrementTutorViewCount(String tId) {
+        if (tId == null || hasCountedView) return;
 
-    /**
-     * Navigate to tutor profile page - Delayed version (most stable)
-     */
-    private void navigateToTutorProfile(String tutorId) {
-        if (getActivity() == null || !isAdded() || tutorId == null) {
-            return;
-        }
+        // Don't count if the tutor is viewing their own lesson
+        String currentUid = CurrentUser.getInstance().getUid();
+        if (currentUid != null && currentUid.equals(tId)) return;
 
-        // Use Handler to delay navigation slightly
-        new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                if (getActivity() == null || !isAdded()) return;
+        hasCountedView = true;
 
-                Fragment profileFragment = new com.example. mad_edumatch.student. StudentViewTutorProfileFragment();
-                Bundle args = new Bundle();
-                args.putString("tutorId", tutorId);
-                profileFragment.setArguments(args);
+        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
+                .getReference("tutor_profiles").child(tId).child("totalViews");
 
-                ((AppCompatActivity) getActivity()).getSupportFragmentManager()
-                        .beginTransaction()
-                        . replace(R.id.fragment_container, profileFragment)
-                        .addToBackStack(null)
-                        .commitAllowingStateLoss();
+        ref.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                Integer views = currentData.getValue(Integer.class);
+                if (views == null) {
+                    currentData.setValue(1);
+                } else {
+                    currentData.setValue(views + 1);
+                }
+                return Transaction.success(currentData);
+            }
 
-            } catch (Exception e) {
-                Log.e("FreeLessonDetail", "Error:  " + e.getMessage());
-                e.printStackTrace();
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                // Success
             }
         });
     }
 
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+    private void incrementStudentsHelpedCount() {
+        if (tutorId == null) return;
+
+        // Don't count if tutor helps themselves
+        String currentUid = CurrentUser.getInstance().getUid();
+        if (currentUid != null && currentUid.equals(tutorId)) return;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL)
+                .getReference("tutor_profiles").child(tutorId).child("studentsHelped");
+
+        ref.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                Integer currentVal = currentData.getValue(Integer.class);
+                if (currentVal == null) {
+                    currentData.setValue(1);
+                } else {
+                    currentData.setValue(currentVal + 1);
+                }
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                // Success
+            }
+        });
+    }
+
+    public void loadLessonDetails() {
+        if (lessonId != null) {
+            // Re-fetch the data using the existing ID
+            fetchLessonDetailsFromFirebase(lessonId);
+        }
+    }
 }

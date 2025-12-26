@@ -55,11 +55,11 @@
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
             android:name="com.example.mad_edumatch.authentication.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.example.mad_edumatch.authentication.RegisterActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.example.mad_edumatch.MainActivity"

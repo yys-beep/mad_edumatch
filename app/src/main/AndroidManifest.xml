@@ -34,12 +34,12 @@
 
         <activity
             android:name=".authentication.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".authentication.RegisterActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
 
         <activity

@@ -1,7 +1,6 @@
 package com.example.mad_edumatch.helper;
 
 import androidx.annotation.NonNull;
-import com.example.mad_edumatch.firebaseModels.Answer;
 import com.example.mad_edumatch.firebaseModels.FreeLesson;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -9,123 +8,134 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamificationHelper {
 
     private static final String DB_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
 
-    // Call this whenever a Tutor does something (Uploads/Answers)
     public static void calculateScore(String tutorId) {
         DatabaseReference ref = FirebaseDatabase.getInstance(DB_URL).getReference();
 
-        // 1. Fetch Lessons (For Uploads, Views, Likes)
+        // 1. Fetch Lessons
         ref.child("free_lessons").orderByChild("tutorId").equalTo(tutorId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int uploads = 0;
-                int views = 0;
-                int lessonLikes = 0;
+                int uploadCount = 0;
+                int likeCount = 0;
+                List<String> myLessonIds = new ArrayList<>();
 
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    FreeLesson l = ds.getValue(FreeLesson.class);
-                    if (l != null) {
-                        uploads++;
-                        // views += l.getViewCount(); // Assuming viewCount exists in FreeLesson
-                        if (l.getLikes() != null) lessonLikes += l.getLikes().size();
+                    FreeLesson lesson = ds.getValue(FreeLesson.class);
+
+                    // =================================================================
+                    // 🛡️ STRICT FILTER: FORCE CHECK TUTOR ID
+                    // This ignores the 4 lessons belonging to other tutors
+                    // =================================================================
+                    if (lesson != null && lesson.getTutorId() != null && lesson.getTutorId().equals(tutorId)) {
+
+                        uploadCount++; // NOW THIS WILL ONLY BE 3
+
+                        if (lesson.getLikes() != null) {
+                            likeCount += lesson.getLikes().size();
+                        }
+                        if (lesson.getLessonId() != null) {
+                            myLessonIds.add(lesson.getLessonId());
+                        }
                     }
                 }
 
-                // 2. Fetch Answers (For Q&A Stats)
-                fetchAnswers(tutorId, ref, uploads, views, lessonLikes);
+                // 2. Fetch Answers (Using corrected "forum_answers")
+                fetchAnswersAndCompletions(tutorId, ref, uploadCount, likeCount, myLessonIds);
             }
+
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    private static void fetchAnswers(String tutorId, DatabaseReference ref, int uploads, int views, int lessonLikes) {
-        // NOTE: This assumes you have an index on 'userId' in 'answers'.
-        // If not, for a small project, you can fetch all answers and filter manually.
-        ref.child("answers").orderByChild("userId").equalTo(tutorId).addListenerForSingleValueEvent(new ValueEventListener() {
+    private static void fetchAnswersAndCompletions(String tutorId, DatabaseReference ref, int uploadCount, int likeCount, List<String> lessonIds) {
+
+        // Use "forum_answers" as verified
+        ref.child("forum_answers").orderByChild("userId").equalTo(tutorId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int answers = 0;
-                int answerLikes = 0;
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    Answer a = ds.getValue(Answer.class);
-                    if (a != null) {
-                        answers++;
-                        if (a.getLikes() != null) answerLikes += a.getLikes().size();
-                    }
-                }
-
-                performCalculation(tutorId, ref, uploads, views, lessonLikes, answers, answerLikes);
+                int answerCount = (int) snapshot.getChildrenCount();
+                countCompletions(tutorId, ref, uploadCount, likeCount, answerCount, lessonIds);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-// ... imports stay same
+    private static void countCompletions(String tutorId, DatabaseReference ref, int uploadCount, int likeCount, int answerCount, List<String> lessonIds) {
 
-    private static void performCalculation(String tutorId, DatabaseReference ref, int uploads, int views, int lessonLikes, int answers, int answerLikes) {
-        // 1. SCORE CALCULATION (Keep your weights)
-        int scoreUpload = Math.min(5, uploads * 2);
-        int scoreView = Math.min(15, (int)(views * 0.03));
-        int scoreLessonLike = Math.min(35, (int)(lessonLikes * 0.7));
-        int scoreQna = Math.min(30, (int)(answers * 1.5));
-        int scoreQnaLike = Math.min(15, (int)(answerLikes * 1.5));
-
-        int totalScore = scoreUpload + scoreView + scoreLessonLike + scoreQna + scoreQnaLike;
-        if (totalScore > 100) totalScore = 100; // Hard Cap
-
-        int studentsHelped = lessonLikes + answerLikes;
-
-        // 2. BADGE LOGIC (Updated to your Rules)
-        Map<String, Boolean> badges = new HashMap<>();
-
-        // --- TIER BADGES (Based on Score) ---
-        if (totalScore >= 81) {
-            badges.put("tier_top", true);     // 🏆 Top Rated
-        } else if (totalScore >= 51) {
-            badges.put("tier_gold", true);    // 🥇 High Impact
-        } else if (totalScore >= 21) {
-            badges.put("tier_silver", true);  // 🥈 Active Contributor
-        } else {
-            badges.put("tier_bronze", true);  // 🥉 New Tutor (Default 0-20)
+        // If strict filter removed all lessons, ensure we don't crash
+        if (lessonIds.isEmpty()) {
+            finalizeCalculation(tutorId, ref, uploadCount, likeCount, answerCount, 0);
+            return;
         }
 
-        // --- ACHIEVEMENT BADGES (Based on Actions) ---
+        final AtomicInteger completedLessonsProcessed = new AtomicInteger(0);
+        final AtomicInteger totalCompletions = new AtomicInteger(0);
 
-        // 📹 Lesson Starter (3 Uploads)
-        if (uploads >= 3) badges.put("ach_starter", true);
+        for (String lessonId : lessonIds) {
+            ref.child("lesson_participation").child(lessonId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot studentRecord : snapshot.getChildren()) {
+                        Boolean isCompleted = studentRecord.child("isCompleted").getValue(Boolean.class);
+                        if (Boolean.TRUE.equals(isCompleted)) {
+                            totalCompletions.incrementAndGet();
+                        }
+                    }
+                    if (completedLessonsProcessed.incrementAndGet() == lessonIds.size()) {
+                        finalizeCalculation(tutorId, ref, uploadCount, likeCount, answerCount, totalCompletions.get());
+                    }
+                }
+                public void onDataChange(@NonNull DatabaseError error) {
+                    if (completedLessonsProcessed.incrementAndGet() == lessonIds.size()) {
+                        finalizeCalculation(tutorId, ref, uploadCount, likeCount, answerCount, totalCompletions.get());
+                    }
+                }
+                @Override public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }
+    }
 
-        // ❤️ Crowd Favorite (50 Likes on lessons)
-        if (lessonLikes >= 50) badges.put("ach_favorite", true);
+    private static void finalizeCalculation(String tutorId, DatabaseReference ref, int uploads, int likes, int answers, int completions) {
 
-        // 🚀 Viral Educator (500 Views)
-        if (views >= 500) badges.put("ach_viral", true);
+        // --- SCORING FORMULA ---
+        int scoreUpload = Math.min(20, uploads * 2);
+        int scoreLikes = Math.min(20, likes * 1);
+        int scoreAnswers = Math.min(30, answers * 2);
+        int scoreCompletions = Math.min(30, completions * 3);
 
-        // ✋ Helper Hand (3 Answers)
-        if (answers >= 3) badges.put("ach_helper", true);
+        int totalScore = scoreUpload + scoreLikes + scoreAnswers + scoreCompletions;
+        if (totalScore > 100) totalScore = 100;
 
-        // 🧠 Problem Solver (20 Answers)
-        if (answers >= 20) badges.put("ach_solver", true);
+        Map<String, Boolean> badges = new HashMap<>();
+        // Tiers
+        if (totalScore >= 80) badges.put("tier_top", true);
+        else if (totalScore >= 50) badges.put("tier_gold", true);
+        else if (totalScore >= 20) badges.put("tier_silver", true);
+        else badges.put("tier_bronze", true);
 
-        // ✨ Verified Expert (10 Likes on answers)
-        if (answerLikes >= 10) badges.put("ach_expert", true);
+        // Achievements
+        if (completions >= 10) badges.put("ach_impact", true);
+        if (answers >= 10) badges.put("ach_helper", true);
+        if (likes >= 50) badges.put("ach_loved", true);
 
-        // --- SAVE TO FIREBASE ---
+        // Save
         Map<String, Object> updates = new HashMap<>();
         updates.put("contributionScore", totalScore);
-        updates.put("totalViews", views);
-        updates.put("studentsHelped", studentsHelped);
         updates.put("badges", badges);
+        updates.put("stat_completions", completions);
+        updates.put("stat_answers", answers);
 
         ref.child("tutor_profiles").child(tutorId).updateChildren(updates);
-
-        // Update Listing for search ranking
         updateListingScore(tutorId, ref, totalScore);
     }
 
@@ -140,5 +150,4 @@ public class GamificationHelper {
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-
 }

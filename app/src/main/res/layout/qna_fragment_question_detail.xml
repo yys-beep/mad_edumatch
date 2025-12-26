@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/lightApricot">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -131,7 +131,7 @@
                     android:id="@+id/btnMarkSolved"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mark as Solved"
+                    android:text="@string/mark_as_solved"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/pastelGreen"
                     app:icon="@drawable/outline_check_circle_24"
@@ -167,7 +167,7 @@
                 android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"

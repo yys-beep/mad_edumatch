@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mad_eduMatch</string>
+    <string name="app_name">EduMatch</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_back">Welcome Back!</string>
@@ -25,7 +25,7 @@
     <string name="register_password">Password</string>
     <string name="academic_level_e_g_spm">Academic Level (e.g. SPM)</string>
     <string name="you_can_complete_your_tutor_profile_details_after_registration">* You can complete your tutor profile details after registration.</string>
-    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="already_have_an_account">Already have an account?</string>
     <string name="loading">Loading...</string>
     <string name="type_a_message">Type a message...</string>
     <string name="no_active_chats_yet_find_a_tutor_or_student_to_start_a_conversation">No active chats yet. Find a tutor or student to start a conversation!</string>
@@ -245,4 +245,25 @@
     <string name="post_lesson">Post Lesson</string>
     <string name="my_listings">My Listings</string>
     <string name="search_by_subject">Search by Subject</string>
+    <string name="swipe_left_to_delete_chat">Swipe left to delete chat</string>
+    <string name="received_message">Received message</string>
+    <string name="_02_30_pm">02:30 PM</string>
+    <string name="message_here">Message here</string>
+    <string name="_10_00_am">10:00 AM</string>
+    <string name="my_community_impact">My Community Impact</string>
+    <string name="hosted_lessons_0">Hosted Lessons: 0</string>
+    <string name="questions_answered_0">Questions Answered: 0</string>
+    <string name="total_likes_received_0">Total Likes Received: 0</string>
+    <string name="badges">Badges</string>
+    <string name="contribution">Contribution:</string>
+    <string name="_0_100">0/100</string>
+    <string name="students_completed_0">Students Completed: 0</string>
+    <string name="mark_as_solved">Mark as Solved</string>
+    <string name="background_image">Background Image</string>
+    <string name="notifications">Notifications</string>
+    <string name="clear_all">Clear All</string>
+    <string name="swipe_left_or_right_to_delete">Swipe left or right to delete</string>
+    <string name="no_notifications_yet">No notifications yet!</string>
+    <string name="free_new_lessons">Free new lessons</string>
+    <string name="background">Background</string>
 </resources>

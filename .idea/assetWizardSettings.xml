@@ -24,11 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-<<<<<<< HEAD
-                                                <entry key="imagePath" value="C:\Users\natas\AppData\Local\Temp\ic_android_black_24dp.xml" />
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\AppData\Local\Temp\ic_android_black_24dp.xml" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -71,11 +67,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-<<<<<<< HEAD
-                                                <entry key="imagePath" value="C:\Users\natas\AppData\Local\Temp\ic_android_black_24dp.xml" />
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\AppData\Local\Temp\ic_android_black_24dp.xml" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -87,11 +79,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-<<<<<<< HEAD
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\Downloads\Gemini_Generated_Image_6pq6kp6pq6kp6pq6.png" />
-                                                <entry key="scalingPercent" value="86" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\Downloads\Gemini_Generated_Image_ot1oacot1oacot1o.png" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -121,15 +109,6 @@
                                       </entry>
                                     </map>
                                   </option>
-<<<<<<< HEAD
-=======
-                                  <option name="values">
-                                    <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="b9ebfa" />
-                                    </map>
-                                  </option>
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
                                 </PersistentState>
                               </value>
                             </entry>
@@ -144,11 +123,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-<<<<<<< HEAD
-                                                <entry key="imagePath" value="C:\Users\natas\AppData\Local\Temp\ic_android_black_24dp.xml" />
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\AppData\Local\Temp\ic_android_black_24dp.xml" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -192,11 +167,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-<<<<<<< HEAD
-                                                <entry key="imagePath" value="C:\Users\natas\AppData\Local\Temp\ic_android_black_24dp.xml" />
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\AppData\Local\Temp\ic_android_black_24dp.xml" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -260,11 +231,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-<<<<<<< HEAD
-                                                <entry key="imagePath" value="C:\Users\natas\AppData\Local\Temp\ic_android_black_24dp.xml" />
-=======
-                                                <entry key="imagePath" value="C:\Users\winsl\AppData\Local\Temp\ic_android_black_24dp.xml" />
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                                                <entry key="imagePath" value="C:\Users\win11\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -333,7 +300,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/message/baseline_message_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialsymbolsoutlined/done_all/outline_done_all_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -343,8 +310,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_chat_message" />
-                            <entry key="sourceFile" value="C:\Users\natas\MAD\mad_edumatch" />
+                            <entry key="outputName" value="outline_done_all_24" />
+                            <entry key="sourceFile" value="C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch" />
                           </map>
                         </option>
                       </PersistentState>

@@ -4,11 +4,17 @@
             "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-v24/values-v24.xml",
             "map": [
                 {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cd4f171fd47034f91d218c74bbec0b3f\\transformed\\material-1.13.0\\res\\values-v24\\values-v24.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-v24\\values-v24.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-v24\\values-v24.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,212",
+                        "endColumns": "156,134",
+                        "endOffsets": "207,342"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,9,12,15",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -24,20 +30,6 @@
                         "endLines": "4,5,6,7,10,13,16,19",
                         "endColumns": "84,98,86,100,10,10,10,10",
                         "endOffsets": "427,526,613,714,913,1126,1327,1542"
-                    }
-                },
-                {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\7a53c00295c495e02d9c746efc07c41f\\transformed\\appcompat-1.7.1\\res\\values-v24\\values-v24.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-v24\\values-v24.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,212",
-                        "endColumns": "156,134",
-                        "endOffsets": "207,342"
                     }
                 }
             ]

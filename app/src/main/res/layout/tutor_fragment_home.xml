@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/tutor_bg"
     android:fillViewport="true">
 
@@ -115,7 +116,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/post_nlisting"
                         android:textAlignment="center"
-                        android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -196,7 +199,7 @@
 
         <include
             android:id="@+id/layoutDashboard"
-            layout="@layout/item_tutor_dashboard"
+            layout="@layout/item_community_impact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"/>
@@ -204,7 +207,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Free new lessons"
+            android:text="@string/free_new_lessons"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -220,14 +223,19 @@
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp">
+            app:boxCornerRadiusBottomEnd="12dp"
+
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etSearchLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:hint="@string/search_lesson_title"
-                android:inputType="text"/>
+
+                android:inputType="textFilter|textNoSuggestions"
+                android:importantForAutofill="no"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

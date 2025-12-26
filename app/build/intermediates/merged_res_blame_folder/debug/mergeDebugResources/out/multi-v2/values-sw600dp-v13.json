@@ -4,21 +4,7 @@
             "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cd4f171fd47034f91d218c74bbec0b3f\\transformed\\material-1.13.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,124,193,263,337,413,472,543",
-                        "endColumns": "68,68,69,73,75,58,70,67",
-                        "endOffsets": "119,188,258,332,408,467,538,606"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,10,11,12,13,14",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
@@ -37,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\7a53c00295c495e02d9c746efc07c41f\\transformed\\appcompat-1.7.1\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

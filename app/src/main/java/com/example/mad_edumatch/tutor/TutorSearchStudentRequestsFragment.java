@@ -124,7 +124,10 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Context context = getContext();
+                if (context != null) {
+                    Toast.makeText(context, "Failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
