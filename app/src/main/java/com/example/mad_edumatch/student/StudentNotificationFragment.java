@@ -1,6 +1,10 @@
 package com.example.mad_edumatch.student;
 
 import android.app.AlertDialog;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -191,15 +196,93 @@ public class StudentNotificationFragment extends Fragment {
     }
 
     private void setupSwipeToDelete() {
+        // ALLOW BOTH DIRECTIONS: ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, @NonNull RecyclerView.ViewHolder t) { return false; }
-            @Override public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int dir) {
-                int pos = vh.getAdapterPosition();
-                String nid = notificationList.get(pos).getId();
-                adapter.removeItem(pos);
-                String uid = FirebaseAuth.getInstance().getUid();
-                if (uid != null) FirebaseDatabase.getInstance(DB_URL).getReference("notifications").child(uid).child(nid).removeValue();
-                if (notificationList.isEmpty()) tvEmptyState.setVisibility(View.VISIBLE);
+            @Override
+            public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, @NonNull RecyclerView.ViewHolder t) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int dir) {
+                int pos = vh.getBindingAdapterPosition();
+
+                if (pos >= 0 && pos < notificationList.size()) {
+                    String nid = notificationList.get(pos).getId();
+
+                    // 1. Remove from Adapter (Visual)
+                    adapter.removeItem(pos);
+
+                    // 2. Remove from Firebase (Data)
+                    String uid = FirebaseAuth.getInstance().getUid();
+                    if (uid != null) {
+                        FirebaseDatabase.getInstance(DB_URL).getReference("notifications")
+                                .child(uid).child(nid).removeValue();
+                    }
+
+                    if (notificationList.isEmpty()) tvEmptyState.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View itemView = viewHolder.itemView;
+                    Paint p = new Paint();
+                    p.setColor(Color.parseColor("#FF5252")); // Red Delete Color
+
+                    Drawable icon = ContextCompat.getDrawable(requireContext(), android.R.drawable.ic_menu_delete);
+                    if (icon != null) icon.setTint(Color.WHITE);
+
+                    // --- SWIPE RIGHT (dX > 0) ---
+                    if (dX > 0) {
+                        // Draw Red Background on Left Side
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(),
+                                dX, (float) itemView.getBottom(), p);
+
+                        if (icon != null) {
+                            int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
+                            int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
+                            int iconBottom = iconTop + icon.getIntrinsicHeight();
+
+                            // Icon on the Left
+                            int iconLeft = itemView.getLeft() + iconMargin;
+                            int iconRight = itemView.getLeft() + iconMargin + icon.getIntrinsicWidth();
+
+                            // Only draw if swipe is big enough
+                            if (dX > iconMargin + icon.getIntrinsicWidth()) {
+                                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                                icon.draw(c);
+                            }
+                        }
+                    }
+                    // --- SWIPE LEFT (dX < 0) ---
+                    else if (dX < 0) {
+                        // Draw Red Background on Right Side
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                        if (icon != null) {
+                            int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
+                            int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
+                            int iconBottom = iconTop + icon.getIntrinsicHeight();
+
+                            // Icon on the Right
+                            int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
+                            int iconRight = itemView.getRight() - iconMargin;
+
+                            // Only draw if swipe is big enough
+                            if (Math.abs(dX) > iconMargin + icon.getIntrinsicWidth()) {
+                                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                                icon.draw(c);
+                            }
+                        }
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(rvNotifications);
     }

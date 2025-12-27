@@ -3,29 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background">
+    android:background="@drawable/login_background"
+    android:fitsSystemWindows="true">
 
     <ScrollView
+        android:id="@+id/registerScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:isScrollContainer="true"
+        android:descendantFocusability="afterDescendants"
+        android:scrollbars="none"
         android:padding="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvRegisterTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/create_account"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="24dp"/>
 
             <com.google.android.material.card.MaterialCardView
@@ -52,8 +57,12 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvAvatarSelect"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="120dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
                         android:layout_marginBottom="16dp"/>
 
                     <View
@@ -139,7 +148,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:visibility="gone">
-
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
@@ -183,15 +191,32 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tvLoginLink"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/already_have_an_account_login"
-                android:textColor="@color/black"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:layout_marginBottom="32dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/already_have_an_account"
+                    android:textColor="#555555"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/tvLoginLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/login"
+                    android:textColor="#021289"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

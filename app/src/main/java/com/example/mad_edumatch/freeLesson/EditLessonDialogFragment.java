@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.mad_edumatch.R;
+import com.example.mad_edumatch.helper.LinkValidator;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,7 +54,8 @@ import okhttp3.Response;
 public class EditLessonDialogFragment extends DialogFragment {
 
     // --- UI VIEWS ---
-    private EditText etTitle, etDescription, etVideoUrl;
+    // RENAMED: etVideoUrl -> etVideoLink
+    private EditText etTitle, etDescription, etVideoLink;
     private MaterialButton btnChooseMaterial, btnSaveChanges;
     private ProgressBar progressBar;
     private TextView tvMaterialStatus;
@@ -78,13 +80,15 @@ public class EditLessonDialogFragment extends DialogFragment {
     private static final String APPWRITE_ENDPOINT_FILE = "https://sgp.cloud.appwrite.io/v1/storage/buckets/" + BUCKET_ID + "/files";
 
     // --- FACTORY METHOD ---
-    public static EditLessonDialogFragment newInstance(String lessonId, String title, String desc, String videoUrl, String materialUrl, String materialName) {
+    // RENAMED parameter: videoUrl -> videoLink
+    public static EditLessonDialogFragment newInstance(String lessonId, String title, String desc, String videoLink, String materialUrl, String materialName) {
         EditLessonDialogFragment fragment = new EditLessonDialogFragment();
         Bundle args = new Bundle();
         args.putString("lessonId", lessonId);
         args.putString("title", title);
         args.putString("description", desc);
-        args.putString("videoUrl", videoUrl);
+        // UPDATED KEY: "videoLink"
+        args.putString("videoLink", videoLink);
         args.putString("materialUrl", materialUrl);
         args.putString("materialName", materialName);
         fragment.setArguments(args);
@@ -131,7 +135,9 @@ public class EditLessonDialogFragment extends DialogFragment {
         // 1. Bind Views
         etTitle = view.findViewById(R.id.etEditLessonTitle);
         etDescription = view.findViewById(R.id.etEditLessonDescription);
-        etVideoUrl = view.findViewById(R.id.etEditVideoUrl);
+        // Note: The ID in XML (R.id.etEditVideoUrl) can stay the same, but we bind it to our new variable
+        etVideoLink = view.findViewById(R.id.etEditVideoUrl);
+
         btnChooseMaterial = view.findViewById(R.id.btnEditChooseMaterial);
         btnSaveChanges = view.findViewById(R.id.btnEditSaveChanges);
         progressBar = view.findViewById(R.id.progressBarEditUpload);
@@ -168,7 +174,8 @@ public class EditLessonDialogFragment extends DialogFragment {
             // Pre-fill fields
             etTitle.setText(args.getString("title"));
             etDescription.setText(args.getString("description"));
-            etVideoUrl.setText(args.getString("videoUrl"));
+            // UPDATED KEY: "videoLink"
+            etVideoLink.setText(args.getString("videoLink"));
 
             initialMaterialUrl = args.getString("materialUrl");
             initialMaterialName = args.getString("materialName");
@@ -195,8 +202,6 @@ public class EditLessonDialogFragment extends DialogFragment {
         filePickerLauncher.launch(Intent.createChooser(intent, "Select New Material"));
     }
 
-    // --- OKHTTP FILE UPLOAD LOGIC (Copied from Fragment) ---
-
     private void handleSaveAttempt() {
         if (isUploading) {
             Toast.makeText(getContext(), "Upload is in progress. Please wait.", Toast.LENGTH_SHORT).show();
@@ -208,11 +213,23 @@ public class EditLessonDialogFragment extends DialogFragment {
             return;
         }
 
-        // Check if a new file needs uploading
+        // --- NEW VALIDATION BLOCK ---
+        String linkInput = etVideoLink.getText().toString().trim();
+
+        // Only validate if the user actually typed something (since it might be optional)
+        if (!TextUtils.isEmpty(linkInput)) {
+            if (!LinkValidator.isValidUrl(linkInput)) {
+                etVideoLink.setError("Invalid link! Must start with http:// or https://");
+                etVideoLink.requestFocus();
+                return; // Stop here. Do not save.
+            }
+        }
+        // ----------------------------
+
+        // Check if a new file needs uploading...
         if (newFileUri != null) {
             uploadNewMaterialAndSave();
         } else {
-            // No new file, save immediately using existing material data
             saveLessonChanges(currentMaterialUrl, currentMaterialName);
         }
     }
@@ -302,7 +319,9 @@ public class EditLessonDialogFragment extends DialogFragment {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("title", etTitle.getText().toString());
         updates.put("description", etDescription.getText().toString());
-        updates.put("videoUrl", etVideoUrl.getText().toString());
+
+        // UPDATED KEY: "videoLink"
+        updates.put("videoLink", etVideoLink.getText().toString());
 
         // Use the new or old material data
         updates.put("materialUrl", materialFileId);

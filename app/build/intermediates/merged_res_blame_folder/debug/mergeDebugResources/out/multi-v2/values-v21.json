@@ -4,8 +4,7 @@
             "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-v21/values-v21.xml",
             "map": [
                 {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\e9233f95cba86f5bb4c6a1f734518efb\\transformed\\core-1.16.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cbc8d093c5269911e7d2f677202958d8\\transformed\\core-1.16.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -24,69 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cd4f171fd47034f91d218c74bbec0b3f\\transformed\\material-1.13.0\\res\\values-v21\\values-v21.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-v21\\values-v21.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,153,248,344",
-                        "endColumns": "97,94,95,96",
-                        "endOffsets": "148,243,339,436"
-                    },
-                    "to": {
-                        "startLines": "3,4,5,6",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "173,271,366,462",
-                        "endColumns": "97,94,95,96",
-                        "endOffsets": "266,361,457,554"
-                    }
-                },
-                {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\7a53c00295c495e02d9c746efc07c41f\\transformed\\appcompat-1.7.1\\res\\values-v21\\values-v21.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\0dad7224f514a5e6b3c05f06a7e3e1da\\transformed\\credentials-play-services-auth-1.2.0-rc01\\res\\values-v21\\values-v21.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endLines": "9",
-                        "endColumns": "12",
-                        "endOffsets": "543"
-                    },
-                    "to": {
-                        "startLines": "272",
-                        "startColumns": "4",
-                        "startOffsets": "19537",
-                        "endLines": "279",
-                        "endColumns": "12",
-                        "endOffsets": "20025"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\cbc8d093c5269911e7d2f677202958d8\\transformed\\core-1.16.0\\res\\values-v21\\values-v21.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,13",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,173,237,304,368,484,610,736,864,1036",
-                        "endLines": "2,3,4,5,6,7,8,9,12,17",
-                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
-                        "endOffsets": "168,232,299,363,479,605,731,859,1031,1383"
-                    },
-                    "to": {
-                        "startLines": "2,7,8,9,268,269,270,271,280,283",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,559,623,690,19041,19157,19283,19409,20030,20202",
-                        "endLines": "2,7,8,9,268,269,270,271,282,287",
-                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
-                        "endOffsets": "168,618,685,749,19152,19278,19404,19532,20197,20549"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-v21\\values-v21.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\02a0663f3d90c3d0d4964420ee786f83\\transformed\\appcompat-1.7.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,19,20,21,22,24,26,27,28,29,30,32,34,36,38,40,42,43,48,50,52,53,54,56,58,59,60,61,62,63,106,109,152,155,158,160,162,164,167,171,174,175,176,179,180,181,182,183,184,187,188,190,192,194,196,200,202,203,204,205,207,211,213,215,216,217,218,219,220,222,223,224,234,235,236,248",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -105,7 +42,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\c12c567a4c6013eae98b8ee9dd3c2201\\transformed\\credentials-play-services-auth-1.2.0-rc01\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-v21\\values-v21.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,153,248,344",
+                        "endColumns": "97,94,95,96",
+                        "endOffsets": "148,243,339,436"
+                    },
+                    "to": {
+                        "startLines": "3,4,5,6",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "173,271,366,462",
+                        "endColumns": "97,94,95,96",
+                        "endOffsets": "266,361,457,554"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\0dad7224f514a5e6b3c05f06a7e3e1da\\transformed\\credentials-play-services-auth-1.2.0-rc01\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

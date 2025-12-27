@@ -4,11 +4,7 @@
             "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
             "map": [
                 {
-<<<<<<< HEAD
-                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cd4f171fd47034f91d218c74bbec0b3f\\transformed\\material-1.13.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
-=======
-                    "source": "C:\\Users\\winsl\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                    "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\6490fc593c68dd8f2c2fdd70de72a91e\\transformed\\material-1.13.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

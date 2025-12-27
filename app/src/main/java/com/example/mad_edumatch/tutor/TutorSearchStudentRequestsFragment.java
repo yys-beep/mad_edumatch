@@ -2,11 +2,12 @@ package com.example.mad_edumatch.tutor;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
-import com.example.mad_edumatch.recycleAdapters.TutorStudentRequestAdapter; // Ensure this adapter exists/is correct
+import com.example.mad_edumatch.recycleAdapters.TutorStudentRequestAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,16 +37,19 @@ import java.util.List;
 
 public class TutorSearchStudentRequestsFragment extends Fragment {
 
-    private TextInputEditText etSearchSubject; // Changed to TextInputEditText
-    private ChipGroup chipGroupFilter;         // Added ChipGroup
+    private TextInputEditText etSearchSubject;
+    private ChipGroup chipGroupFilter;
     private RecyclerView recyclerView;
-    private TextView tvNoRequestFound;         // Added "No Results" text
+    private TextView tvNoRequestFound;
 
     private TutorStudentRequestAdapter adapter;
     private List<StudentRequest> fullRequestList;
     private List<StudentRequest> displayList;
 
     private DatabaseReference databaseRef;
+
+    // 1. Variable to hold the listener (Prevents crash on logout)
+    private ValueEventListener requestsListener;
 
     @Nullable
     @Override
@@ -56,53 +61,39 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Initialize Views
+        // Initialize Views
         etSearchSubject = view.findViewById(R.id.etSearchSubject);
-        chipGroupFilter = view.findViewById(R.id.chipGroupFilter); // Bind Chips
+        chipGroupFilter = view.findViewById(R.id.chipGroupFilter);
         recyclerView = view.findViewById(R.id.rvStudentRequests);
-        tvNoRequestFound = view.findViewById(R.id.tvNoRequestFound); // Bind No Result Text
+        tvNoRequestFound = view.findViewById(R.id.tvNoRequestFound);
 
-        // 2. Setup RecyclerView
+        // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
         fullRequestList = new ArrayList<>();
         displayList = new ArrayList<>();
 
-        // Initialize Adapter (Use the correct adapter for Tutor viewing requests)
         adapter = new TutorStudentRequestAdapter(displayList);
         recyclerView.setAdapter(adapter);
 
-        // 3. Setup Firebase
+        // Setup Firebase
         databaseRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("student_requests");
 
-        // 4. Load initial data
+        // Load data
         loadAllRequests();
 
-        // 5. Setup Search Actions
-
-        // A. Handle Keyboard "Search" Button
-        etSearchSubject.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch();
-                return true;
-            }
-            return false;
-        });
-
-        // B. Handle Chip Selection Change
-        chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
-            performSearch();
-        });
+        // Setup Listeners
+        setupSearchListeners();
     }
 
     private void loadAllRequests() {
-        databaseRef.addValueEventListener(new ValueEventListener() {
+        // 2. Assign listener to variable
+        requestsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 fullRequestList.clear();
-                displayList.clear();
 
                 for (DataSnapshot data : snapshot.getChildren()) {
                     StudentRequest request = data.getValue(StudentRequest.class);
@@ -112,35 +103,61 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
                     }
                 }
 
-                // Show Latest first
-                Collections.reverse(fullRequestList);
+                // --- 3. FIX: SORT BY TIMESTAMP (Newest First) ---
+                Collections.sort(fullRequestList, (r1, r2) ->
+                        Long.compare(r2.getTimestamp(), r1.getTimestamp())
+                );
+                // ------------------------------------------------
 
-                // Update display list
-                displayList.addAll(fullRequestList);
-                adapter.notifyDataSetChanged();
-
-                updateEmptyView();
+                // Refresh the search view with the new data
+                performSearch();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                // Prevent crash if auth is null
+                if (FirebaseAuth.getInstance().getCurrentUser() != null && getContext() != null) {
+                    Toast.makeText(getContext(), "Failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
+        };
+
+        databaseRef.addValueEventListener(requestsListener);
+    }
+
+    // 4. Cleanup listener to prevent crash on Logout
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (databaseRef != null && requestsListener != null) {
+            databaseRef.removeEventListener(requestsListener);
+        }
+    }
+
+    private void setupSearchListeners() {
+        // A. Real-time Text Search (Better than EditorActionListener)
+        etSearchSubject.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                performSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // B. Chip Selection
+        chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            performSearch();
         });
     }
 
     private void performSearch() {
-        // 1. Hide Keyboard
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        // 2. Get Search Query
         String query = etSearchSubject.getText() != null ? etSearchSubject.getText().toString().trim().toLowerCase() : "";
 
-        // 3. Get Selected Level from Chips
         String selectedLevel = "";
         int checkedChipId = chipGroupFilter.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
@@ -150,26 +167,22 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
 
         displayList.clear();
 
-        // 4. Filtering Logic
         for (StudentRequest request : fullRequestList) {
             boolean matchesSubject = false;
             boolean matchesLevel = false;
 
-            // Check Subject
+            // Subject Check
             String reqSubject = request.getSubject() != null ? request.getSubject().toLowerCase() : "";
             if (TextUtils.isEmpty(query) || reqSubject.contains(query)) {
                 matchesSubject = true;
             }
 
-            // Check Level (Exact match for level is usually best)
+            // Level Check
             String reqLevel = request.getLevel() != null ? request.getLevel().toLowerCase() : "";
-            // If no chip selected, we ignore level filtering (matches = true)
-            // If chip is selected, we check if request level contains the chip text
             if (TextUtils.isEmpty(selectedLevel) || reqLevel.contains(selectedLevel)) {
                 matchesLevel = true;
             }
 
-            // Add if BOTH match
             if (matchesSubject && matchesLevel) {
                 displayList.add(request);
             }

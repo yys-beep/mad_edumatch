@@ -8,26 +8,27 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mad_edumatch.authentication.LoginActivity;
+import com.example.mad_edumatch.R;
+
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DURATION = 2000; // 2 seconds
+    private static final int SPLASH_DURATION = 2000; // 2 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.app_activity_splash); // your splash XML
 
-        // Initialize the splash logo ImageView
+        // Set the splash logo (if your teammate's logo is ic_splash_logo)
         ImageView splashLogo = findViewById(R.id.splash_logo);
-
-        // Set the splash logo drawable (ic_splash_logo)
         if (splashLogo != null) {
             splashLogo.setImageResource(R.drawable.ic_splash_logo);
         }
 
-        // Delay and transition to MainActivity
+        // Delay and go to LoginActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }, SPLASH_DURATION);

@@ -27,17 +27,9 @@
                 android:layout_marginBottom="16dp"
                 android:elevation="4dp">
 
-                <!-- Title and Tutor Name Row -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
+                <TextView
                         android:id="@+id/tvDetailTitle"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/lesson_title"
@@ -47,22 +39,16 @@
                         android:maxLines="2"
                         android:ellipsize="end"/>
 
-                    <TextView
-                        android:id="@+id/tvTutorName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="by Tutor"
-                        android:textSize="14sp"
-                        android:textColor="@color/pastelBlue"
-                        android:textStyle="bold"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"/>
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvTutorName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="by Tutor Name • 12 Oct 2025"
+                    android:textSize="12sp"
+                    android:textColor="#555555"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="16dp"/>
+
                 <TextView
                     android:id="@+id/tvDetailDesc"
                     android:layout_width="match_parent"

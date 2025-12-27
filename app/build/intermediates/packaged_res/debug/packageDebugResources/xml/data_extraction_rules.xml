@@ -3,10 +3,7 @@
     <cloud-backup>
         <include domain="file" path="."/>
     </cloud-backup>
-<<<<<<< HEAD
     <device-transfer>
         <include domain="file" path="."/>
     </device-transfer>
-=======
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 </data-extraction-rules>

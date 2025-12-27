@@ -8,9 +8,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,6 +67,41 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
         rvAvatarSelect = findViewById(R.id.rvAvatarSelect);
         rvAvatarSelect.setLayoutManager(new GridLayoutManager(this, 5));
         rvAvatarSelect.setAdapter(new AvatarAdapter(AvatarManager.AVATAR_DRAWABLES, this));
+        rvAvatarSelect.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull android.graphics.Rect outRect, @NonNull View view,
+                                       @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                int padding = -5; // Increase this number to make the avatars smaller
+                outRect.left = padding;
+                outRect.right = padding;
+                outRect.top = padding;
+                outRect.bottom = padding;
+            }
+        });
+
+        final ScrollView scrollView = findViewById(R.id.registerScrollView);
+
+        View.OnFocusChangeListener autoScrollListener = (v, hasFocus) -> {
+            if (hasFocus) {
+                // Wait for keyboard animation to start
+                scrollView.postDelayed(() -> {
+                    // Get the position of the focused EditText
+                    int[] location = new int[2];
+                    v.getLocationOnScreen(location);
+                    int yPos = location[1];
+
+                    // Scroll the view up so the EditText is near the top of the visible area
+                    // Adjust the '200' value to control how high it scrolls
+                    scrollView.smoothScrollBy(0, yPos - 200);
+                }, 300);
+            }
+        };
+
+        // Apply to all input fields
+        etName.setOnFocusChangeListener(autoScrollListener);
+        etEmail.setOnFocusChangeListener(autoScrollListener);
+        etPassword.setOnFocusChangeListener(autoScrollListener);
+        etAcademicLevel.setOnFocusChangeListener(autoScrollListener);
     }
 
     private void setupListeners() {

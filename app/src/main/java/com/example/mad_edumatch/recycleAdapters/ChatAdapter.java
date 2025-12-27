@@ -57,13 +57,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatMessage chat = chatList.get(position);
+        holder.tvMessage.setText(chat.getMessage());
 
-        // Safety check for null message
-        holder.tvMessage.setText(chat.getMessage() != null ? chat.getMessage() : "");
-
-        // --- FIXED TIME LOGIC ---
         if (holder.tvTime != null) {
-            holder.tvTime.setText(TimeHelper.getMalaysiaTime(chat.getTimestamp()));
+            // Format to show ONLY time (e.g., 01:46 PM)
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm aa", java.util.Locale.getDefault());
+            sdf.setTimeZone(java.util.TimeZone.getTimeZone("Asia/Kuala_Lumpur"));
+            String timeStr = sdf.format(new java.util.Date(chat.getTimestamp()));
+            holder.tvTime.setText(timeStr);
         }
 
         // --- FIXED IMAGE LOGIC ---

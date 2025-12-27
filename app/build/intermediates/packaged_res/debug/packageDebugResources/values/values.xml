@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="ic_launcher_background">#B9EBFA</color>
+    <color name="darkPurple">#7D0394</color>
     <color name="lightApricot">#FAEFC3</color>
     <color name="lightSkyBlue">#B9EBFA</color>
     <color name="pastelBlue">#ADD3FA</color>
@@ -13,7 +13,10 @@
     <color name="softPastelGreen">#FADFAA</color>
     <color name="white">#FFFFFFFF</color>
     <string name="_012_3456789">012-3456789</string>
+    <string name="_02_30_pm">02:30 PM</string>
+    <string name="_0_100">0/100</string>
     <string name="_0_kudos">0 Kudos</string>
+    <string name="_10_00_am">10:00 AM</string>
     <string name="_10_30_am">10:30 AM</string>
     <string name="_12_kudos">❤️ 12 Kudos</string>
     <string name="_2_hours_ago">2 hours ago</string>
@@ -30,10 +33,10 @@
     <string name="age">Age</string>
     <string name="age_18">Age: 18</string>
     <string name="age_icon">Age Icon</string>
-    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="already_have_an_account">Already have an account?</string>
     <string name="any_specific_requirements_or_preferred_times">Any specific requirements or preferred times?</string>
     <string name="app_logo">App Logo</string>
-    <string name="app_name">mad_eduMatch</string>
+    <string name="app_name">EduMatch</string>
     <string name="area">Area</string>
     <string name="area_icon">Area Icon</string>
     <string name="area_kuala_lumpur">Area: Kuala Lumpur</string>
@@ -44,10 +47,14 @@
     <string name="attachment_available">📎 Attachment Available</string>
     <string name="avatar_option">Avatar Option</string>
     <string name="bachelor_in_education">Bachelor in Education</string>
+    <string name="background">Background</string>
+    <string name="background_image">Background Image</string>
+    <string name="badges">Badges</string>
     <string name="budget_rm_hr">Budget (RM/hr)</string>
     <string name="by_tutor_alex_2_hours_ago">By Tutor Alex • 2 hours ago</string>
     <string name="cancel">Cancel</string>
     <string name="choose_new_material_file_pdf_image_video">Choose NEW Material File (PDF/Image/Video)</string>
+    <string name="clear_all">Clear All</string>
     <string name="comment_content">Comment content...</string>
     <string name="comments">Comments</string>
     <string name="comments_amp_questions"><![CDATA[Comments & Questions]]></string>
@@ -56,6 +63,7 @@
     <string name="contact_student">Contact Student</string>
     <string name="contact_tutor">Contact Tutor</string>
     <string name="content_goes_here">Content goes here...</string>
+    <string name="contribution">Contribution:</string>
     <string name="create_account">Create Account</string>
     <string name="current_file_none">Current File: None</string>
     <string name="current_material_file_pdf">Current Material: File.pdf</string>
@@ -95,6 +103,7 @@
     <string name="find_a_tutor">Find a Tutor</string>
     <string name="find_students">Find Students</string>
     <string name="free_lesson_algebra_basics">Free Lesson: Algebra Basics</string>
+    <string name="free_new_lessons">Free new lessons</string>
     <string name="full_name">Full Name</string>
     <string name="gcm_defaultSenderId" translatable="false">674700121118</string>
     <string name="google_api_key" translatable="false">AIzaSyAxt-LxqIXCfa6WtITLqo04szpQRqdYnfo</string>
@@ -106,6 +115,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hi_there">Hi there</string>
     <string name="hosted_free_lessons">Hosted Free Lessons</string>
+    <string name="hosted_lessons_0">Hosted Lessons: 0</string>
     <string name="hourly_fee_rm_50_hr">Hourly Fee: RM 50/hr</string>
     <string name="i_am_a">I am a:</string>
     <string name="igcse">IGCSE</string>
@@ -128,10 +138,13 @@
     <string name="logout">Logout</string>
     <string name="looking_for_a_tutor_on_weekends">Looking for a tutor on weekends.</string>
     <string name="lower_secondary_f1_f3">Lower Secondary (F1-F3)</string>
+    <string name="mark_as_solved">Mark as Solved</string>
     <string name="mark_lesson_as_complete">Mark Lesson as Complete</string>
     <string name="mathematics">Mathematics</string>
     <string name="mathematics_science">Mathematics, Science</string>
+    <string name="message_here">Message here</string>
     <string name="mode_online">Mode: Online</string>
+    <string name="my_community_impact">My Community Impact</string>
     <string name="my_listings">My Listings</string>
     <string name="my_nlistings">My\nListings</string>
     <string name="my_posted_requests">My Posted Requests</string>
@@ -148,11 +161,13 @@
     <string name="no_free_lessons_found">No free lessons found.</string>
     <string name="no_lessons_found">No lessons found.</string>
     <string name="no_lessons_recorded">No lessons recorded.</string>
+    <string name="no_notifications_yet">No notifications yet!</string>
     <string name="no_solution_yet">No solution yet.</string>
     <string name="no_student_requests_found">No student requests found.</string>
     <string name="no_tutors_found_matching_your_criteria_ntry_broadening_your_search">No tutors found matching your criteria.\nTry broadening your search.</string>
     <string name="no_tutors_found_try_a_different_keyword">No tutors found. Try a different keyword.</string>
     <string name="notification_icon">Notification Icon</string>
+    <string name="notifications">Notifications</string>
     <string name="one_to_many">One-to-Many</string>
     <string name="one_to_one">One-to-One</string>
     <string name="online">Online</string>
@@ -193,6 +208,8 @@
     <string name="qualification_e_g_degree_in_math">Qualification (e.g. Degree in Math)</string>
     <string name="question_preview">Question preview...</string>
     <string name="question_title">Question Title</string>
+    <string name="questions_answered_0">Questions Answered: 0</string>
+    <string name="received_message">Received message</string>
     <string name="register_here">Register Here</string>
     <string name="register_password">Password</string>
     <string name="replace_material_pdf_img">📄 Replace Material (PDF/Img)</string>
@@ -224,6 +241,7 @@
     <string name="student">Student</string>
     <string name="student_description_goes_here">Student description goes here...</string>
     <string name="student_name">Student Name</string>
+    <string name="students_completed_0">Students Completed: 0</string>
     <string name="study_time_required_05_00">Study time required: 05:00</string>
     <string name="subang_jaya">Subang Jaya</string>
     <string name="subject">Subject</string>
@@ -231,6 +249,9 @@
     <string name="subjects">Subjects</string>
     <string name="subjects_e_g_math_science">Subjects (e.g. Math, Science)</string>
     <string name="subjects_math_science">Subjects: Math, Science</string>
+    <string name="swipe_left_or_right_to_delete">Swipe left or right to delete</string>
+    <string name="swipe_left_to_delete_chat">Swipe left to delete chat</string>
+    <string name="total_likes_received_0">Total Likes Received: 0</string>
     <string name="tutor">Tutor</string>
     <string name="tutor_john_doe">Tutor: John Doe</string>
     <string name="tutor_name">Tutor Name</string>
@@ -262,14 +283,14 @@
     <string name="welcome_back_nstudent">Welcome back,\nStudent</string>
     <string name="welcome_back_ntutor">Welcome back,\nTutor</string>
     <string name="you_can_complete_your_tutor_profile_details_after_registration">* You can complete your tutor profile details after registration.</string>
-<<<<<<< HEAD
-    <string name="your_free_lessons">Your Free Lessons</string>
-=======
     <string name="your_free_lessons">New Free Lessons</string>
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
     <style name="Base.Theme.Mad_eduMatch" parent="Theme.Material3.DayNight.NoActionBar">
-        
-        
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:statusBarColor">@color/white</item>
     </style>
     <style name="CircularImageView">
         <item name="cornerFamily">rounded</item>

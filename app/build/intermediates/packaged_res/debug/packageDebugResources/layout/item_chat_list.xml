@@ -9,7 +9,6 @@
     android:gravity="center_vertical"
     android:layout_marginBottom="1dp">
     <com.google.android.material.imageview.ShapeableImageView
-<<<<<<< HEAD
         android:id="@+id/imgChatListProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -17,15 +16,6 @@
         app:shapeAppearanceOverlay="@style/CircularImageView"
         android:layout_marginEnd="16dp"
         android:scaleType="centerCrop"/>
-=======
-    android:id="@+id/imgChatListProfile"
-    android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:src="@drawable/outline_background_replace_24"
-    app:shapeAppearanceOverlay="@style/CircularImageView"
-    android:layout_marginEnd="16dp"
-    android:scaleType="centerCrop"/>
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 
     <LinearLayout
         android:layout_width="0dp"

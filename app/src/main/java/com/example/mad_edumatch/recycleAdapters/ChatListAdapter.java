@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone; // Import TimeZone
+import java.util.TimeZone;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
 
@@ -48,10 +48,16 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatList chatList = chatLists.get(position);
 
-        holder.tvLastMessage.setText(chatList.getLastMessage());
-        holder.tvName.setText("Loading...");
+        // 1. CRITICAL: "Tag" this holder with the ID it is supposed to display
+        holder.itemView.setTag(chatList.getId());
 
-        // --- UPDATED TIME LOGIC ---
+        holder.tvLastMessage.setText(chatList.getLastMessage());
+
+        // Reset name/image to placeholder immediately to prevent "flickering" old data
+        holder.tvName.setText("Loading...");
+        holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+
+        // Time logic
         holder.tvTime.setText(getSmartDate(chatList.getTimestamp()));
 
         // Bold Logic (Unread)
@@ -68,72 +74,71 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         loadUserInfo(chatList.getId(), holder);
 
         holder.itemView.setOnClickListener(v -> {
+            // Get the CURRENT name on the view, or fallback to "User"
             String currentName = holder.tvName.getText().toString();
+            if (currentName.equals("Loading...")) currentName = "User";
             openChatFragment(chatList.getId(), currentName);
         });
     }
 
-    // --- FIX: USE MALAYSIA TIMEZONE HERE ---
-    private String getSmartDate(long timestamp) {
-        // 1. Force TimeZone
-        TimeZone myTimeZone = TimeZone.getTimeZone("Asia/Kuala_Lumpur");
-
-        Calendar now = Calendar.getInstance(myTimeZone);
-        Calendar msgTime = Calendar.getInstance(myTimeZone);
-        msgTime.setTimeInMillis(timestamp);
-
-        // Check if it's the same day
-        if (now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR) &&
-                now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR)) {
-            // TODAY: Return Time (e.g., "10:30 PM")
-            return DateFormat.format("hh:mm aa", msgTime).toString();
-        }
-
-        // Check if it was Yesterday
-        now.add(Calendar.DATE, -1);
-        if (now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR) &&
-                now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR)) {
-            // YESTERDAY
-            return "Yesterday";
-        }
-
-        // OLDER: Return Date (e.g., "13 Dec")
-        return DateFormat.format("dd MMM", msgTime).toString();
-    }
-
-    // ... (Keep loadUserInfo, openChatFragment, getItemCount same as before) ...
     private void loadUserInfo(String userId, ViewHolder holder) {
-        if (userId == null || userId.trim().isEmpty()) {
-            holder.tvName.setText("Unknown User");
-            holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
-            return; // Prevents the crash at .child(userId)
-        }
+        if (userId == null) return;
+
         DatabaseReference ref = FirebaseDatabase.getInstance(DB_URL).getReference("Users").child(userId);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (context == null || holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
+                if (context == null) return;
+
+                // 2. CRITICAL CHECK:
+                // Ask the view: "Are you still displaying the user I fetched data for?"
+                // If the tag doesn't match the userId, this view has been recycled. STOP.
+                Object tag = holder.itemView.getTag();
+                if (tag == null || !tag.equals(userId)) {
+                    return;
+                }
 
                 if(snapshot.exists()) {
                     String name = "User";
                     if (snapshot.hasChild("name")) name = snapshot.child("name").getValue(String.class);
-                    else if (snapshot.hasChild("username")) name = snapshot.child("username").getValue(String.class);
                     holder.tvName.setText(name);
 
                     if(snapshot.hasChild("profileImageUrl")) {
                         String imgName = snapshot.child("profileImageUrl").getValue(String.class);
                         if (imgName != null && !imgName.isEmpty()) {
                             int resId = context.getResources().getIdentifier(imgName, "drawable", context.getPackageName());
-                            if (resId != 0) Glide.with(context).load(resId).into(holder.imgProfile);
-                            else holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+                            if (resId != 0) {
+                                Glide.with(context).load(resId).into(holder.imgProfile);
+                            } else {
+                                holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
+                            }
                         }
-                    } else {
-                        holder.imgProfile.setImageResource(R.drawable.outline_background_replace_24);
                     }
                 }
             }
+
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+
+    private String getSmartDate(long timestamp) {
+        TimeZone myTimeZone = TimeZone.getTimeZone("Asia/Kuala_Lumpur");
+        Calendar now = Calendar.getInstance(myTimeZone);
+        Calendar msgTime = Calendar.getInstance(myTimeZone);
+        msgTime.setTimeInMillis(timestamp);
+
+        if (now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR) &&
+                now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR)) {
+            return DateFormat.format("hh:mm aa", msgTime).toString();
+        }
+
+        now.add(Calendar.DATE, -1);
+        if (now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR) &&
+                now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR)) {
+            return "Yesterday";
+        }
+
+        return DateFormat.format("dd MMM", msgTime).toString();
     }
 
     private void openChatFragment(String targetId, String targetName) {

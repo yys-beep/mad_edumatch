@@ -1553,6 +1553,7 @@ color common_google_signin_btn_text_light_disabled
 color common_google_signin_btn_text_light_focused
 color common_google_signin_btn_text_light_pressed
 color common_google_signin_btn_tint
+color darkPurple
 color design_bottom_navigation_shadow_color
 color design_box_stroke_color
 color design_dark_default_color_background
@@ -1601,7 +1602,6 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
-color ic_launcher_background
 color lightApricot
 color lightSkyBlue
 color m3_appbar_overlay_color
@@ -3588,6 +3588,7 @@ drawable avd_show_password
 drawable baseline_check_circle_24
 drawable baseline_delete_24
 drawable baseline_email_24
+drawable baseline_favorite_border_24
 drawable baseline_home_24
 drawable baseline_location_on_24
 drawable baseline_logout_24
@@ -3598,6 +3599,8 @@ drawable baseline_send_24
 drawable baseline_smart_display_24
 drawable baseline_subject_24
 drawable baseline_thumb_up_24
+drawable bg_chat_left
+drawable bg_chat_right
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -3670,6 +3673,7 @@ drawable ic_other_sign_in
 drawable ic_passkey
 drawable ic_password
 drawable ic_search_black_24
+drawable ic_splash_logo
 drawable login_background
 drawable m3_avd_hide_password
 drawable m3_avd_show_password
@@ -3740,18 +3744,23 @@ drawable notification_bg_normal
 drawable notification_bg_normal_pressed
 drawable notification_icon_background
 drawable notification_oversize_large_icon_bg
+drawable notification_student_bg
 drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
+drawable notification_tutor_bg
 drawable notify_panel_notification_icon_bg
 drawable outline_attach_file_24
 drawable outline_attach_money_24
+drawable outline_auto_stories_24
+drawable outline_award_star_24
 drawable outline_background_replace_24
 drawable outline_chat_bubble_24
 drawable outline_check_circle_24
 drawable outline_checklist_24
 drawable outline_close_24
 drawable outline_delete_24
+drawable outline_done_all_24
 drawable outline_download_24
 drawable outline_edit_square_24
 drawable outline_file_present_24
@@ -3762,15 +3771,22 @@ drawable outline_notifications_active_24
 drawable outline_person_24
 drawable outline_person_search_24
 drawable outline_post_add_24
+drawable outline_psychology_alt_24
+drawable outline_school_24
 drawable outline_settings_24
 drawable outline_thumb_up_24
 drawable outline_timer_24
 drawable outline_video_camera_back_24
 drawable outline_video_library_24
+drawable outline_volunteer_activism_24
+drawable outline_workspace_premium_24
+drawable penguin_icon
+drawable penguin_icon_round
 drawable qna_bg
 drawable rounded_card_light
 drawable rounded_dialog_bg
 drawable shadow_gradient_top
+drawable splash_bg
 drawable student_bg
 drawable test_level_drawable
 drawable tooltip_frame_dark
@@ -3944,11 +3960,14 @@ id btnViewMore
 id btnViewQuestion
 id btnWatchLesson
 id btnWatchVideo
+id bubble
+id bubbleLeft
 id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
 id cardAvatar
+id cardNotification
 id cardPostListing
 id cardPostRequest
 id cardSearchStudent
@@ -4160,7 +4179,6 @@ id ivAnswerAvatar
 id ivAnswerDetailAvatar
 id ivCommentAvatar
 id ivDetailAvatar
-id ivLogo
 id ivNotificationIcon
 id ivQuestionAvatar
 id ivTutorAvatar
@@ -4171,6 +4189,7 @@ id layout
 id layoutAchievementsContainer
 id layoutBadgeContainer
 id layoutDashboard
+id layoutNoRequests
 id layoutOwnerActions
 id layoutParticipation
 id layoutStudentFields
@@ -4250,7 +4269,6 @@ id nav_chat
 id nav_home
 id nav_notifications
 id nav_qna
-id nav_settings
 id navigation_bar_item_active_indicator_view
 id navigation_bar_item_content_container
 id navigation_bar_item_icon_container
@@ -4320,6 +4338,7 @@ id progress_circular
 id progress_horizontal
 id radio
 id ratio
+id rbEditGroup
 id rbEditOneToMany
 id rbEditOneToOne
 id rbEditOnline
@@ -4331,6 +4350,7 @@ id rbPhysical
 id rbStudent
 id rbTutor
 id rectangles
+id registerScrollView
 id report_drawn
 id retreat
 id reverseSawtooth
@@ -4406,6 +4426,7 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
+id splash_logo
 id spline
 id split_action_bar
 id spread
@@ -4493,7 +4514,6 @@ id tvAnswerDetailDate
 id tvAnswerDetailLink
 id tvAnswerFileName
 id tvAnswerUser
-id tvAppName
 id tvAppTitle
 id tvArea
 id tvAttachmentPreview
@@ -4507,7 +4527,10 @@ id tvCommentAuthor
 id tvCommentContent
 id tvCommentDate
 id tvContact
+id tvDashCompletions
 id tvDashHelped
+id tvDashHosted
+id tvDashLikes
 id tvDashScore
 id tvDashViews
 id tvDescription
@@ -4573,8 +4596,8 @@ id tvStudentName
 id tvStudentWelcome
 id tvSubject
 id tvSubjects
+id tvSwipeDeleteChatHint
 id tvSwipeTip
-id tvTagline
 id tvTime
 id tvTimerStatus
 id tvTimestamp
@@ -4790,6 +4813,7 @@ layout item_card_tutor_view_student_request
 layout item_chat_left
 layout item_chat_list
 layout item_chat_right
+layout item_community_impact
 layout item_edit_dynamic_row
 layout item_lesson_comment
 layout item_student_view_tutor_listing
@@ -4888,7 +4912,10 @@ mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 raw firebase_common_keep
 string _012_3456789
+string _02_30_pm
+string _0_100
 string _0_kudos
+string _10_00_am
 string _10_30_am
 string _12_kudos
 string _2_hours_ago
@@ -4932,7 +4959,7 @@ string add_post_question
 string age
 string age_18
 string age_icon
-string already_have_an_account_login
+string already_have_an_account
 string android_credentials_TYPE_PASSWORD_CREDENTIAL
 string androidx_credentials_TYPE_PUBLIC_KEY_CREDENTIAL
 string androidx_startup
@@ -4950,6 +4977,9 @@ string attach_material_pdf_img
 string attachment_available
 string avatar_option
 string bachelor_in_education
+string background
+string background_image
+string badges
 string bottom_sheet_behavior
 string bottomsheet_action_collapse
 string bottomsheet_action_expand
@@ -4969,6 +4999,7 @@ string character_counter_content_description
 string character_counter_overflowed_content_description
 string character_counter_pattern
 string choose_new_material_file_pdf_image_video
+string clear_all
 string clear_text_end_icon_content_description
 string comment_content
 string comments
@@ -4996,6 +5027,7 @@ string contact_info
 string contact_student
 string contact_tutor
 string content_goes_here
+string contribution
 string copy_toast_msg
 string create_account
 string current_file_none
@@ -5037,10 +5069,7 @@ string fab_transformation_sheet_behavior
 string fallback_menu_item_copy_link
 string fallback_menu_item_open_in_browser
 string fallback_menu_item_share_link
-<<<<<<< HEAD
 string fcm_fallback_notification_channel_label
-=======
->>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
 string fee_icon
 string fee_rm_hr
 string file_selected
@@ -5048,6 +5077,7 @@ string filter_by_level
 string find_a_tutor
 string find_students
 string free_lesson_algebra_basics
+string free_new_lessons
 string full_name
 string gcm_defaultSenderId
 string google_api_key
@@ -5060,6 +5090,7 @@ string hello_blank_fragment
 string hi_there
 string hide_bottom_view_on_scroll_behavior
 string hosted_free_lessons
+string hosted_lessons_0
 string hourly_fee_rm_50_hr
 string i_am_a
 string icon_content_description
@@ -5101,6 +5132,7 @@ string m3_sys_motion_easing_linear
 string m3_sys_motion_easing_standard
 string m3_sys_motion_easing_standard_accelerate
 string m3_sys_motion_easing_standard_decelerate
+string mark_as_solved
 string mark_lesson_as_complete
 string material_clock_display_divider
 string material_clock_toggle_content_description
@@ -5126,6 +5158,7 @@ string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
 string mathematics
 string mathematics_science
+string message_here
 string mode_online
 string mtrl_badge_numberless_content_description
 string mtrl_button_collapsed_content_description
@@ -5193,6 +5226,7 @@ string mtrl_switch_track_decoration_path
 string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
+string my_community_impact
 string my_listings
 string my_nlistings
 string my_posted_requests
@@ -5211,11 +5245,13 @@ string no_file_selected
 string no_free_lessons_found
 string no_lessons_found
 string no_lessons_recorded
+string no_notifications_yet
 string no_solution_yet
 string no_student_requests_found
 string no_tutors_found_matching_your_criteria_ntry_broadening_your_search
 string no_tutors_found_try_a_different_keyword
 string notification_icon
+string notifications
 string one_to_many
 string one_to_one
 string online
@@ -5261,6 +5297,8 @@ string qualification
 string qualification_e_g_degree_in_math
 string question_preview
 string question_title
+string questions_answered_0
+string received_message
 string register_here
 string register_password
 string replace_material_pdf_img
@@ -5299,6 +5337,7 @@ string stpm_a_level
 string student
 string student_description_goes_here
 string student_name
+string students_completed_0
 string study_time_required_05_00
 string subang_jaya
 string subject
@@ -5306,6 +5345,9 @@ string subject_icon
 string subjects
 string subjects_e_g_math_science
 string subjects_math_science
+string swipe_left_or_right_to_delete
+string swipe_left_to_delete_chat
+string total_likes_received_0
 string tutor
 string tutor_john_doe
 string tutor_name

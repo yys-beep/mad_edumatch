@@ -4,28 +4,32 @@ public class StudentRequest {
     private String requestId;
     private String studentId;
     private String subject;
-    private String level;         // <--- NEW FIELD
+    private String level;
     private String area;
     private String learningMode;  // "One-to-One" or "One-to-Many"
     private String deliveryMode;  // "Physical" or "Online"
-    private double budget;        // Renamed from fee
-    private String description;   // New field
+    private double budget;
+    private String description;
+
+    // --- NEW FIELD FOR SORTING ---
+    private long timestamp;
 
     // Empty constructor required for Firebase
     public StudentRequest() {
     }
 
-    // Updated Constructor to include 'level'
-    public StudentRequest(String requestId, String studentId, String subject, String level, String area, String learningMode, String deliveryMode, double budget, String description) {
+    // Updated Constructor to include 'timestamp'
+    public StudentRequest(String requestId, String studentId, String subject, String level, String area, String learningMode, String deliveryMode, double budget, String description, long timestamp) {
         this.requestId = requestId;
         this.studentId = studentId;
         this.subject = subject;
-        this.level = level;       // <--- Initialize here
+        this.level = level;
         this.area = area;
         this.learningMode = learningMode;
         this.deliveryMode = deliveryMode;
         this.budget = budget;
         this.description = description;
+        this.timestamp = timestamp; // Initialize here
     }
 
     // Getters and Setters
@@ -38,7 +42,6 @@ public class StudentRequest {
     public String getSubject() { return subject; }
     public void setSubject(String subject) { this.subject = subject; }
 
-    // NEW Getter and Setter for Level
     public String getLevel() { return level; }
     public void setLevel(String level) { this.level = level; }
 
@@ -56,4 +59,8 @@ public class StudentRequest {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    // --- NEW GETTER & SETTER ---
+    public long getTimestamp() { return timestamp; }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 }

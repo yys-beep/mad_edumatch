@@ -1,11 +1,13 @@
 package com.example.mad_edumatch.student;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +39,12 @@ public class StudentSearchTutorFragment extends Fragment {
     private TextView tvNoTutorFound;
 
     private StudentSearchTutorAdapter adapter;
-    private List<TutorListing> tutorList = new ArrayList<>();
+
+    // LIST A: Holds all data from Firebase (The "Master" list)
+    private List<TutorListing> allTutorList = new ArrayList<>();
+    // LIST B: Holds only what matches your search (The "Display" list)
+    private List<TutorListing> displayedTutorList = new ArrayList<>();
+
     private DatabaseReference dbRef;
 
     @Override
@@ -49,152 +56,148 @@ public class StudentSearchTutorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 1. Initialize Views
         etSearchSubject = view.findViewById(R.id.etSearchSubject);
         chipGroupFilter = view.findViewById(R.id.chipGroupFilter);
         rvSearchTutors = view.findViewById(R.id.rvSearchTutors);
         tvNoTutorFound = view.findViewById(R.id.tvNoTutorFound);
 
+        // 2. Setup RecyclerView
         rvSearchTutors.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // Initialize adapter with the display list
+        adapter = new StudentSearchTutorAdapter(displayedTutorList);
+        rvSearchTutors.setAdapter(adapter);
+
+        // 3. Setup Firebase
         dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("tutor_listings");
 
-        // --- FIX 1: Restore the Adapter immediately if it exists ---
-        if (adapter != null) {
-            rvSearchTutors.setAdapter(adapter);
-        } else {
-            // Initialize empty adapter so the list isn't null
-            adapter = new StudentSearchTutorAdapter(tutorList);
-            rvSearchTutors.setAdapter(adapter);
-        }
+        // 4. Load Data (ONCE)
+        loadAllData();
 
-        // Listeners
-        etSearchSubject.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch();
-                return true;
+        // 5. Setup Listeners
+        setupListeners();
+    }
+
+    private void loadAllData() {
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allTutorList.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    TutorListing tutor = data.getValue(TutorListing.class);
+                    if (tutor != null) {
+                        tutor.setKey(data.getKey());
+                        allTutorList.add(tutor);
+                    }
+                }
+                // Once data is loaded, run the filter immediately
+                performFilter();
             }
-            return false;
-        });
 
-        chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
-            performSearch();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Error loading data", Toast.LENGTH_SHORT).show();
+            }
         });
-
-        // Always perform search to ensure data is fresh
-        performSearch();
     }
 
-    // --- FIX 2: Ensure data refreshes when returning ---
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (tutorList.isEmpty()) {
-            performSearch();
-        }
+    private void setupListeners() {
+        // Listener 1: Search Bar (TextWatcher for instant search)
+        etSearchSubject.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                performFilter(); // Filter as you type
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Listener 2: Chips
+        chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            performFilter(); // Filter when chip changes
+        });
     }
 
-    private void performSearch() {
+    // --- KEY LOGIC IS HERE ---
+    private void performFilter() {
         String query = etSearchSubject.getText() != null ? etSearchSubject.getText().toString().trim().toLowerCase() : "";
 
+        // Get selected Chip Text
         String selectedLevel = "";
         int checkedChipId = chipGroupFilter.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
             Chip chip = chipGroupFilter.findViewById(checkedChipId);
-            selectedLevel = chip.getText().toString().toLowerCase();
+            selectedLevel = chip.getText().toString().toLowerCase(); // e.g., "primary", "spm"
         }
 
-        String finalLevel = selectedLevel;
+        // Clear previous results
+        displayedTutorList.clear();
 
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tutorList.clear();
-                List<ScoredTutor> scoredList = new ArrayList<>();
+        // Loop through the MASTER list
+        for (TutorListing tutor : allTutorList) {
 
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    TutorListing tutor = data.getValue(TutorListing.class);
-                    if (tutor == null) continue;
+            // 1. CHECK SEARCH TEXT (Subject OR Name)
+            boolean matchSearch = false;
+            if (query.isEmpty()) {
+                matchSearch = true; // If search is empty, everything matches
+            } else {
+                String subject = tutor.getSubject() != null ? tutor.getSubject().toLowerCase() : "";
+                String name = tutor.getName() != null ? tutor.getName().toLowerCase() : "";
 
-                    tutor.setKey(data.getKey());
-
-                    int score = 0;
-                    String tSubject = tutor.getSubject() != null ? tutor.getSubject().toLowerCase() : ""; // Use Getter
-
-                    // A. Subject Match
-                    if (query.isEmpty()) {
-                        score += 10;
-                    } else if (tSubject.equals(query)) {
-                        score += 50;
-                    } else if (tSubject.contains(query)) {
-                        score += 30;
-                    }
-
-                    // B. Level Filter
-                    if (!finalLevel.isEmpty()) {
-                        boolean levelMatch = false;
-
-                        if (tutor.getAcademicLevels() != null) {
-                            for (String dbLevel : tutor.getAcademicLevels()) {
-                                // Check if they match, IGNORING Upper/Lower case differences
-                                if (dbLevel.equalsIgnoreCase(finalLevel)) {
-                                    levelMatch = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (levelMatch) {
-                            score += 20;
-                        } else {
-                            score = 0; // Strict filter: if level doesn't match, hide it.
-                        }
-                    }
-
-                    if (score > 0) {
-                        scoredList.add(new ScoredTutor(tutor, score));
-                    }
+                if (subject.contains(query) || name.contains(query)) {
+                    matchSearch = true;
                 }
-
-                Collections.sort(scoredList, (o1, o2) -> {
-                    // 1. First priority: Filter Score (Subject Match)
-                    int filterComparison = Integer.compare(o2.score, o1.score);
-                    if (filterComparison != 0) return filterComparison;
-
-                    // 2. Second priority: Contribution Score (Reputation)
-                    return Integer.compare(o2.tutor.contributionScore, o1.tutor.contributionScore);
-                });
-
-                for (ScoredTutor st : scoredList) {
-                    tutorList.add(st.tutor);
-                }
-
-                updateUI();
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+            // 2. CHECK LEVEL (Chip)
+            boolean matchLevel = false;
+            if (selectedLevel.isEmpty()) {
+                matchLevel = true; // If no chip selected, everything matches
+            } else {
+                // Check if the tutor's list of levels contains the selected chip text
+                if (tutor.getAcademicLevels() != null) {
+                    for (String lvl : tutor.getAcademicLevels()) {
+                        if (lvl.toLowerCase().contains(selectedLevel)) {
+                            matchLevel = true;
+                            break;
+                        }
+                    }
+                }
+                // Fallback: If you store levels as a single string
+                else if (tutor.getLevelsAsString() != null) {
+                    if (tutor.getLevelsAsString().toLowerCase().contains(selectedLevel)) {
+                        matchLevel = true;
+                    }
+                }
+            }
+
+            // 3. STRICT "AND" LOGIC: Both must be true
+            if (matchSearch && matchLevel) {
+                displayedTutorList.add(tutor);
+            }
+        }
+
+        // 4. SORT (Optional: Newest first)
+        Collections.sort(displayedTutorList, (o1, o2) ->
+                Long.compare(o2.getTimestamp(), o1.getTimestamp())
+        );
+
+        // 5. UPDATE UI
+        updateUI();
     }
 
     private void updateUI() {
-        if (tutorList.isEmpty()) {
+        if (displayedTutorList.isEmpty()) {
             tvNoTutorFound.setVisibility(View.VISIBLE);
             rvSearchTutors.setVisibility(View.GONE);
         } else {
             tvNoTutorFound.setVisibility(View.GONE);
             rvSearchTutors.setVisibility(View.VISIBLE);
-
-            // --- FIX 3: Safety check ---
-            // If adapter became null or detached, re-attach it
-            if (rvSearchTutors.getAdapter() == null) {
-                rvSearchTutors.setAdapter(adapter);
-            }
-            adapter.notifyDataSetChanged();
         }
-    }
-
-    private static class ScoredTutor {
-        TutorListing tutor;
-        int score;
-        ScoredTutor(TutorListing tutor, int score) { this.tutor = tutor; this.score = score; }
+        adapter.notifyDataSetChanged();
     }
 }
