@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,46 +42,57 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
     private String tempFileUrl = null, tempFileName = null;
     private TextView tvDialogFileName;
 
+    // FIX 1: Add variable to cache the view
+    private View rootView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.qna_forum_fragment_main, container, false);
+
+        // FIX 2: Check if view already exists. Reuse it to stop flicker.
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.qna_forum_fragment_main, container, false);
+
+            // --- ALL SETUP LOGIC MOVED HERE ---
+            etSearch = rootView.findViewById(R.id.etSearchQuestion);
+            btnSearch = rootView.findViewById(R.id.btnSearch);
+            btnPostQuestion = rootView.findViewById(R.id.btnPostQuestion);
+            btnMyQuestions = rootView.findViewById(R.id.btnMyQuestions);
+            recyclerView = rootView.findViewById(R.id.rvQuestions);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            fullList = new ArrayList<>();
+            displayList = new ArrayList<>();
+
+            adapter = new QuestionAdapter(getContext(), displayList, this::openQuestionDetail);
+            recyclerView.setAdapter(adapter);
+
+            // --- CATCH NAVIGATION FLAGS ---
+            if (getArguments() != null) {
+                if (getArguments().getBoolean("showMyQuestions", false)) {
+                    isShowingMyQuestions = true;
+                    btnMyQuestions.setText("Show All");
+                }
+            }
+
+            dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
+                    .getReference("forum_questions");
+
+            loadQuestions();
+
+            btnSearch.setOnClickListener(v -> performSearch());
+            btnPostQuestion.setOnClickListener(v -> showPostDialog());
+            btnMyQuestions.setOnClickListener(v -> toggleMyQuestions());
+        }
+
+        return rootView;
     }
 
+    // NOTE: onViewCreated is removed/empty because we did everything in onCreateView
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        etSearch = view.findViewById(R.id.etSearchQuestion);
-        btnSearch = view.findViewById(R.id.btnSearch);
-        btnPostQuestion = view.findViewById(R.id.btnPostQuestion);
-        btnMyQuestions = view.findViewById(R.id.btnMyQuestions);
-        recyclerView = view.findViewById(R.id.rvQuestions);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        fullList = new ArrayList<>();
-        displayList = new ArrayList<>();
-
-        adapter = new QuestionAdapter(getContext(), displayList, this::openQuestionDetail);
-        recyclerView.setAdapter(adapter);
-
-        // --- STEP 1: CATCH NAVIGATION FLAGS FROM NOTIFICATION ---
-        if (getArguments() != null) {
-            // Check if we should auto-filter to "My Questions"
-            if (getArguments().getBoolean("showMyQuestions", false)) {
-                isShowingMyQuestions = true;
-                btnMyQuestions.setText("Show All");
-            }
-        }
-
-        dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("forum_questions");
-
-        loadQuestions();
-
-        btnSearch.setOnClickListener(v -> performSearch());
-        btnPostQuestion.setOnClickListener(v -> showPostDialog());
-        btnMyQuestions.setOnClickListener(v -> toggleMyQuestions());
+        // Logic moved to onCreateView to support caching
     }
 
     private void openQuestionDetail(Question q) {
@@ -111,7 +121,6 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Crash guard: stop if fragment is gone
                 if (!isAdded()) return;
 
                 fullList.clear();
@@ -128,7 +137,7 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
                     return Long.compare(q2.getTimestamp(), q1.getTimestamp());
                 });
 
-                // --- STEP 2: APPLY FILTER ---
+                // Apply Filter
                 if (isShowingMyQuestions) {
                     String uid = CurrentUser.getInstance().getUid();
                     for (Question q : fullList) {
@@ -140,14 +149,14 @@ public class QnaForumFragment extends Fragment implements UploadMaterialBottom.U
 
                 adapter.notifyDataSetChanged();
 
+                // Handle Scroll Target (Deep Linking)
                 if (getArguments() != null && getArguments().containsKey("targetQuestionId")) {
                     String targetId = getArguments().getString("targetQuestionId");
 
                     for (int i = 0; i < displayList.size(); i++) {
                         if (displayList.get(i).getQuestionId().equals(targetId)) {
-                            // This line brings your post (with solutions) into view
                             recyclerView.scrollToPosition(i);
-                            getArguments().remove("targetQuestionId"); // Stop scrolling after it's done
+                            getArguments().remove("targetQuestionId");
                             break;
                         }
                     }

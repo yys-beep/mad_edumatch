@@ -2,15 +2,15 @@ package com.example.mad_edumatch.recycleAdapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.format.DateUtils; // Import this for time formatting
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager; // Import this
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
@@ -24,9 +24,8 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
 
     private Context context;
     private List<StudentRequest> requestList;
-    private FragmentManager fragmentManager; // Needed for Dialog
+    private FragmentManager fragmentManager;
 
-    // Constructor needs FragmentManager now
     public StudentRequestAdapter(Context context, List<StudentRequest> requestList, FragmentManager fragmentManager) {
         this.context = context;
         this.requestList = requestList;
@@ -45,11 +44,27 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
         StudentRequest req = requestList.get(position);
 
         holder.tvSubject.setText(req.getSubject());
-        holder.tvLevel.setText(req.getLevel()); // Ensure getLevel() exists in model
+        holder.tvLevel.setText(req.getLevel());
         holder.tvArea.setText(req.getArea());
         holder.tvBudget.setText("RM " + req.getBudget() + "/hr");
         holder.tvMode.setText(req.getDeliveryMode() + " (" + req.getLearningMode() + ")");
         holder.tvDesc.setText(req.getDescription());
+
+        // --- NEW: TIME AGO LOGIC ---
+        if (req.getTimestamp() != 0) {
+            // This helper method converts the timestamp into "42 mins ago", "Yesterday", etc.
+            CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                    req.getTimestamp(),
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS
+            );
+            holder.tvTimestamp.setText("Last updated: " + timeAgo);
+            holder.tvTimestamp.setVisibility(View.VISIBLE);
+        } else {
+            // For old items with no timestamp, hide or show default
+            holder.tvTimestamp.setVisibility(View.GONE);
+        }
+        // ---------------------------
 
         // DELETE BUTTON LOGIC
         holder.btnDelete.setOnClickListener(v -> {
@@ -66,7 +81,7 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
                     .show();
         });
 
-        // EDIT BUTTON LOGIC (Opens the Dialog)
+        // EDIT BUTTON LOGIC
         holder.btnEdit.setOnClickListener(v -> {
             EditStudentRequestDialog dialog = new EditStudentRequestDialog(req);
             dialog.show(fragmentManager, "EditRequest");
@@ -79,8 +94,8 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSubject, tvLevel, tvArea, tvBudget, tvMode, tvDesc;
-        Button btnDelete, btnEdit; // Add btnEdit
+        TextView tvSubject, tvLevel, tvArea, tvBudget, tvMode, tvDesc, tvTimestamp; // Added tvTimestamp
+        Button btnDelete, btnEdit;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,8 +106,11 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
             tvMode = itemView.findViewById(R.id.tvModes);
             tvDesc = itemView.findViewById(R.id.tvDescription);
 
+            // --- BIND THE TIMESTAMP VIEW ---
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+
             btnDelete = itemView.findViewById(R.id.btnDeleteRequest);
-            btnEdit = itemView.findViewById(R.id.btnEditRequest); // Bind View
+            btnEdit = itemView.findViewById(R.id.btnEditRequest);
         }
     }
 }

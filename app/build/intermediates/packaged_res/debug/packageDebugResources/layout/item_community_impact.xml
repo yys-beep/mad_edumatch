@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
+    app:cardBackgroundColor="#FAF5ED"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     app:strokeColor="#DDDDDD"
@@ -19,8 +19,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="24dp"
@@ -33,31 +33,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/my_community_impact"
+                android:textColor="#000000"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#000000"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#EEEEEE"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:background="#EEEEEE" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="6dp"
                 android:src="@drawable/outline_video_library_24"
-                app:tint="#555555"
-                android:layout_marginEnd="6dp"/>
+                app:tint="#555555" />
 
             <TextView
                 android:id="@+id/tvDashHosted"
@@ -66,22 +66,22 @@
                 android:text="@string/hosted_lessons_0"
                 android:textColor="#000000"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="6dp"
                 android:src="@drawable/outline_auto_stories_24"
-                app:tint="#555555"
-                android:layout_marginEnd="6dp"/>
+                app:tint="#555555" />
 
             <TextView
                 android:id="@+id/tvDashHelped"
@@ -90,22 +90,22 @@
                 android:text="@string/questions_answered_0"
                 android:textColor="#000000"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="6dp"
                 android:src="@drawable/baseline_favorite_border_24"
-                app:tint="#555555"
-                android:layout_marginEnd="6dp"/>
+                app:tint="#555555" />
 
             <TextView
                 android:id="@+id/tvDashLikes"
@@ -114,7 +114,7 @@
                 android:text="@string/total_likes_received_0"
                 android:textColor="#000000"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,9 +126,9 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="6dp"
                 android:src="@drawable/outline_done_all_24"
-                app:tint="#555555"
-                android:layout_marginEnd="6dp"/>
+                app:tint="#555555" />
 
             <TextView
                 android:id="@+id/tvDashCompletions"
@@ -137,15 +137,15 @@
                 android:text="@string/students_completed_0"
                 android:textColor="#000000"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
@@ -158,9 +158,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/contribution"
-                android:textStyle="bold"
+                android:textColor="#000000"
                 android:textSize="16sp"
-                android:textColor="#000000"/>
+                android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/pbContribution"
@@ -179,33 +179,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_0_100"
+                android:textColor="#000000"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#000000"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
+                android:layout_marginEnd="6dp"
                 android:src="@drawable/outline_workspace_premium_24"
-                app:tint="#000000"
-                android:layout_marginEnd="6dp"/>
+                app:tint="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/badges"
+                android:textColor="#000000"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#000000"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <HorizontalScrollView
@@ -218,8 +218,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="4dp">
-            </LinearLayout>
+                android:paddingBottom="4dp"></LinearLayout>
         </HorizontalScrollView>
 
     </LinearLayout>

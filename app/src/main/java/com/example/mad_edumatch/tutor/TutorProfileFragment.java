@@ -52,7 +52,8 @@ public class TutorProfileFragment extends Fragment {
     private ArrayList<String> achievementList = new ArrayList<>();
 
     // State
-    private boolean isLessonsExpanded = true;
+    // CHANGE 1: Start collapsed (false) so it shows only 3 items initially
+    private boolean isLessonsExpanded = false;
     private boolean isExperienceExpanded = false;
     private boolean isAchievementsExpanded = false;
     private static final int INITIAL_ITEM_LIMIT = 3;
@@ -123,17 +124,23 @@ public class TutorProfileFragment extends Fragment {
     private void setupRecyclerViews() {
         rvLessons.setLayoutManager(new LinearLayoutManager(getContext()));
         freeLessonAdapter = new FreeLessonAdapter(hostedLessonList, this::openLessonDetail);
+        // CHANGE 2: Set initial limit
+        freeLessonAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvLessons.setAdapter(freeLessonAdapter);
+        // Important: Prevent nested scrolling issues if inside ScrollView
+        rvLessons.setNestedScrollingEnabled(false);
 
         rvExperience.setLayoutManager(new LinearLayoutManager(getContext()));
         experienceAdapter = new AchievementAdapter(experienceList);
         experienceAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvExperience.setAdapter(experienceAdapter);
+        rvExperience.setNestedScrollingEnabled(false);
 
         rvAchievements.setLayoutManager(new LinearLayoutManager(getContext()));
         achievementAdapter = new AchievementAdapter(achievementList);
         achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvAchievements.setAdapter(achievementAdapter);
+        rvAchievements.setNestedScrollingEnabled(false);
 
         tvLessonCollapseToggle.setOnClickListener(v -> toggleLessonView());
         tvExperienceCollapseToggle.setOnClickListener(v -> toggleExperienceView());
@@ -191,6 +198,7 @@ public class TutorProfileFragment extends Fragment {
         });
     }
 
+    // Helper for Experience/Achievement
     private void refreshSectionUI(int size, RecyclerView rv, TextView emptyTv, TextView toggle, AchievementAdapter adapter, boolean isExpanded) {
         if (size == 0) {
             rv.setVisibility(View.GONE);
@@ -211,6 +219,31 @@ public class TutorProfileFragment extends Fragment {
         }
     }
 
+    // CHANGE 3: New Helper logic specifically for Lessons
+    private void refreshLessonUI() {
+        int size = hostedLessonList.size();
+        tvHeaderLessons.setText("Hosted Free Lessons (" + size + ")");
+
+        if (size == 0) {
+            rvLessons.setVisibility(View.GONE);
+            tvLessonCollapseToggle.setVisibility(View.GONE);
+            // Optional: You could show a "No lessons" textview here if you have one
+        } else {
+            rvLessons.setVisibility(View.VISIBLE);
+            if (size > INITIAL_ITEM_LIMIT) {
+                tvLessonCollapseToggle.setVisibility(View.VISIBLE);
+                tvLessonCollapseToggle.setText(isLessonsExpanded ? "Collapse" : "View All");
+
+                // 0 means "Show All" in FreeLessonAdapter, INITIAL_ITEM_LIMIT means "Show 3"
+                freeLessonAdapter.setLimit(isLessonsExpanded ? 0 : INITIAL_ITEM_LIMIT);
+            } else {
+                tvLessonCollapseToggle.setVisibility(View.GONE);
+                freeLessonAdapter.setLimit(0); // Show everything since it fits
+            }
+            freeLessonAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void toggleExperienceView() {
         isExperienceExpanded = !isExperienceExpanded;
         refreshSectionUI(experienceList.size(), rvExperience, tvNoExperience, tvExperienceCollapseToggle, experienceAdapter, isExperienceExpanded);
@@ -221,10 +254,10 @@ public class TutorProfileFragment extends Fragment {
         refreshSectionUI(achievementList.size(), rvAchievements, tvNoAchievements, tvAchievementsCollapseToggle, achievementAdapter, isAchievementsExpanded);
     }
 
+    // CHANGE 4: Updated toggle logic to use refreshLessonUI
     private void toggleLessonView() {
         isLessonsExpanded = !isLessonsExpanded;
-        rvLessons.setVisibility(isLessonsExpanded ? View.VISIBLE : View.GONE);
-        tvLessonCollapseToggle.setText(isLessonsExpanded ? "Collapse" : "View All");
+        refreshLessonUI();
     }
 
     private void loadHostedLessons() {
@@ -242,10 +275,9 @@ public class TutorProfileFragment extends Fragment {
                         hostedLessonList.add(lesson);
                     }
                 }
-                freeLessonAdapter.notifyDataSetChanged();
-                tvHeaderLessons.setText("Hosted Free Lessons (" + hostedLessonList.size() + ")");
-                rvLessons.setVisibility(hostedLessonList.isEmpty() ? View.GONE : (isLessonsExpanded ? View.VISIBLE : View.GONE));
-                tvLessonCollapseToggle.setVisibility(hostedLessonList.isEmpty() ? View.GONE : View.VISIBLE);
+                hostedLessonList.sort((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
+                // CHANGE 5: Call the new helper instead of manually setting visibility
+                refreshLessonUI();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });

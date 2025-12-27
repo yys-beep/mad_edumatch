@@ -216,10 +216,6 @@
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\tutor_fragment_search_student_requests.xml"
     },
     {
-        "merged": "com.example.mad_edumatch.app-debug-60:/layout_student_fragment_notifications.xml.flat",
-        "source": "com.example.mad_edumatch.app-main-62:/layout/student_fragment_notifications.xml"
-    },
-    {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\drawable_custom_progress.xml.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\custom_progress.xml"
     },
@@ -234,10 +230,6 @@
     {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_auth_activity_register.xml.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\auth_activity_register.xml"
-    },
-    {
-        "merged": "com.example.mad_edumatch.app-debug-60:/layout_tutor_fragment_notifications.xml.flat",
-        "source": "com.example.mad_edumatch.app-main-62:/layout/tutor_fragment_notifications.xml"
     },
     {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\drawable_ic_launcher_foreground.xml.flat",
@@ -276,6 +268,10 @@
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\outline_psychology_alt_24.xml"
     },
     {
+        "merged": "com.example.mad_edumatch.app-debug-60:/layout_item_student_view_tutor_listing.xml.flat",
+        "source": "com.example.mad_edumatch.app-main-62:/layout/item_student_view_tutor_listing.xml"
+    },
+    {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\drawable_avatar_4.png.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\avatar_4.png"
     },
@@ -284,12 +280,12 @@
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\baseline_menu_book_24.xml"
     },
     {
-        "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_tutor_fragment_profile.xml.flat",
-        "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\tutor_fragment_profile.xml"
-    },
-    {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\drawable_outline_settings_24.xml.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\outline_settings_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_tutor_fragment_profile.xml.flat",
+        "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\tutor_fragment_profile.xml"
     },
     {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\xml_backup_rules.xml.flat",
@@ -608,6 +604,10 @@
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\qna_item_comment.xml"
     },
     {
+        "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_item_card_tutor_view_student_request.xml.flat",
+        "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\item_card_tutor_view_student_request.xml"
+    },
+    {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_item_card_notification.xml.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\item_card_notification.xml"
     },
@@ -618,10 +618,6 @@
     {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\drawable_outline_thumb_up_24.xml.flat",
         "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\drawable\\outline_thumb_up_24.xml"
-    },
-    {
-        "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_item_card_tutor_view_student_request.xml.flat",
-        "source": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-main-62:\\layout\\item_card_tutor_view_student_request.xml"
     },
     {
         "merged": "C:\\Users\\win11\\.gradle\\daemon\\9.0-milestone-1\\com.example.mad_edumatch.app-debug-60:\\layout_item_student_view_tutor_listing.xml.flat",
