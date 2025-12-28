@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.android.datatransport:transport-api:3.1.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/9.0-milestone-1/transforms/9b497a4959e7d77792f97a5d73245c95/transformed/transport-api-3.1.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/9.0-milestone-1/transforms/9b497a4959e7d77792f97a5d73245c95/transformed/transport-api-3.1.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
