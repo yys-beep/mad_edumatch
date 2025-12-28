@@ -105,7 +105,7 @@ public class StudentPostRequestFragment extends Fragment {
             Toast.makeText(requireContext(), "Please select a learning mode", Toast.LENGTH_SHORT).show();
             return;
         }
-        String learningMode = (selectedModeId == R.id.rbOneToOne) ? "One-to-One" : "One-to-Many";
+        String learningMode = (selectedModeId == R.id.rbOneToOne) ? "One-to-One" : "Group";
 
         // Delivery Mode
         int selectedDeliveryId = rgDeliveryMode.getCheckedRadioButtonId();
@@ -146,7 +146,8 @@ public class StudentPostRequestFragment extends Fragment {
                 learningMode,
                 deliveryMode,
                 budget,
-                description
+                description,
+                System.currentTimeMillis()
         );
 
         database.getReference("student_requests")

@@ -1,20 +1,15 @@
 package com.example.mad_edumatch.tutor;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.FreeLesson;
-import com.example.mad_edumatch.firebaseModels.TutorProfile;
 import com.example.mad_edumatch.freeLesson.FreeLessonDetailFragment;
 import com.example.mad_edumatch.helper.AvatarManager;
 import com.example.mad_edumatch.helper.CurrentUser;
@@ -38,30 +32,26 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 
 public class TutorHomeFragment extends Fragment {
 
-    // Views
+    // Main Navigation Views
     private View cardSearchStudent, cardPostListing, cardViewListings, cardUploadLesson;
     private TextView tvTutorWelcome, tvNoLessons;
     private ImageView imgHomeAvatar;
+
+    // Lessons List Views
     private RecyclerView rvFreeLessons;
     private EditText etSearchLesson;
     private Button btnViewMore;
 
-    // Dashboard Views
-    private TextView tvDashViews, tvDashHelped, tvDashScore;
-    private ProgressBar pbContribution;
-    private LinearLayout layoutBadgeContainer; // New container for badges
-
-    // Data
+    // Data Management
     private FreeLessonAdapter freeLessonAdapter;
     private ArrayList<FreeLesson> allFreeLessons = new ArrayList<>();
     private ArrayList<FreeLesson> displayList = new ArrayList<>();
     private DatabaseReference freeLessonsRef;
 
-    // Pagination & Search
+    // Pagination & Search State
     private int currentLimit = 10;
     private static final int LOAD_STEP = 10;
     private String currentSearchText = "";
@@ -77,15 +67,15 @@ public class TutorHomeFragment extends Fragment {
         setupClickListeners();
         setupSearchListener();
 
+        // Load data on startup
         loadUserInfo();
         loadFreeLessons();
-        loadDashboard(); // Loads the gamification stats
+        loadDashboard(view); // Initialize the modular Impact Dashboard
 
         return view;
     }
 
     private void bindViews(View view) {
-        // Basic Views
         tvTutorWelcome = view.findViewById(R.id.tvTutorWelcome);
         imgHomeAvatar = view.findViewById(R.id.imgHomeAvatar);
 
@@ -98,13 +88,23 @@ public class TutorHomeFragment extends Fragment {
         etSearchLesson = view.findViewById(R.id.etSearchLesson);
         tvNoLessons = view.findViewById(R.id.tvNoLessons);
         btnViewMore = view.findViewById(R.id.btnViewMore);
+    }
 
-        // Dashboard Views
-        tvDashViews = view.findViewById(R.id.tvDashViews);
-        tvDashHelped = view.findViewById(R.id.tvDashHelped);
-        tvDashScore = view.findViewById(R.id.tvDashScore);
-        pbContribution = view.findViewById(R.id.pbContribution);
-        layoutBadgeContainer = view.findViewById(R.id.layoutBadgeContainer); // Bind the new container
+    /**
+     * Delegates all Impact Score and Badge logic to the ImpactManager.
+     */
+    private void loadDashboard(View rootView) {
+        String uid = CurrentUser.getInstance().getUid();
+        if (uid == null) return;
+
+        // Force a recalculation of the contribution score
+        GamificationHelper.calculateScore(uid);
+
+        // Find the included layout and bind it via the Manager
+        View impactView = rootView.findViewById(R.id.layoutDashboard);
+        if (impactView != null) {
+            ImpactManager.bindImpact(impactView, uid, this);
+        }
     }
 
     private void setupRecyclerView() {
@@ -138,7 +138,7 @@ public class TutorHomeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 currentSearchText = s.toString().toLowerCase().trim();
-                currentLimit = LOAD_STEP;
+                currentLimit = LOAD_STEP; // Reset pagination on new search
                 filterAndDisplayList();
             }
 
@@ -169,14 +169,11 @@ public class TutorHomeFragment extends Fragment {
         }
         freeLessonAdapter.notifyDataSetChanged();
 
-        if (displayList.isEmpty()) {
-            tvNoLessons.setVisibility(View.VISIBLE);
-            rvFreeLessons.setVisibility(View.GONE);
-        } else {
-            tvNoLessons.setVisibility(View.GONE);
-            rvFreeLessons.setVisibility(View.VISIBLE);
-        }
+        // Toggle empty state visibility
+        tvNoLessons.setVisibility(displayList.isEmpty() ? View.VISIBLE : View.GONE);
+        rvFreeLessons.setVisibility(displayList.isEmpty() ? View.GONE : View.VISIBLE);
 
+        // Show "View More" button only if there is more data to load
         btnViewMore.setVisibility(end < total ? View.VISIBLE : View.GONE);
     }
 
@@ -184,16 +181,19 @@ public class TutorHomeFragment extends Fragment {
         freeLessonsRef.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded()) return;
                 allFreeLessons.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     FreeLesson lesson = ds.getValue(FreeLesson.class);
-                    if (lesson != null) allFreeLessons.add(lesson);
+                    if (lesson != null) {
+                        lesson.setLessonId(ds.getKey());
+                        allFreeLessons.add(lesson);
+                    }
                 }
-                Collections.reverse(allFreeLessons);
+                Collections.reverse(allFreeLessons); // Show newest lessons first
                 filterAndDisplayList();
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
@@ -201,14 +201,10 @@ public class TutorHomeFragment extends Fragment {
         FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
         Bundle args = new Bundle();
         args.putString("lessonId", lesson.getLessonId());
-        args.putString("tutorName", lesson.getTutorName());
-        args.putString("tutorId", lesson.getTutorId());
         args.putString("title", lesson.getTitle());
-        args.putString("desc", lesson.getDescription());
         args.putString("videoUrl", lesson.getVideoLink());
-        args.putString("matUrl", lesson.getMaterialUrl());
-        args.putString("matName", lesson.getMaterialName());
-        args.putLong("duration", lesson.getDurationMinutes());
+        args.putString("materialUrl", lesson.getMaterialUrl());
+        args.putString("materialName", lesson.getMaterialName());
         fragment.setArguments(args);
         navigateToFragment(fragment);
     }
@@ -225,134 +221,26 @@ public class TutorHomeFragment extends Fragment {
 
     private void loadUserInfo() {
         String uid = CurrentUser.getInstance().getUid();
-        if (uid != null) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                    .getReference("tutor_profiles")
-                    .child(uid);
-
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (!isAdded()) return;
-                    String realName = "Tutor";
-                    if (snapshot.hasChild("username")) {
-                        realName = snapshot.child("username").getValue(String.class);
-                    }
-                    tvTutorWelcome.setText("Welcome back,\n" + realName + " !");
-                    if (snapshot.hasChild("profileImageUrl")) {
-                        String avatarName = snapshot.child("profileImageUrl").getValue(String.class);
-                        int resId = AvatarManager.getAvatarResourceId(avatarName);
-                        if(resId != 0) imgHomeAvatar.setImageResource(resId);
-                    }
-                }
-                @Override public void onCancelled(@NonNull DatabaseError error) {}
-            });
-        }
-    }
-
-    // --- NEW: Load Dashboard Stats & Badges ---
-    private void loadDashboard() {
-        String uid = CurrentUser.getInstance().getUid();
         if (uid == null) return;
 
-        // Recalculate score every time home loads
-        GamificationHelper.calculateScore(uid);
-
-        DatabaseReference ref = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
+        DatabaseReference userRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("tutor_profiles").child(uid);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded()) return;
-                TutorProfile p = snapshot.getValue(TutorProfile.class);
-                if (p != null) {
-                    tvDashViews.setText("👀 Total Views: " + p.getTotalViews());
-                    tvDashHelped.setText("🎓 Students Helped: " + p.getStudentsHelped());
-                    tvDashScore.setText(p.getContributionScore() + "/100");
-                    pbContribution.setProgress(p.getContributionScore());
 
-                    // Render Badges Dynamically
-                    renderBadges(p.getBadges());
-                }
+                String realName = snapshot.child("username").getValue(String.class);
+                if (realName == null) realName = "Tutor";
+
+                tvTutorWelcome.setText("Welcome back,\n" + realName + " !");
+
+                String avatarName = snapshot.child("profileImageUrl").getValue(String.class);
+                int resId = AvatarManager.getAvatarResourceId(avatarName);
+                if(resId != 0) imgHomeAvatar.setImageResource(resId);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
-    }
-
-    private void renderBadges(Map<String, Boolean> badges) {
-        layoutBadgeContainer.removeAllViews(); // Clear previous badges
-
-        if (badges == null) return;
-
-        // 1. TIER BADGES (Always show one)
-        if (badges.containsKey("tier_top")) addBadgeIcon("tier_top", "🏆");
-        else if (badges.containsKey("tier_gold")) addBadgeIcon("tier_gold", "🥇");
-        else if (badges.containsKey("tier_silver")) addBadgeIcon("tier_silver", "🥈");
-        else addBadgeIcon("tier_bronze", "🥉"); // Default
-
-        // 2. ACHIEVEMENT BADGES
-        if (badges.containsKey("ach_starter")) addBadgeIcon("ach_starter", "📹");
-        if (badges.containsKey("ach_favorite")) addBadgeIcon("ach_favorite", "❤️");
-        if (badges.containsKey("ach_viral")) addBadgeIcon("ach_viral", "🚀");
-        if (badges.containsKey("ach_helper")) addBadgeIcon("ach_helper", "✋");
-        if (badges.containsKey("ach_solver")) addBadgeIcon("ach_solver", "🧠");
-        if (badges.containsKey("ach_expert")) addBadgeIcon("ach_expert", "✨");
-    }
-
-    private void addBadgeIcon(String badgeKey, String iconEmoji) {
-        TextView tv = new TextView(getContext());
-        tv.setText(iconEmoji);
-        tv.setTextSize(26); // Large Icon
-        tv.setPadding(24, 16, 24, 16);
-        tv.setBackgroundResource(R.drawable.circle_bg_light); // Ensure you created this drawable!
-        tv.setGravity(Gravity.CENTER);
-
-        // Add margin between badges
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, 16, 0);
-        tv.setLayoutParams(params);
-
-        // Click Listener -> Show Dialog
-        tv.setOnClickListener(v -> showBadgeInfo(badgeKey));
-
-        layoutBadgeContainer.addView(tv);
-    }
-
-    private void showBadgeInfo(String key) {
-        String title = "";
-        String desc = "";
-        String howTo = "";
-        String icon = "";
-
-        switch (key) {
-            case "tier_bronze":
-                icon = "🥉"; title = "New Tutor"; desc = "Just started."; howTo = "Contributions score: 0 - 20"; break;
-            case "tier_silver":
-                icon = "🥈"; title = "Active Contributor"; desc = "Regular participation."; howTo = "Contributions score: 21 - 50"; break;
-            case "tier_gold":
-                icon = "🥇"; title = "High Impact"; desc = "Very helpful community member."; howTo = "Contributions score: 51 - 80"; break;
-            case "tier_top":
-                icon = "🏆"; title = "Top Rated Educator"; desc = "The elite top 5% of tutors."; howTo = "Contributions score: 81 - 100"; break;
-            case "ach_starter":
-                icon = "📹"; title = "Lesson Starter"; desc = "3 lessons uploaded."; howTo = "Upload 3 Free Lessons."; break;
-            case "ach_favorite":
-                icon = "❤️"; title = "Crowd Favorite"; desc = "Receive 50 Total Likes on lessons."; howTo = "Receive 50 Total Likes on lessons."; break;
-            case "ach_viral":
-                icon = "🚀"; title = "Viral Educator"; desc = "Achieve 500 Total Views."; howTo = "Achieve 500 Total Views across all lessons."; break;
-            case "ach_helper":
-                icon = "✋"; title = "Helper Hand"; desc = "Post 3 Answers in Q&A."; howTo = "Post 3 Answers in Q&A."; break;
-            case "ach_solver":
-                icon = "🧠"; title = "Problem Solver"; desc = "Post 20 Answers in Q&A."; howTo = "Post 20 Answers in Q&A."; break;
-            case "ach_expert":
-                icon = "✨"; title = "Verified Expert"; desc = "Get 10 Upvotes on answers."; howTo = "Get 10 'Upvotes/Likes' on answers."; break;
-        }
-
-        new AlertDialog.Builder(getContext())
-                .setTitle(icon + " " + title)
-                .setMessage(desc + "\n\n💡 Description:\n" + howTo)
-                .setPositiveButton("Awesome!", null)
-                .show();
     }
 }

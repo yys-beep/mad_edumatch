@@ -2,6 +2,8 @@ package com.example.mad_edumatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -60,6 +62,20 @@ public class HomeActivity extends AppCompatActivity {
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 
         super.onCreate(savedInstanceState);
+        // --- NUCLEAR FIX: REMOVE GREY SHADOW ---
+        // 1. Clear the "Translucent" flag that adds the grey shadow
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // 2. Add the "Draws System Bar Backgrounds" flag so we can color it
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        // 3. Force the background color to pure WHITE
+        getWindow().setStatusBarColor(android.graphics.Color.WHITE);
+
+        // 4. Force the icons (Time, Battery) to be BLACK
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        // ---------------------------------------
+
         setContentView(R.layout.app_activity_main);
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);

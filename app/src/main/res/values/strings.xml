@@ -1,10 +1,5 @@
 <resources>
-
-    <string name="settings_title">Settings</string>
-    <string name="language_option">App Language</string>
-    <string name="current_language">English</string>
-
-    <string name="app_name">mad_eduMatch</string>
+    <string name="app_name">EduMatch</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_back">Welcome Back!</string>
@@ -30,7 +25,7 @@
     <string name="register_password">Password</string>
     <string name="academic_level_e_g_spm">Academic Level (e.g. SPM)</string>
     <string name="you_can_complete_your_tutor_profile_details_after_registration">* You can complete your tutor profile details after registration.</string>
-    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="already_have_an_account">Already have an account?</string>
     <string name="loading">Loading...</string>
     <string name="type_a_message">Type a message...</string>
     <string name="no_active_chats_yet_find_a_tutor_or_student_to_start_a_conversation">No active chats yet. Find a tutor or student to start a conversation!</string>
@@ -46,9 +41,9 @@
     <string name="subject">Subject</string>
     <string name="academic_level">Academic Level</string>
     <string name="primary">Primary</string>
-    <string name="spm" translatable="false">SPM</string>
-    <string name="stpm_a_level" translatable="false">STPM / A-Level</string>
-    <string name="igcse" translatable="false">IGCSE</string>
+    <string name="spm">SPM</string>
+    <string name="stpm_a_level">STPM / A-Level</string>
+    <string name="igcse">IGCSE</string>
     <string name="university">University</string>
     <string name="lower_secondary_f1_f3">Lower Secondary (F1-F3)</string>
     <string name="area">Area</string>
@@ -77,8 +72,8 @@
     <string name="lesson_description_goes_here">Lesson description goes here...</string>
     <string name="watch_video">Watch Video</string>
     <string name="download_material">Download Material</string>
-    <string name="_0_kudos" translatable="false">0 Kudos</string>
-    <string name="like" translatable="false">Like</string>
+    <string name="_0_kudos">0 Kudos</string>
+    <string name="like">Like</string>
     <string name="study_time_required_05_00">Study time required: 05:00</string>
     <string name="mark_lesson_as_complete">Mark Lesson as Complete</string>
     <string name="comments_amp_questions"><![CDATA[Comments & Questions]]></string>
@@ -125,17 +120,17 @@
     <string name="comment_content">Comment content...</string>
     <string name="view_attachment">📎 View Attachment</string>
     <string name="tutor_name">Tutor Name</string>
-    <string name="posted_2_hours_ago" translatable="false">Posted: 2 hours ago</string>
+    <string name="posted_2_hours_ago">Posted: 2 hours ago</string>
     <string name="profile_subjects">Subjects:</string>
-    <string name="mathematics_science" translatable="false">Mathematics, Science</string>
+    <string name="mathematics_science">Mathematics, Science</string>
     <string name="profile_levels">Levels:</string>
-    <string name="primary_lower_secondary" translatable="false">Primary, Lower Secondary</string>
+    <string name="primary_lower_secondary">Primary, Lower Secondary</string>
     <string name="bachelor_in_education">Bachelor in Education</string>
     <string name="contact_tutor">Contact Tutor</string>
     <string name="profile_fee">Fee:</string>
     <string name="profile_qualification">Qualification:</string>
     <string name="profile_contact">Contact:</string>
-    <string name="_012_3456789" translatable="false">012-3456789</string>
+    <string name="_012_3456789">012-3456789</string>
     <string name="last_updated_just_now">Last updated: Just now</string>
     <string name="q_amp_a_forum"><![CDATA[Q&A Forum]]></string>
     <string name="search_questions">Search questions...</string>
@@ -145,7 +140,7 @@
     <string name="solution_details">Solution Details</string>
     <string name="date_time">Date • Time</string>
     <string name="solution_content">Solution content...</string>
-    <string name="link_http" translatable="false">Link: http://</string>
+    <string name="link_http">Link: http://</string>
     <string name="download_attachment">Download Attachment</string>
     <string name="delete_solution">Delete Solution</string>
     <string name="comments">Comments</string>
@@ -181,13 +176,13 @@
     <string name="view_more">View More</string>
     <string name="post_nrequest">Post\nRequest</string>
     <string name="post_a_request">Post a Request</string>
-    <string name="e_g_mathematics" translatable="false">e.g. Mathematics</string>
-    <string name="e_g_cheras" translatable="false">e.g. Cheras</string>
+    <string name="e_g_mathematics">e.g. Mathematics</string>
+    <string name="e_g_cheras">e.g. Cheras</string>
     <string name="description_preferences">Description / Preferences</string>
     <string name="any_specific_requirements_or_preferred_times">Any specific requirements or preferred times?</string>
     <string name="one_to_many">One-to-Many</string>
     <string name="post_request">Post Request</string>
-    <string name="e_g_40" translatable="false">e.g. 40</string>
+    <string name="e_g_40">e.g. 40</string>
     <string name="profile_avatar">Profile Avatar</string>
     <string name="student_name">Student Name</string>
     <string name="about_me">About Me</string>
@@ -209,8 +204,8 @@
     <string name="search_results">Search Results</string>
     <string name="no_tutors_found_matching_your_criteria_ntry_broadening_your_search">No tutors found matching your criteria.\nTry broadening your search.</string>
     <string name="my_posted_requests">My Posted Requests</string>
-    <string name="free_lesson_algebra_basics" translatable="false">Free Lesson: Algebra Basics</string>
-    <string name="tutor_john_doe" translatable="false">Tutor: John Doe</string>
+    <string name="free_lesson_algebra_basics">Free Lesson: Algebra Basics</string>
+    <string name="tutor_john_doe">Tutor: John Doe</string>
     <string name="mode_online">Mode: Online</string>
     <string name="video_link">Video Link</string>
     <string name="replace_material_pdf_img">📄 Replace Material (PDF/Img)</string>
@@ -223,18 +218,18 @@
     <string name="your_free_lessons">New Free Lessons</string>
     <string name="my_nlistings">My\nListings</string>
     <string name="post_new_listing">Post New Listing</string>
-    <string name="subjects_e_g_math_science" translatable="false">Subjects (e.g. Math, Science)</string>
+    <string name="subjects_e_g_math_science">Subjects (e.g. Math, Science)</string>
     <string name="academic_levels_taught">Academic Levels Taught</string>
     <string name="area_location">Area / Location</string>
     <string name="qualification_e_g_degree_in_math">Qualification (e.g. Degree in Math)</string>
     <string name="post_listing">Post Listing</string>
     <string name="description_goes_here">Description goes here...</string>
     <string name="subject_icon">Subject Icon</string>
-    <string name="subjects_math_science" translatable="false">Subjects: Math, Science</string>
+    <string name="subjects_math_science">Subjects: Math, Science</string>
     <string name="fee_icon">Fee Icon</string>
     <string name="hourly_fee_rm_50_hr">Hourly Fee: RM 50/hr</string>
     <string name="area_icon">Area Icon</string>
-    <string name="area_kuala_lumpur" translatable="false">Area: Kuala Lumpur</string>
+    <string name="area_kuala_lumpur">Area: Kuala Lumpur</string>
     <string name="email_tutor_email_com">Email: tutor@email.com</string>
     <string name="experience">Experience</string>
     <string name="no_experience_recorded">No experience recorded.</string>
@@ -250,5 +245,25 @@
     <string name="post_lesson">Post Lesson</string>
     <string name="my_listings">My Listings</string>
     <string name="search_by_subject">Search by Subject</string>
-    <string name="back">Back</string>
+    <string name="swipe_left_to_delete_chat">Swipe left to delete chat</string>
+    <string name="received_message">Received message</string>
+    <string name="_02_30_pm">02:30 PM</string>
+    <string name="message_here">Message here</string>
+    <string name="_10_00_am">10:00 AM</string>
+    <string name="my_community_impact">My Community Impact</string>
+    <string name="hosted_lessons_0">Hosted Lessons: 0</string>
+    <string name="questions_answered_0">Questions Answered: 0</string>
+    <string name="total_likes_received_0">Total Likes Received: 0</string>
+    <string name="badges">Badges</string>
+    <string name="contribution">Contribution:</string>
+    <string name="_0_100">0/100</string>
+    <string name="students_completed_0">Students Completed: 0</string>
+    <string name="mark_as_solved">Mark as Solved</string>
+    <string name="background_image">Background Image</string>
+    <string name="notifications">Notifications</string>
+    <string name="clear_all">Clear All</string>
+    <string name="swipe_left_or_right_to_delete">Swipe left or right to delete</string>
+    <string name="no_notifications_yet">No notifications yet!</string>
+    <string name="free_new_lessons">Free new lessons</string>
+    <string name="background">Background</string>
 </resources>

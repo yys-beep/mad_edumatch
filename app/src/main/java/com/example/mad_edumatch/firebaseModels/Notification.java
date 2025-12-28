@@ -1,5 +1,7 @@
 package com.example.mad_edumatch.firebaseModels;
 
+import com.google.firebase.database.PropertyName;
+
 import java.io.Serializable;
 
 public class Notification implements Serializable {
@@ -37,6 +39,9 @@ public class Notification implements Serializable {
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
+    @PropertyName("isRead")  // Forces Firebase to read "isRead" key
     public boolean isRead() { return isRead; }
+
+    @PropertyName("isRead")  // Forces Firebase to write "isRead" key
     public void setRead(boolean read) { isRead = read; }
 }

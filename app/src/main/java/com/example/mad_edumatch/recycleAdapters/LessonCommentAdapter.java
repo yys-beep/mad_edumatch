@@ -80,7 +80,7 @@ public class LessonCommentAdapter extends RecyclerView.Adapter<LessonCommentAdap
         // 5. Attachment Logic
         if (!TextUtils.isEmpty(c.getAttachmentUrl())) {
             holder.btnAttachment.setVisibility(View.VISIBLE);
-            String label = TextUtils.isEmpty(c.getAttachmentName()) ? "View Attachment" : "📎 " + c.getAttachmentName();
+            String label = TextUtils.isEmpty(c.getAttachmentName()) ? "View Attachment" : c.getAttachmentName();
             holder.btnAttachment.setText(label);
 
             holder.btnAttachment.setOnClickListener(v -> actionListener.onAttachmentClick(c.getAttachmentUrl()));

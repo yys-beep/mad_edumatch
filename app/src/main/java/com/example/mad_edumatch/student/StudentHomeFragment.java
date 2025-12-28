@@ -46,8 +46,8 @@ public class StudentHomeFragment extends Fragment {
 
     // Data
     private FreeLessonAdapter freeLessonAdapter;
-    private ArrayList<FreeLesson> allFreeLessons = new ArrayList<>(); // Store everything from DB
-    private ArrayList<FreeLesson> displayList = new ArrayList<>();    // Store what is currently shown
+    private ArrayList<FreeLesson> allFreeLessons = new ArrayList<>();
+    private ArrayList<FreeLesson> displayList = new ArrayList<>();
     private DatabaseReference freeLessonsRef;
 
     // Pagination & Search State
@@ -55,21 +55,38 @@ public class StudentHomeFragment extends Fragment {
     private static final int LOAD_STEP = 10;
     private String currentSearchText = "";
 
+    // FIX 1: Add a variable to hold the view
+    private View rootView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.student_fragment_home, container, false);
 
-        bindViews(view);
-        setupRecyclerView();
-        setupClickListeners();
-        setupSearchListener();
+        // FIX 2: Check if view already exists. If yes, reuse it.
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.student_fragment_home, container, false);
 
+            bindViews(rootView);
+            setupRecyclerView();
+            setupClickListeners();
+            setupSearchListener();
+
+            // Only load these ONCE when the view is first created
+            loadFreeLessons();
+        }
+
+        return rootView;
+    }
+
+    // FIX 3: Load User Info in onResume
+    // This runs every time the page appears (even when coming back).
+    // Because we reused rootView, the OLD name is still there, so it won't flash "Welcome Student".
+    // It will just silently update to the new name if it changed.
+    @Override
+    public void onResume() {
+        super.onResume();
         loadUserInfo();
-        loadFreeLessons();
-
-        return view;
     }
 
     private void bindViews(View view) {
@@ -79,8 +96,6 @@ public class StudentHomeFragment extends Fragment {
         cardPostRequest = view.findViewById(R.id.cardPostRequest);
         cardViewRequests = view.findViewById(R.id.cardViewRequests);
         rvFreeLessons = view.findViewById(R.id.rvFreeLessons);
-
-        // New Views
         etSearchLesson = view.findViewById(R.id.etSearchLesson);
         tvNoLessons = view.findViewById(R.id.tvNoLessons);
         btnViewMore = view.findViewById(R.id.btnViewMore);
@@ -90,7 +105,6 @@ public class StudentHomeFragment extends Fragment {
         freeLessonAdapter = new FreeLessonAdapter(displayList, this::openLessonDetail);
         rvFreeLessons.setLayoutManager(new LinearLayoutManager(getContext()));
         rvFreeLessons.setAdapter(freeLessonAdapter);
-        // Important for nested scrolling
         rvFreeLessons.setNestedScrollingEnabled(false);
 
         freeLessonsRef = FirebaseDatabase.getInstance(
@@ -104,7 +118,6 @@ public class StudentHomeFragment extends Fragment {
         cardViewRequests.setOnClickListener(v -> navigateToFragment(new StudentViewRequestsFragment()));
         imgHomeAvatar.setOnClickListener(v -> navigateToFragment(new StudentProfileFragment()));
 
-        // VIEW MORE LOGIC
         btnViewMore.setOnClickListener(v -> {
             currentLimit += LOAD_STEP;
             filterAndDisplayList();
@@ -113,28 +126,24 @@ public class StudentHomeFragment extends Fragment {
 
     private void setupSearchListener() {
         etSearchLesson.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 currentSearchText = s.toString().toLowerCase().trim();
-                currentLimit = LOAD_STEP; // Reset pagination on search
+                currentLimit = LOAD_STEP;
                 filterAndDisplayList();
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
     }
 
-    // --- CORE LOGIC: Filter + Pagination ---
     private void filterAndDisplayList() {
         if (!isAdded()) return;
 
         ArrayList<FreeLesson> filtered = new ArrayList<>();
 
-        // 1. Filter logic
         if (currentSearchText.isEmpty()) {
             filtered.addAll(allFreeLessons);
         } else {
@@ -145,7 +154,6 @@ public class StudentHomeFragment extends Fragment {
             }
         }
 
-        // 2. Pagination Logic
         int totalFilteredCount = filtered.size();
         int end = Math.min(currentLimit, totalFilteredCount);
 
@@ -154,10 +162,8 @@ public class StudentHomeFragment extends Fragment {
             displayList.addAll(filtered.subList(0, end));
         }
 
-        // 3. UI Updates
         freeLessonAdapter.notifyDataSetChanged();
 
-        // Toggle "No Lessons" message
         if (displayList.isEmpty()) {
             tvNoLessons.setVisibility(View.VISIBLE);
             rvFreeLessons.setVisibility(View.GONE);
@@ -166,7 +172,6 @@ public class StudentHomeFragment extends Fragment {
             rvFreeLessons.setVisibility(View.VISIBLE);
         }
 
-        // Toggle "View More" button
         if (end < totalFilteredCount) {
             btnViewMore.setVisibility(View.VISIBLE);
         } else {
@@ -178,6 +183,9 @@ public class StudentHomeFragment extends Fragment {
         freeLessonsRef.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Check if the fragment is currently valid before updating UI
+                if (!isAdded()) return;
+
                 allFreeLessons.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     FreeLesson lesson = ds.getValue(FreeLesson.class);
@@ -185,16 +193,12 @@ public class StudentHomeFragment extends Fragment {
                         allFreeLessons.add(lesson);
                     }
                 }
-                Collections.reverse(allFreeLessons); // Newest first
-                filterAndDisplayList(); // Apply initial display logic
+                Collections.reverse(allFreeLessons);
+                filterAndDisplayList();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-
-    // ... loadUserInfo and navigateToFragment remain the same ...
 
     private void loadUserInfo() {
         String uid = CurrentUser.getInstance().getUid();

@@ -28,7 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatListFragment extends Fragment {
 
@@ -38,10 +40,12 @@ public class ChatListFragment extends Fragment {
     private DatabaseReference chatListRef;
     private TextView tvNoChats;
 
+    // 1. DEFINE LISTENER AS GLOBAL VARIABLE
+    private ValueEventListener chatListListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Ensure this layout exists in your res/layout folder
         return inflater.inflate(R.layout.chat_fragment_list, container, false);
     }
 
@@ -53,8 +57,6 @@ public class ChatListFragment extends Fragment {
         tvNoChats = view.findViewById(R.id.tvNoChats);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Initialize the adapter with the empty list first
         adapter = new ChatListAdapter(getContext(), chatLists);
         recyclerView.setAdapter(adapter);
 
@@ -67,88 +69,48 @@ public class ChatListFragment extends Fragment {
 
             loadChatList();
         } else {
-            // Safety: If no user found, show empty state
             tvNoChats.setVisibility(View.VISIBLE);
-            tvNoChats.setText("Please log in to see your chats.");
         }
 
-        // Inside ChatListFragment.java -> onViewCreated
-        SwipeHelper customSwipeHelper = new SwipeHelper(getContext());
-
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getBindingAdapterPosition();
-                ChatList deletedChat = chatLists.get(position);
-
-                new android.app.AlertDialog.Builder(getContext())
-                        .setTitle("Delete Unknown Entry")
-                        .setMessage("This entry has no ID mapping. Delete it anyway?")
-                        .setPositiveButton("Delete", (dialog, which) -> {
-                            // FIX: If the internal ID is null, try to get the ID from the list item directly
-                            String chatIdToDelete = deletedChat.getId();
-
-                            if (chatIdToDelete != null) {
-                                chatListRef.child(chatIdToDelete).removeValue();
-                            } else {
-                                // If it's still null, the data is corrupted.
-                                // You may need to delete it manually from the Firebase Console.
-                                Toast.makeText(getContext(), "Cannot delete: Missing ID", Toast.LENGTH_SHORT).show();
-                                adapter.notifyItemChanged(position);
-                            }
-                        })
-                        .setNegativeButton("Cancel", (dialog, which) -> {
-                            adapter.notifyItemChanged(position);
-                        })
-                        .show();
-            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
-                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                // This draws your red background from the SwipeHelper class
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    customSwipeHelper.paint(c, viewHolder, dX);
-                }
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-
-// ATTACH THE HELPER
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+        setupSwipeToDelete();
     }
 
     private void loadChatList() {
-        // REMOVE the loop that was here; 'snapshot' is not available yet!
+        // 2. PREVENT DUPLICATE LISTENERS
+        if (chatListListener != null) {
+            chatListRef.removeEventListener(chatListListener);
+        }
 
-        chatListRef.addValueEventListener(new ValueEventListener() {
+        chatListListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded() || getContext() == null) return;
 
-                chatLists.clear();
+                // 3. USE MAP TO ENFORCE UNIQUENESS (Fixes duplicates)
+                Map<String, ChatList> uniqueMap = new HashMap<>();
+
                 for (DataSnapshot data : snapshot.getChildren()) {
                     ChatList chat = data.getValue(ChatList.class);
                     if (chat != null) {
-                        // FORCE ID: This makes "Unknown User" deletable
+                        // Use key as ID (from your JSON: "kpahon..." or "qBlO6K...")
                         chat.setId(data.getKey());
-                        chatLists.add(chat);
+                        uniqueMap.put(chat.getId(), chat);
                     }
                 }
 
-                if (chatLists.size() > 1) {
-                    Collections.sort(chatLists, (o1, o2) -> Long.compare(o2.getTimestamp(), o1.getTimestamp()));
+                List<ChatList> newList = new ArrayList<>(uniqueMap.values());
+
+                // 4. SORT BY TIME
+                if (newList.size() > 1) {
+                    Collections.sort(newList, (o1, o2) -> Long.compare(o2.getTimestamp(), o1.getTimestamp()));
                 }
 
+                // 5. UPDATE UI
+                chatLists.clear();
+                chatLists.addAll(newList);
                 adapter.notifyDataSetChanged();
 
+                // Visibility
                 if (chatLists.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     tvNoChats.setVisibility(View.VISIBLE);
@@ -159,11 +121,54 @@ public class ChatListFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                if (isAdded()) {
-                    Toast.makeText(getContext(), "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+
+        // Attach the new listener
+        chatListRef.addValueEventListener(chatListListener);
+    }
+
+    // 6. CRITICAL: CLEAN UP LISTENER WHEN LEAVING SCREEN
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (chatListRef != null && chatListListener != null) {
+            chatListRef.removeEventListener(chatListListener);
+        }
+    }
+
+    private void setupSwipeToDelete() {
+        SwipeHelper customSwipeHelper = new SwipeHelper(getContext());
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, @NonNull RecyclerView.ViewHolder target) { return false; }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getBindingAdapterPosition();
+                if (position >= 0 && position < chatLists.size()) {
+                    ChatList deletedChat = chatLists.get(position);
+                    new android.app.AlertDialog.Builder(getContext())
+                            .setTitle("Delete Chat")
+                            .setMessage("Are you sure?")
+                            .setPositiveButton("Delete", (dialog, which) -> {
+                                if (deletedChat.getId() != null) {
+                                    chatListRef.child(deletedChat.getId()).removeValue();
+                                }
+                            })
+                            .setNegativeButton("Cancel", (dialog, which) -> adapter.notifyItemChanged(position))
+                            .show();
                 }
             }
-        });
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, float dX, float dY, int actionState, boolean isActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    customSwipeHelper.paint(c, vh, dX);
+                }
+                super.onChildDraw(c, rv, vh, dX, dY, actionState, isActive);
+            }
+        };
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 }
