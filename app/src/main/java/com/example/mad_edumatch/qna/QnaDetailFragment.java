@@ -39,17 +39,14 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     private String questionId, questionUserId, qFileUrl, qFileName;
     private DatabaseReference answerRef, questionRef;
 
-    // --- VARIABLES FOR ANSWER UPLOAD ---
     private String tempAnswerFileId = null;
     private String tempAnswerFileName = null;
 
-    // --- NEW: VARIABLES FOR EDIT QUESTION UPLOAD ---
-    private boolean isEditMode = false; // Flag to distinguish Answer vs Edit upload
+    private boolean isEditMode = false;
     private String tempEditFileId = null;
     private String tempEditFileName = null;
-    private TextView tvEditFileStatus; // Reference to the TextView inside the Dialog
+    private TextView tvEditFileStatus;
 
-    // UI
     private ImageView ivAvatar;
     private TextView tvTitle, tvInfo, tvContent, tvAnswerFileName, tvNoAnswers;
     private Button btnEdit, btnDelete, btnViewAttachment, btnAttachFileToAnswer, btnPostAnswer;
@@ -76,7 +73,6 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // UI Binding
         ivAvatar = view.findViewById(R.id.ivDetailAvatar);
         tvTitle = view.findViewById(R.id.tvDetailTitle);
         tvInfo = view.findViewById(R.id.tvDetailInfo);
@@ -95,19 +91,14 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         btnAttachFileToAnswer = view.findViewById(R.id.btnAttachFileToAnswer);
         tvAnswerFileName = view.findViewById(R.id.tvAnswerFileName);
 
-        // References
         answerRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("forum_answers");
         questionRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("forum_questions");
 
-        // --- ENHANCED DATA LOADING (Supports Deep Links) ---
         if (getArguments() != null) {
-            // 1. Resolve the ID from either 'sourceId' (notification) or 'questionId' (internal)
             questionId = getArguments().containsKey("sourceId") ?
                     getArguments().getString("sourceId") : getArguments().getString("questionId");
 
-            // 2. Logic to determine if we fetch from Firebase or use passed data
             if (getArguments().containsKey("title") && !getArguments().containsKey("sourceId")) {
-                // Normal Path: Data passed from list
                 questionUserId = getArguments().getString("userId");
                 tvTitle.setText(getArguments().getString("title"));
                 tvContent.setText(getArguments().getString("content"));
@@ -121,16 +112,14 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                 checkOwnership();
                 updateSolvedUI();
                 updateAttachmentButtonUI();
-                loadAnswers(); // Ensure answers load for normal path
+                loadAnswers();
             } else if (questionId != null) {
-                // Notification Path: ONLY the ID is known, so fetch everything
                 fetchQuestionDetailsFromFirebase(questionId);
             } else {
-                Toast.makeText(getContext(), "Error: Invalid Question ID", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_invalid_question_id), Toast.LENGTH_SHORT).show();
             }
         }
 
-        // Setup Answer List
         rvAnswers.setLayoutManager(new LinearLayoutManager(getContext()));
         answerList = new ArrayList<>();
         adapter = new AnswerAdapter(getContext(), answerList, answer -> {
@@ -155,7 +144,6 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         rvAnswers.setAdapter(adapter);
         loadAnswers();
 
-        // --- LISTENERS ---
         btnPostAnswer.setOnClickListener(v -> postAnswer());
         btnDelete.setOnClickListener(v -> deleteQuestion());
         btnEdit.setOnClickListener(v -> showEditQuestionDialog());
@@ -168,7 +156,6 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         });
     }
 
-    // --- NEW: FETCH FOR NOTIFICATION DEEP LINK ---
     private void fetchQuestionDetailsFromFirebase(String qId) {
         this.questionId = qId;
         questionRef.child(qId).addValueEventListener(new ValueEventListener() {
@@ -177,8 +164,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                 if (!isAdded() || !snapshot.exists()) return;
 
                 if (!snapshot.exists()) {
-                    // The question was deleted!
-                    Toast.makeText(getContext(), "This question has been deleted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.question_deleted), Toast.LENGTH_SHORT).show();
                     if (getActivity() != null) getActivity().onBackPressed();
                     return;
                 }
@@ -196,7 +182,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                 checkOwnership();
                 updateSolvedUI();
                 updateAttachmentButtonUI();
-                loadAnswers(); // Refresh answers once ID is set
+                loadAnswers();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
@@ -217,7 +203,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
                             if (tutorSnap.exists()) {
                                 updateHeaderUI(tutorSnap.child("username").getValue(String.class), tutorSnap.child("profileImageUrl").getValue(String.class), timestamp);
                             } else {
-                                updateHeaderUI("Unknown User", null, timestamp);
+                                updateHeaderUI(getString(R.string.unknown_user_default), null, timestamp);
                             }
                         }
                         @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -246,14 +232,14 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
             this.tempEditFileId = fileId;
             this.tempEditFileName = fileName;
             if (tvEditFileStatus != null) {
-                tvEditFileStatus.setText("Selected: " + fileName);
+                tvEditFileStatus.setText(getString(R.string.selected_file, fileName));
                 tvEditFileStatus.setVisibility(View.VISIBLE);
             }
         } else {
             this.tempAnswerFileId = fileId;
             this.tempAnswerFileName = fileName;
             if (tvAnswerFileName != null) {
-                tvAnswerFileName.setText("Attached: " + fileName);
+                tvAnswerFileName.setText(getString(R.string.attached_file, fileName));
                 tvAnswerFileName.setVisibility(View.VISIBLE);
             }
         }
@@ -276,12 +262,12 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         tempEditFileName = qFileName;
 
         if (tempEditFileName != null && !TextUtils.isEmpty(tempEditFileName)) {
-            tvEditFileStatus.setText("Current: " + tempEditFileName);
+            tvEditFileStatus.setText(getString(R.string.current_file, tempEditFileName));
         } else {
-            tvEditFileStatus.setText("No file attached");
+            tvEditFileStatus.setText(getString(R.string.no_file_attached));
         }
 
-        btnSubmit.setText("Update Question");
+        btnSubmit.setText(getString(R.string.update_question_btn));
         AlertDialog dialog = builder.create();
 
         btnAttach.setOnClickListener(v -> {
@@ -294,7 +280,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
             String newTitle = etEditTitle.getText().toString().trim();
             String newContent = etEditContent.getText().toString().trim();
             if (TextUtils.isEmpty(newTitle) || TextUtils.isEmpty(newContent)) {
-                Toast.makeText(getContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.fields_empty_error), Toast.LENGTH_SHORT).show();
                 return;
             }
             updateQuestion(newTitle, newContent, dialog);
@@ -316,7 +302,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
             qFileUrl = tempEditFileId;
             qFileName = tempEditFileName;
             updateAttachmentButtonUI();
-            Toast.makeText(getContext(), "Question Updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.question_updated), Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
     }
@@ -324,7 +310,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     private void updateAttachmentButtonUI() {
         if (qFileUrl != null && !qFileUrl.isEmpty()) {
             btnViewAttachment.setVisibility(View.VISIBLE);
-            btnViewAttachment.setText("Download: " + (qFileName != null ? qFileName : "File"));
+            btnViewAttachment.setText(getString(R.string.download_file_btn, (qFileName != null ? qFileName : "File")));
             btnViewAttachment.setOnClickListener(v -> downloadFile(qFileUrl));
         } else {
             btnViewAttachment.setVisibility(View.GONE);
@@ -335,7 +321,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         String content = etAnswerContent.getText().toString().trim();
         String link = etSolutionLink.getText().toString().trim();
         if (TextUtils.isEmpty(content)) {
-            etAnswerContent.setError("Content required");
+            etAnswerContent.setError(getString(R.string.content_required_error));
             return;
         }
 
@@ -343,13 +329,11 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         if (uid == null) return;
 
         DatabaseReference userRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
-        // 1. Try fetching from student_profiles first
         userRef.child("student_profiles").child(uid).child("username").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().getValue() != null) {
                 String name = task.getResult().getValue(String.class);
-                saveToFirebase(uid, name, content, link); // Pass real name
+                saveToFirebase(uid, name, content, link);
             } else {
-                // 2. If not a student, try tutor_profiles
                 userRef.child("tutor_profiles").child(uid).child("username").get().addOnCompleteListener(tutorTask -> {
                     String name = (tutorTask.isSuccessful() && tutorTask.getResult().getValue() != null)
                             ? tutorTask.getResult().getValue(String.class) : "A user";
@@ -364,7 +348,6 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         Answer answer = new Answer(key, questionId, uid, username, content, link, System.currentTimeMillis(), tempAnswerFileId, tempAnswerFileName);
 
         answerRef.child(key).setValue(answer).addOnSuccessListener(unused -> {
-            // UI Cleanup
             if (tvAnswerFileName != null) {
                 tvAnswerFileName.setVisibility(View.GONE);
                 tvAnswerFileName.setText("");
@@ -374,28 +357,24 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
             etAnswerContent.setText("");
             etSolutionLink.setText("");
 
-            // NOTIFICATION LOGIC
             if (questionUserId != null && !questionUserId.equals(uid)) {
-                sendAnswerNotification(questionUserId, username, tvTitle.getText().toString());
+                sendAnswerNotification(questionUserId, uid, username, tvTitle.getText().toString());
             }
-            Toast.makeText(getContext(), "Solution Posted!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.solution_posted), Toast.LENGTH_SHORT).show();
         });
     }
 
-    private void sendAnswerNotification(String recipientId, String answererName, String questionTitle) {
+    // Inside QnaDetailFragment.java
+    private void sendAnswerNotification(String recipientId, String senderId, String answererName, String questionTitle) {
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(recipientId);
 
-        // Snippet Logic: 20 chars
-        String snippet = (questionTitle != null && questionTitle.length() > 20)
-                ? questionTitle.substring(0, 20) + "..." : questionTitle;
-
-        String dynamicMessage = answererName + " answered your question: " + snippet;
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("title", "New Solution!");
-        data.put("message", dynamicMessage);
-        data.put("action_type", "OPEN_QUESTION");
-        data.put("sourceId", questionId);
+        data.put("title", getString(R.string.new_solution_notif_title));
+
+        // Standard Q&A Action Type
+        data.put("action_type", "NEW_SOLUTION");
+        data.put("senderId", senderId);
+        data.put("sourceId", questionId); // Points to the Question node
         data.put("timestamp", System.currentTimeMillis());
         data.put("isRead", false);
 
@@ -453,19 +432,16 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
     private void deleteQuestion() {
         if (questionId == null) return;
 
-        // Use a listener to confirm deletion was successful in Firebase
         questionRef.child(questionId).removeValue().addOnSuccessListener(aVoid -> {
             if (isAdded()) {
-                Toast.makeText(getContext(), "Question Deleted", Toast.LENGTH_SHORT).show();
-
-                // Go back to the forum list
+                Toast.makeText(getContext(), getString(R.string.delete_question_success), Toast.LENGTH_SHORT).show();
                 if (getParentFragmentManager().getBackStackEntryCount() > 0) {
                     getParentFragmentManager().popBackStack();
                 }
             }
         }).addOnFailureListener(e -> {
             if (isAdded()) {
-                Toast.makeText(getContext(), "Delete failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.delete_failed_msg, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -475,7 +451,7 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl)));
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Cannot open file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.cannot_open_file), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -484,14 +460,14 @@ public class QnaDetailFragment extends Fragment implements UploadMaterialBottom.
         isSolved = !isSolved;
         questionRef.child(questionId).child("solved").setValue(isSolved).addOnSuccessListener(aVoid -> {
             updateSolvedUI();
-            String msg = isSolved ? "Marked as Solved" : "Marked as Unsolved";
+            String msg = isSolved ? getString(R.string.marked_as_solved) : getString(R.string.marked_as_unsolved);
             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
         });
     }
 
     private void updateSolvedUI() {
         if (btnMarkSolved == null) return;
-        btnMarkSolved.setText(isSolved ? "Mark as Unsolved" : "Mark as Solved");
+        btnMarkSolved.setText(isSolved ? getString(R.string.btn_mark_unsolved) : getString(R.string.btn_mark_solved));
         btnMarkSolved.setIconResource(isSolved ? R.drawable.outline_check_circle_24 : R.drawable.baseline_check_circle_24);
         btnMarkSolved.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(isSolved ? R.color.pastelGreen : R.color.lightSkyBlue, null)));
     }

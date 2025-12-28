@@ -63,54 +63,60 @@ public class TutorNotificationFragment extends Fragment {
         adapter = new NotificationAdapter(notificationList, "Tutor", notification -> {
             markNotificationAsRead(notification.getId());
 
-            String actionType = notification.getAction_type();
+            String actionType = notification.getAction_type() != null ? notification.getAction_type().toUpperCase() : "";
             String targetId = notification.getSourceId();
 
-            if (actionType == null || actionType.isEmpty() || targetId == null) return;
+            if (targetId == null) return;
 
-            if (actionType.equals("OPEN_LESSON") || actionType.equals("KUDOS")) {
+            // --- PATH 1: LESSONS (Lesson Comments or Kudos) ---
+            if (actionType.equals("LESSON_COMMENT") || actionType.equals("KUDOS") || actionType.equals("OPEN_LESSON")) {
                 FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
                 Bundle args = new Bundle();
-                args.putString("sourceId", targetId);
+                args.putString("lessonId", targetId);
                 fragment.setArguments(args);
                 navigateTo(fragment);
             }
-
-            else if (actionType.equals("OPEN_QUESTION") || actionType.equals("OPEN_QUESTION_DETAIL") || actionType.equals("MY_QUESTIONS_NOTIF")) {
+            // --- PATH 2: Q&A SOLUTIONS ---
+            else if (actionType.equals("NEW_SOLUTION")) {
+                // Tutors usually get notified of solutions if they are participating in a thread
                 QnaDetailFragment fragment = new QnaDetailFragment();
                 Bundle args = new Bundle();
-                args.putString("sourceId", targetId);
+                args.putString("questionId", targetId);
                 fragment.setArguments(args);
                 navigateTo(fragment);
             }
-
-            else if (actionType.equals("NEW_SOLUTION") || actionType.equals("OPEN_COMMENT")) {
+            // --- PATH 3: Q&A COMMENTS (Comment on the Tutor's solution) ---
+            else if (actionType.equals("OPEN_COMMENT")) {
                 FirebaseDatabase.getInstance(DB_URL).getReference("forum_answers")
                         .child(targetId).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (!isAdded()) return;
-
                                 if (!snapshot.exists()) {
-                                    Toast.makeText(getContext(), "This solution was deleted.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), getString(R.string.solution_deleted_error), Toast.LENGTH_SHORT).show();
+                                    removeNotification(notification.getId());
                                 } else {
                                     QnaAnswerCommentFragment fragment = new QnaAnswerCommentFragment();
                                     Bundle args = new Bundle();
                                     args.putString("answerId", targetId);
-                                    args.putString("sourceId", targetId);
                                     fragment.setArguments(args);
                                     navigateTo(fragment);
                                 }
                             }
                             @Override public void onCancelled(@NonNull DatabaseError error) {}
                         });
-            } else if ("OPEN_CHAT".equals(actionType)) {
+            }
+            else if ("OPEN_CHAT".equals(actionType)) {
                 ChatDetailFragment fragment = new ChatDetailFragment();
                 Bundle args = new Bundle();
                 args.putString("targetUserId", notification.getSenderId());
                 args.putString("listingId", notification.getSourceId());
-                args.putString("targetUserName", "Student"); // Or fetch name if needed
-                args.putString("listingTitle", "Inquiry");
+
+                // FIX: Remove hardcoded "Student" and "Inquiry".
+                // Let ChatDetailFragment handle the loading or use resources.
+                args.putString("targetUserName", getString(R.string.student_default_name)); // Use resource
+                args.putString("listingTitle", getString(R.string.listing_inquiry_title)); // Use resource
+
                 fragment.setArguments(args);
                 navigateTo(fragment);
             }
@@ -257,5 +263,13 @@ public class TutorNotificationFragment extends Fragment {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(rvNotifications);
+    }
+
+    private void removeNotification(String notificationId) {
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid != null) {
+            FirebaseDatabase.getInstance(DB_URL).getReference("notifications")
+                    .child(uid).child(notificationId).removeValue();
+        }
     }
 }

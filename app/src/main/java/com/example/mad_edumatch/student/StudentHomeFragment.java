@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class StudentHomeFragment extends Fragment {
 
@@ -55,7 +53,7 @@ public class StudentHomeFragment extends Fragment {
     private static final int LOAD_STEP = 10;
     private String currentSearchText = "";
 
-    // FIX 1: Add a variable to hold the view
+    // View Caching
     private View rootView;
 
     @Nullable
@@ -63,7 +61,6 @@ public class StudentHomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        // FIX 2: Check if view already exists. If yes, reuse it.
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.student_fragment_home, container, false);
 
@@ -72,17 +69,12 @@ public class StudentHomeFragment extends Fragment {
             setupClickListeners();
             setupSearchListener();
 
-            // Only load these ONCE when the view is first created
             loadFreeLessons();
         }
 
         return rootView;
     }
 
-    // FIX 3: Load User Info in onResume
-    // This runs every time the page appears (even when coming back).
-    // Because we reused rootView, the OLD name is still there, so it won't flash "Welcome Student".
-    // It will just silently update to the new name if it changed.
     @Override
     public void onResume() {
         super.onResume();
@@ -165,6 +157,7 @@ public class StudentHomeFragment extends Fragment {
         freeLessonAdapter.notifyDataSetChanged();
 
         if (displayList.isEmpty()) {
+            tvNoLessons.setText(getString(R.string.no_lessons_found)); // Updated
             tvNoLessons.setVisibility(View.VISIBLE);
             rvFreeLessons.setVisibility(View.GONE);
         } else {
@@ -173,6 +166,7 @@ public class StudentHomeFragment extends Fragment {
         }
 
         if (end < totalFilteredCount) {
+            btnViewMore.setText(getString(R.string.view_more_btn)); // Updated
             btnViewMore.setVisibility(View.VISIBLE);
         } else {
             btnViewMore.setVisibility(View.GONE);
@@ -183,7 +177,6 @@ public class StudentHomeFragment extends Fragment {
         freeLessonsRef.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Check if the fragment is currently valid before updating UI
                 if (!isAdded()) return;
 
                 allFreeLessons.clear();
@@ -215,7 +208,8 @@ public class StudentHomeFragment extends Fragment {
                     if (snapshot.hasChild("username")) {
                         realName = snapshot.child("username").getValue(String.class);
                     }
-                    tvStudentWelcome.setText("Welcome back,\n" + realName + " !");
+                    // Updated: Using Resource String
+                    tvStudentWelcome.setText(getString(R.string.welcome_back_comma) + "\n" + realName + " !");
 
                     if (snapshot.hasChild("profileImageUrl")) {
                         String avatarName = snapshot.child("profileImageUrl").getValue(String.class);

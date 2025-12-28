@@ -2,10 +2,6 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-<<<<<<< HEAD
-        gradlePluginPortal()
-=======
->>>>>>> main
     }
 }
 dependencyResolutionManagement {
@@ -15,11 +11,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-<<<<<<< HEAD
-rootProject.name = "mad_edumatch"
-include(":app")
-=======
 
 rootProject.name = "mad_edumatch"
 include(":app")
->>>>>>> main

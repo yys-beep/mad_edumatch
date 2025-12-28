@@ -1,5 +1,10 @@
 package com.example.mad_edumatch.tutor;
 
+import android.app.AlertDialog; // Import for Dialog
+import android.content.Context; // Import for Context
+import android.content.Intent;  // Import for Intent
+import android.content.SharedPreferences; // Import for Saving Settings
+import android.content.res.Configuration; // Import for Locale Config
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mad_edumatch.HomeActivity; // Import HomeActivity for restart
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.FreeLesson;
 import com.example.mad_edumatch.firebaseModels.TutorProfile;
@@ -25,6 +31,7 @@ import com.example.mad_edumatch.helper.GamificationHelper;
 import com.example.mad_edumatch.recycleAdapters.AchievementAdapter;
 import com.example.mad_edumatch.recycleAdapters.FreeLessonAdapter;
 
+import com.google.android.material.button.MaterialButton; // Import MaterialButton
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +39,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TutorProfileFragment extends Fragment {
 
     private ImageView imgProfile;
     private TextView tvName, tvQual, tvDesc, tvSubjects, tvFee, tvArea, tvContact, tvEmail;
     private Button btnEdit;
+
+    // 1. ADD: New Button Variable for Language
+    private MaterialButton btnLanguage;
 
     private TextView tvHeaderLessons, tvHeaderExperience, tvHeaderAchievements;
     private TextView tvLessonCollapseToggle, tvExperienceCollapseToggle, tvAchievementsCollapseToggle;
@@ -51,8 +62,6 @@ public class TutorProfileFragment extends Fragment {
     private ArrayList<String> experienceList = new ArrayList<>();
     private ArrayList<String> achievementList = new ArrayList<>();
 
-    // State
-    // CHANGE 1: Start collapsed (false) so it shows only 3 items initially
     private boolean isLessonsExpanded = false;
     private boolean isExperienceExpanded = false;
     private boolean isAchievementsExpanded = false;
@@ -75,14 +84,22 @@ public class TutorProfileFragment extends Fragment {
         bindViews(view);
         setupRecyclerViews();
 
+        // 2. MODIFIED: Control visibility of Edit AND Language buttons
+        // Only show these buttons if the user is viewing their OWN profile
         if (profileUserId != null && profileUserId.equals(CurrentUser.getInstance().getUid())) {
             btnEdit.setVisibility(View.VISIBLE);
+            btnLanguage.setVisibility(View.VISIBLE);
+
             btnEdit.setOnClickListener(v -> getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new TutorEditProfileFragment())
                     .addToBackStack(null).commit());
+
+            // Set Language Click Listener
+            btnLanguage.setOnClickListener(v -> showChangeLanguageDialog());
         } else {
             btnEdit.setVisibility(View.GONE);
+            btnLanguage.setVisibility(View.GONE); // Hide for visitors
         }
 
         GamificationHelper.calculateScore(profileUserId);
@@ -105,6 +122,9 @@ public class TutorProfileFragment extends Fragment {
         tvEmail = view.findViewById(R.id.tvTutorEmail);
         btnEdit = view.findViewById(R.id.btnEditProfile);
 
+        // 3. BIND: Find the new button ID from XML
+        btnLanguage = view.findViewById(R.id.btnChangeLanguageTutor);
+
         tvHeaderLessons = view.findViewById(R.id.tvHeaderLessons);
         tvHeaderExperience = view.findViewById(R.id.tvHeaderExperience);
         tvHeaderAchievements = view.findViewById(R.id.tvHeaderAchievements);
@@ -121,13 +141,78 @@ public class TutorProfileFragment extends Fragment {
         tvNoAchievements = view.findViewById(R.id.tvNoAchievements);
     }
 
+    // 4. ADD: Method to show Language Selection Dialog
+    private void showChangeLanguageDialog() {
+        final String[] listItems = {"English", "Bahasa Malaysia", "简体中文"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.language_option));
+        builder.setSingleChoiceItems(listItems, -1, (dialog, i) -> {
+            if (i == 0) {
+                setLocale("en");
+                dialog.dismiss();
+                restartApp();
+            } else if (i == 1) {
+                setLocale("ms");
+                dialog.dismiss();
+                restartApp();
+            }else if (i == 2) {
+                setLocale("zh");
+                dialog.dismiss();
+                restartApp();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // 5. ADD: Method to save preference and update config
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+
+        if (getActivity() != null) {
+            getActivity().getResources().updateConfiguration(config, getActivity().getResources().getDisplayMetrics());
+
+            // Save to Shared Preferences "Settings" -> "My_Lang"
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit();
+            editor.putString("My_Lang", lang);
+            editor.apply();
+        }
+    }
+
+    // 6. ADD: Method to Restart Activity and return to Profile
+    private void restartApp() {
+        if (getActivity() == null) return;
+
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+
+        // A. Pass User Data back to HomeActivity so it doesn't show default info
+        // Since we are in TutorProfileFragment, the role is definitely "Tutor"
+        intent.putExtra("userRole", "Tutor");
+
+        // Get the name from the current TextView
+        String currentName = tvName.getText().toString();
+        intent.putExtra("userName", currentName);
+
+        // B. Tell HomeActivity to open this Profile page directly
+        intent.putExtra("TARGET_FRAGMENT", "PROFILE");
+
+        // C. Clear the stack so the user cannot "back" into the old language
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    // ... (The rest of your existing methods remain unchanged) ...
+
     private void setupRecyclerViews() {
         rvLessons.setLayoutManager(new LinearLayoutManager(getContext()));
         freeLessonAdapter = new FreeLessonAdapter(hostedLessonList, this::openLessonDetail);
-        // CHANGE 2: Set initial limit
         freeLessonAdapter.setLimit(INITIAL_ITEM_LIMIT);
         rvLessons.setAdapter(freeLessonAdapter);
-        // Important: Prevent nested scrolling issues if inside ScrollView
         rvLessons.setNestedScrollingEnabled(false);
 
         rvExperience.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -150,9 +235,7 @@ public class TutorProfileFragment extends Fragment {
     private void loadDashboardData(View root) {
         if (profileUserId == null || root == null) return;
         View impactView = root.findViewById(R.id.layoutDashboard);
-        if (impactView != null) {
-            ImpactManager.bindImpact(impactView, profileUserId, this);
-        }
+        ImpactManager.bindImpact(impactView, profileUserId, this);
     }
 
     private void loadProfile() {
@@ -167,27 +250,39 @@ public class TutorProfileFragment extends Fragment {
                     tvName.setText(getSafeDisplayString(profile.getUsername()));
                     tvQual.setText(getSafeDisplayString(profile.getQualification()));
                     tvDesc.setText(getSafeDisplayString(profile.getDescription()));
-                    tvContact.setText("Contact: " + getSafeDisplayString(profile.getContact()));
-                    tvArea.setText("Area: " + getSafeDisplayString(profile.getArea()));
-                    tvEmail.setText("Email: " + getSafeDisplayString(profile.getEmail()));
+
+                    // Using String Formatting for Labels
+                    tvContact.setText(getString(R.string.contact_label, getSafeDisplayString(profile.getContact())));
+                    tvArea.setText(getString(R.string.area_label, getSafeDisplayString(profile.getArea())));
+                    tvEmail.setText(getString(R.string.email_label, getSafeDisplayString(profile.getEmail())));
 
                     String fee = getSafeDisplayString(profile.getFee());
-                    tvFee.setText(fee.equals("N/A") ? "Hourly Fee: N/A" : "Hourly Fee: RM " + fee + "/hr");
+                    if (fee.equals("N/A")) {
+                        tvFee.setText(getString(R.string.fee_na));
+                    } else {
+                        tvFee.setText(getString(R.string.fee_format, fee));
+                    }
 
                     String subjectsText = (profile.getSubjects() != null && !profile.getSubjects().isEmpty())
                             ? TextUtils.join(", ", profile.getSubjects()) : "N/A";
-                    tvSubjects.setText("Subjects: " + subjectsText);
+                    tvSubjects.setText(getString(R.string.subjects_label, subjectsText));
 
-                    // Sync Experience
+                    // Experience Section
                     experienceList.clear();
                     if (profile.getExperience() != null) experienceList.addAll(profile.getExperience());
-                    tvHeaderExperience.setText("Experience (" + experienceList.size() + ")");
+
+                    // Format: "Experience (3)" or "Pengalaman (3)"
+                    tvHeaderExperience.setText(getString(R.string.experience_header, experienceList.size()));
+
                     refreshSectionUI(experienceList.size(), rvExperience, tvNoExperience, tvExperienceCollapseToggle, experienceAdapter, isExperienceExpanded);
 
-                    // Sync Achievements
+                    // Achievements Section
                     achievementList.clear();
                     if (profile.getAchievement() != null) achievementList.addAll(profile.getAchievement());
-                    tvHeaderAchievements.setText("Achievements (" + achievementList.size() + ")");
+
+                    // Format: "Achievements (5)" or "Pencapaian (5)"
+                    tvHeaderAchievements.setText(getString(R.string.achievements_header, achievementList.size()));
+
                     refreshSectionUI(achievementList.size(), rvAchievements, tvNoAchievements, tvAchievementsCollapseToggle, achievementAdapter, isAchievementsExpanded);
 
                     int resId = AvatarManager.getAvatarResourceId(profile.getProfileImageUrl());
@@ -198,20 +293,29 @@ public class TutorProfileFragment extends Fragment {
         });
     }
 
-    // Helper for Experience/Achievement
     private void refreshSectionUI(int size, RecyclerView rv, TextView emptyTv, TextView toggle, AchievementAdapter adapter, boolean isExpanded) {
         if (size == 0) {
             rv.setVisibility(View.GONE);
             emptyTv.setVisibility(View.VISIBLE);
             toggle.setVisibility(View.GONE);
         } else {
-            rv.setVisibility(View.VISIBLE);
             emptyTv.setVisibility(View.GONE);
+            rv.setVisibility(View.VISIBLE); // Always visible if we have data
+
             if (size > INITIAL_ITEM_LIMIT) {
                 toggle.setVisibility(View.VISIBLE);
-                toggle.setText(isExpanded ? "Collapse" : "View All");
-                adapter.setLimit(isExpanded ? size : INITIAL_ITEM_LIMIT);
+
+                if (isExpanded) {
+                    // EXPANDED: Show All Items
+                    toggle.setText(getString(R.string.collapse));
+                    adapter.setLimit(size);
+                } else {
+                    // COLLAPSED: Show only 3 Items (This keeps the list "up")
+                    toggle.setText(getString(R.string.view_all));
+                    adapter.setLimit(INITIAL_ITEM_LIMIT);
+                }
             } else {
+                // If 3 or fewer items, show all and hide the button
                 toggle.setVisibility(View.GONE);
                 adapter.setLimit(size);
             }
@@ -219,26 +323,32 @@ public class TutorProfileFragment extends Fragment {
         }
     }
 
-    // CHANGE 3: New Helper logic specifically for Lessons
+    // Helper specifically for Lessons
     private void refreshLessonUI() {
         int size = hostedLessonList.size();
-        tvHeaderLessons.setText("Hosted Free Lessons (" + size + ")");
+        tvHeaderLessons.setText(getString(R.string.hosted_lessons_header, size));
 
         if (size == 0) {
             rvLessons.setVisibility(View.GONE);
             tvLessonCollapseToggle.setVisibility(View.GONE);
-            // Optional: You could show a "No lessons" textview here if you have one
         } else {
-            rvLessons.setVisibility(View.VISIBLE);
+            rvLessons.setVisibility(View.VISIBLE); // Always visible if data exists
+
             if (size > INITIAL_ITEM_LIMIT) {
                 tvLessonCollapseToggle.setVisibility(View.VISIBLE);
-                tvLessonCollapseToggle.setText(isLessonsExpanded ? "Collapse" : "View All");
 
-                // 0 means "Show All" in FreeLessonAdapter, INITIAL_ITEM_LIMIT means "Show 3"
-                freeLessonAdapter.setLimit(isLessonsExpanded ? 0 : INITIAL_ITEM_LIMIT);
+                if (isLessonsExpanded) {
+                    // EXPANDED: Show All
+                    tvLessonCollapseToggle.setText(getString(R.string.collapse));
+                    freeLessonAdapter.setLimit(0); // 0 means "Show All" in your adapter logic
+                } else {
+                    // COLLAPSED: Show only 3
+                    tvLessonCollapseToggle.setText(getString(R.string.view_all));
+                    freeLessonAdapter.setLimit(INITIAL_ITEM_LIMIT);
+                }
             } else {
                 tvLessonCollapseToggle.setVisibility(View.GONE);
-                freeLessonAdapter.setLimit(0); // Show everything since it fits
+                freeLessonAdapter.setLimit(0);
             }
             freeLessonAdapter.notifyDataSetChanged();
         }
@@ -254,7 +364,6 @@ public class TutorProfileFragment extends Fragment {
         refreshSectionUI(achievementList.size(), rvAchievements, tvNoAchievements, tvAchievementsCollapseToggle, achievementAdapter, isAchievementsExpanded);
     }
 
-    // CHANGE 4: Updated toggle logic to use refreshLessonUI
     private void toggleLessonView() {
         isLessonsExpanded = !isLessonsExpanded;
         refreshLessonUI();
@@ -276,7 +385,6 @@ public class TutorProfileFragment extends Fragment {
                     }
                 }
                 hostedLessonList.sort((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
-                // CHANGE 5: Call the new helper instead of manually setting visibility
                 refreshLessonUI();
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}

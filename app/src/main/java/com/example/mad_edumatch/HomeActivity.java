@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mad_edumatch.authentication.LoginActivity;
 import com.example.mad_edumatch.chat.ChatDetailFragment;
-import com.example.mad_edumatch.chat.ChatListFragment; // Import ChatListFragment
+import com.example.mad_edumatch.chat.ChatListFragment;
 import com.example.mad_edumatch.freeLesson.FreeLessonDetailFragment;
 import com.example.mad_edumatch.helper.UserViewModel;
 import com.example.mad_edumatch.qna.QnaAnswerCommentFragment;
@@ -41,7 +41,6 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-
 public class HomeActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
@@ -49,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
     private TextView tvAppTitle;
     private ImageButton btnLogout;
+    private ImageButton btnBack; // 1. ADD VARIABLE
     private DatabaseReference chatRef;
 
     @Override
@@ -62,19 +62,12 @@ public class HomeActivity extends AppCompatActivity {
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 
         super.onCreate(savedInstanceState);
-        // --- NUCLEAR FIX: REMOVE GREY SHADOW ---
-        // 1. Clear the "Translucent" flag that adds the grey shadow
+
+        // Status Bar Styling
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        // 2. Add the "Draws System Bar Backgrounds" flag so we can color it
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-        // 3. Force the background color to pure WHITE
         getWindow().setStatusBarColor(android.graphics.Color.WHITE);
-
-        // 4. Force the icons (Time, Battery) to be BLACK
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        // ---------------------------------------
 
         setContentView(R.layout.app_activity_main);
 
@@ -85,8 +78,10 @@ public class HomeActivity extends AppCompatActivity {
         userViewModel.setUserName(userName);
         userViewModel.setUserRole(userRole);
 
+        // Initialize Views
         tvAppTitle = findViewById(R.id.tvAppTitle);
         btnLogout = findViewById(R.id.btnLogout);
+        btnBack = findViewById(R.id.btnBack); // 2. BIND VIEW
         bottomNav = findViewById(R.id.bottom_navigation);
 
         BottomNavigationView innerNav = findViewById(R.id.bottomNavigationView);
@@ -96,7 +91,20 @@ public class HomeActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> showLogoutConfirmation());
 
+        // 3. SET BACK BUTTON LISTENER (Behaves exactly like hardware back button)
+        btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
         setupOnBackPressed();
+
+        // 4. ADD LISTENER FOR FRAGMENT CHANGES
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (visibleFragment != null) {
+                currentFragment = visibleFragment;
+                // Update the toolbar (Show/Hide Back button) whenever the fragment changes
+                updateToolbarUI(visibleFragment);
+            }
+        });
 
         if (savedInstanceState == null) {
             loadFragment(getHomeFragmentForRole(userRole), R.id.nav_home);
@@ -104,24 +112,18 @@ public class HomeActivity extends AppCompatActivity {
 
         setupBottomNavigation();
         setupBadgeListener();
-
         checkNotificationPermission();
         updateFCMToken();
-        // Check if we arrived here from a Notification click
+
         if (getIntent().hasExtra("action_type")) {
             handleNotificationClick(getIntent());
         }
-        // 1. Handle notification if the app was COMPLETELY CLOSED
-        if (getIntent() != null && getIntent().hasExtra("action_type")) {
-            handleNotificationClick(getIntent());
-        }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        setIntent(intent); // CRITICAL: Updates the activity with the new notification data
-
-        // 2. Handle notification if the app was ALREADY OPEN (background)
+        setIntent(intent);
         if (intent != null && intent.hasExtra("action_type")) {
             handleNotificationClick(intent);
         }
@@ -137,17 +139,14 @@ public class HomeActivity extends AppCompatActivity {
                 fragmentToLoad = getHomeFragmentForRole(role);
             } else if (itemId == R.id.nav_notifications) {
                 fragmentToLoad = getNotificationFragmentForRole(role);
-                bottomNav.removeBadge(R.id.nav_notifications); // Clear badge immediately on click
+                // bottomNav.removeBadge(R.id.nav_notifications); // <--- DELETE THIS LINE
             } else if (itemId == R.id.nav_chat) {
-                // Load Chat List Fragment ---
                 fragmentToLoad = new ChatListFragment();
             } else if (itemId == R.id.nav_qna) {
                 fragmentToLoad = new QnaForumFragment();
             }
 
-            // PREVENT CRASH: Only load if fragment is NOT null and NOT the same as current
             if (fragmentToLoad != null) {
-                // Check if we are already showing this fragment type to prevent "Duplicate ID" crashes
                 if (currentFragment != null && currentFragment.getClass().equals(fragmentToLoad.getClass())) {
                     return true;
                 }
@@ -161,16 +160,39 @@ public class HomeActivity extends AppCompatActivity {
         if (fragment == null) return;
         currentFragment = fragment;
 
-
-            tvAppTitle.setText("EduMatch");
+        // 5. UPDATE UI WHEN LOADING A FRAGMENT
+        updateToolbarUI(fragment);
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .commitAllowingStateLoss(); // Prevents crashes during rapid navigation
+                .commitAllowingStateLoss();
 
         if (bottomNav.getSelectedItemId() != itemId) {
             bottomNav.getMenu().findItem(itemId).setChecked(true);
+        }
+    }
+
+    // 6. HELPER LOGIC: Toggle Back vs Logout
+    private void updateToolbarUI(Fragment fragment) {
+        // Define which fragments are "Root" (Main Tabs) where Back button should be HIDDEN
+        boolean isRootFragment =
+                fragment instanceof StudentHomeFragment ||
+                        fragment instanceof TutorHomeFragment ||
+                        fragment instanceof StudentNotificationFragment ||
+                        fragment instanceof TutorNotificationFragment ||
+                        fragment instanceof ChatListFragment ||
+                        fragment instanceof QnaForumFragment;
+
+        if (isRootFragment) {
+            // Main Tab: Show Logout, Hide Back
+            btnBack.setVisibility(View.GONE);
+            btnLogout.setVisibility(View.VISIBLE);
+            tvAppTitle.setText("EduMatch");
+        } else {
+            // Detail Page (e.g. Profile, Chat Detail): Show Back, Hide Logout
+            btnBack.setVisibility(View.VISIBLE);
+            btnLogout.setVisibility(View.GONE);
         }
     }
 
@@ -198,14 +220,22 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // ... (rest of your methods: showLogoutConfirmation, getHomeFragmentForRole, badge listeners, etc.) ...
+
     private void showLogoutConfirmation() {
         new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
                 .setPositiveButton("Logout", (dialog, which) -> {
                     FirebaseAuth.getInstance().signOut();
+
                     Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+
+                    // --- THIS IS THE FIX ---
+                    // These flags clear the old activity stack so Login starts fresh
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    // -----------------------
+
                     startActivity(intent);
                     finish();
                 })
@@ -233,7 +263,6 @@ public class HomeActivity extends AppCompatActivity {
 
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app");
 
-        // 1. CHAT BADGE LISTENER
         chatRef = db.getReference("chatlist").child(currentUid);
         chatRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override
@@ -249,14 +278,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
 
-        // 2. GENERAL NOTIFICATIONS BADGE LISTENER (Q&A, Kudos, etc.)
         DatabaseReference notifRef = db.getReference("notifications").child(currentUid);
         notifRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
                 int unreadNotifCount = 0;
                 for (com.google.firebase.database.DataSnapshot data : snapshot.getChildren()) {
-                    // We check 'isRead' field for general notifications
                     if (data.hasChild("isRead") && Boolean.FALSE.equals(data.child("isRead").getValue(Boolean.class))) {
                         unreadNotifCount++;
                     }
@@ -267,9 +294,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Helper to keep the UI logic dry
-     */
     private void updateBottomNavBadge(int menuId, int count) {
         if (count > 0) {
             var badge = bottomNav.getOrCreateBadge(menuId);
@@ -284,7 +308,6 @@ public class HomeActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
                     PackageManager.PERMISSION_GRANTED) {
-
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
             }
@@ -294,38 +317,33 @@ public class HomeActivity extends AppCompatActivity {
     private void updateFCMToken() {
         String currentUid = FirebaseAuth.getInstance().getUid();
         if (currentUid == null) return;
-
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) return;
-
             String token = task.getResult();
             DatabaseReference userRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                    .getReference("users")
-                    .child(currentUid);
-
-            // Save token so backend knows where to send push notifications
+                    .getReference("users").child(currentUid);
             userRef.child("fcmToken").setValue(token);
         });
     }
 
     private void handleNotificationClick(Intent intent) {
         String actionType = intent.getStringExtra("action_type");
-        String sourceId = intent.getStringExtra("sourceId"); // Retrieve the Question ID
+        String sourceId = intent.getStringExtra("sourceId");
 
         if ("OPEN_QUESTION".equals(actionType) || "NEW_SOLUTION".equals(actionType)) {
-                QnaDetailFragment fragment = new QnaDetailFragment();
-                Bundle args = new Bundle();
-                args.putString("answerId", sourceId);
-                args.putString("sourceId", sourceId); // Pass as sourceId to match Fragment logic
-                fragment.setArguments(args);
-                loadFragment(fragment, R.id.nav_qna);
-                bottomNav.setSelectedItemId(R.id.nav_qna);
+            QnaDetailFragment fragment = new QnaDetailFragment();
+            Bundle args = new Bundle();
+            args.putString("answerId", sourceId);
+            args.putString("sourceId", sourceId);
+            fragment.setArguments(args);
+            loadFragment(fragment, R.id.nav_qna);
+            bottomNav.setSelectedItemId(R.id.nav_qna);
         }
         else if ("OPEN_LESSON".equals(actionType)) {
             if (sourceId != null) {
                 FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
                 Bundle args = new Bundle();
-                args.putString("lessonId", sourceId); // Pass the ID to the fragment
+                args.putString("lessonId", sourceId);
                 fragment.setArguments(args);
                 loadFragment(fragment, R.id.nav_home);
                 bottomNav.setSelectedItemId(R.id.nav_home);
@@ -334,30 +352,20 @@ public class HomeActivity extends AppCompatActivity {
         else if ("OPEN_COMMENT".equals(actionType)) {
             QnaAnswerCommentFragment fragment = new QnaAnswerCommentFragment();
             Bundle args = new Bundle();
-            args.putString("sourceId", sourceId); // Pass the answerId as sourceId
+            args.putString("sourceId", sourceId);
             fragment.setArguments(args);
-
-            // Load into the Q&A section
             loadFragment(fragment, R.id.nav_qna);
             bottomNav.setSelectedItemId(R.id.nav_qna);
         }
         else if ("OPEN_CHAT".equals(actionType)) {
             String senderId = intent.getStringExtra("senderId");
             String listingId = intent.getStringExtra("sourceId");
-
             ChatDetailFragment fragment = new ChatDetailFragment();
             Bundle args = new Bundle();
-
-            // Pass the senderId from the notification as the targetUserId for the chat
             args.putString("targetUserId", senderId);
             args.putString("listingId", listingId);
-
-            // Optional: You can fetch the name in the fragment,
-            // but passing a placeholder prevents empty headers
             args.putString("targetUserName", "User");
-
             fragment.setArguments(args);
-
             loadFragment(fragment, R.id.nav_chat);
             bottomNav.setSelectedItemId(R.id.nav_chat);
         }

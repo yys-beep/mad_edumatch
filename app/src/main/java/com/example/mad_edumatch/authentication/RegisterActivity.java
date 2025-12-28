@@ -1,11 +1,14 @@
 package com.example.mad_edumatch.authentication;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,11 +27,13 @@ import com.example.mad_edumatch.firebaseModels.TutorProfile;
 import com.example.mad_edumatch.firebaseModels.User;
 import com.example.mad_edumatch.helper.AvatarManager;
 import com.example.mad_edumatch.recycleAdapters.AvatarAdapter;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity implements AvatarAdapter.AvatarClickListener {
 
@@ -37,15 +42,40 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
     private LinearLayout layoutStudentFields, layoutTutorFields;
     private Button btnRegister;
     private TextView tvLoginLink;
-    private ImageButton btnBack;
+
+    // REMOVED: private MaterialButton btnLanguageSwitch; (Old button caused crash)
+
     private RecyclerView rvAvatarSelect;
     private FirebaseAuth mAuth;
-    private String selectedAvatarName = AvatarManager.getAvatarName(0); // Default avatar
+    private String selectedAvatarName = AvatarManager.getAvatarName(0);
+
+    // New Buttons
+    private Button btnRegEn, btnRegBm, btnRegZh;
+    private final int SELECTED_COLOR = Color.parseColor("#021289");
+    private final int UNSELECTED_COLOR = Color.parseColor("#AAAAAA");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 1. Load Language BEFORE setContentView
+        loadLocale();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity_register);
+
+        // 2. Init Language Buttons
+        btnRegEn = findViewById(R.id.btnRegLangEn);
+        btnRegBm = findViewById(R.id.btnRegLangBm);
+        btnRegZh = findViewById(R.id.btnRegLangZh);
+
+        // 3. Set Listeners
+        btnRegEn.setOnClickListener(v -> setLocale("en"));
+        btnRegBm.setOnClickListener(v -> setLocale("ms"));
+        btnRegZh.setOnClickListener(v -> setLocale("zh"));
+
+        // 4. FIX: Load the correct color based on saved preference
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String currentLang = prefs.getString("My_Lang", "en");
+        updateColors(currentLang);
 
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
@@ -64,7 +94,6 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
         layoutTutorFields = findViewById(R.id.layoutTutorFields);
         btnRegister = findViewById(R.id.btnRegister);
         tvLoginLink = findViewById(R.id.tvLoginLink);
-        btnBack = findViewById(R.id.btnBack);
 
         // Initialize Avatar RecyclerView
         rvAvatarSelect = findViewById(R.id.rvAvatarSelect);
@@ -74,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
             @Override
             public void getItemOffsets(@NonNull android.graphics.Rect outRect, @NonNull View view,
                                        @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                int padding = -5; // Increase this number to make the avatars smaller
+                int padding = -5;
                 outRect.left = padding;
                 outRect.right = padding;
                 outRect.top = padding;
@@ -82,25 +111,19 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
             }
         });
 
+        // Auto-scroll logic
         final ScrollView scrollView = findViewById(R.id.registerScrollView);
-
         View.OnFocusChangeListener autoScrollListener = (v, hasFocus) -> {
             if (hasFocus) {
-                // Wait for keyboard animation to start
                 scrollView.postDelayed(() -> {
-                    // Get the position of the focused EditText
                     int[] location = new int[2];
                     v.getLocationOnScreen(location);
                     int yPos = location[1];
-
-                    // Scroll the view up so the EditText is near the top of the visible area
-                    // Adjust the '200' value to control how high it scrolls
                     scrollView.smoothScrollBy(0, yPos - 200);
                 }, 300);
             }
         };
 
-        // Apply to all input fields
         etName.setOnFocusChangeListener(autoScrollListener);
         etEmail.setOnFocusChangeListener(autoScrollListener);
         etPassword.setOnFocusChangeListener(autoScrollListener);
@@ -120,7 +143,32 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
 
         btnRegister.setOnClickListener(v -> registerUser());
         tvLoginLink.setOnClickListener(v -> finish());
-        btnBack.setOnClickListener(v -> finish());
+
+        // REMOVED: btnLanguageSwitch listener (This was causing the crash)
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+
+        recreate(); // Restart Activity
+    }
+
+    private void loadLocale() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "en");
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
     @Override
@@ -136,30 +184,30 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
 
         int selectedRoleId = rgRole.getCheckedRadioButtonId();
         if (selectedRoleId == -1) {
-            Toast.makeText(this, "Please select a role", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_select_role), Toast.LENGTH_SHORT).show();
             return;
         }
 
         RadioButton rbRole = findViewById(selectedRoleId);
-        String role = rbRole.getText().toString();
+        // Note: rbRole.getText() might be translated (e.g., "Pelajar"), so handle roles carefully.
+        // It is safer to rely on the ID to determine the role for the database.
+        String roleStr = (selectedRoleId == R.id.rbStudent) ? "Student" : "Tutor";
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_fill_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 1. Create Auth User
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        String error = task.getException() != null ? task.getException().getMessage() : "Unknown";
+                        Toast.makeText(this, getString(R.string.toast_reg_failed, error), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     String uid = mAuth.getCurrentUser().getUid();
-
-                    // 2. Create User Object for "Users" node (Includes Avatar URL)
-                    User newUser = new User(uid, name, email, role, registerTime, selectedAvatarName);
+                    User newUser = new User(uid, name, email, roleStr, registerTime, selectedAvatarName);
 
                     FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                             .getReference("Users")
@@ -167,21 +215,19 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
                             .setValue(newUser)
                             .addOnCompleteListener(dbTask -> {
                                 if (dbTask.isSuccessful()) {
-                                    // 3. Create Specific Profile (Also save avatar URL for consistency)
-                                    if (role.equalsIgnoreCase("Student")) {
+                                    if (roleStr.equalsIgnoreCase("Student")) {
                                         createStudentProfile(uid, name, email, registerTime, selectedAvatarName);
                                     } else {
                                         createTutorProfile(uid, name, email, registerTime, selectedAvatarName);
                                     }
                                 } else {
-                                    Toast.makeText(this, "Failed to save primary user data", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, getString(R.string.toast_primary_fail), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 });
     }
 
     private void createTutorProfile(String uid, String name, String email, long registerTime, String avatarUrl) {
-        // Defaults
         String contact = "N/A";
         String fee = "N/A";
         String area = "N/A";
@@ -190,13 +236,13 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
 
         TutorProfile profile = new TutorProfile(
                 uid, name, email, contact,
-                new ArrayList<>(), // Subjects
+                new ArrayList<>(),
                 fee, area, qualification,
-                new ArrayList<>(), // Achievements
-                new ArrayList<>(), // Experience
+                new ArrayList<>(),
+                new ArrayList<>(),
                 description,
                 registerTime,
-                avatarUrl // Save avatar URL
+                avatarUrl
         );
 
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -204,11 +250,11 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
                 .child(uid)
                 .setValue(profile)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Registration Successful! Complete your profile.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_reg_success), Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to create profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_profile_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -224,9 +270,9 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
                 uid, name, email, contact,
                 age, academicLevel, description,
                 registerTime,
-                avatarUrl, // Save avatar URL
-                new ArrayList<>(), // Achievements
-                new ArrayList<>()  // Free Lessons
+                avatarUrl,
+                new ArrayList<>(),
+                new ArrayList<>()
         );
 
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -234,11 +280,21 @@ public class RegisterActivity extends AppCompatActivity implements AvatarAdapter
                 .child(uid)
                 .setValue(profile)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Registration Successful! Complete your profile.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_reg_success), Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to create profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_profile_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void updateColors(String lang) {
+        btnRegEn.setTextColor(UNSELECTED_COLOR);
+        btnRegBm.setTextColor(UNSELECTED_COLOR);
+        btnRegZh.setTextColor(UNSELECTED_COLOR);
+
+        if (lang.equals("en")) btnRegEn.setTextColor(SELECTED_COLOR);
+        else if (lang.equals("ms")) btnRegBm.setTextColor(SELECTED_COLOR);
+        else if (lang.equals("zh")) btnRegZh.setTextColor(SELECTED_COLOR);
     }
 }

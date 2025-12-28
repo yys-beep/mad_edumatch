@@ -1,6 +1,6 @@
 package com.example.mad_edumatch.recycleAdapters;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,42 +45,76 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return new ViewHolder(v);
     }
 
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Notification n = list.get(position);
+        Context context = holder.itemView.getContext();
 
-        holder.tvTitle.setText(n.getTitle());
-        holder.tvMsg.setText(n.getMessage());
+        // --- 1. TRANSLATE TITLE DYNAMICALLY ---
+        // Using toUpperCase to ensure matching regardless of how it was saved
+        String actionType = n.getAction_type() != null ? n.getAction_type().toUpperCase() : "";
 
-        // --- Color Logic ---
+        switch (actionType) {
+            case "NEW_SOLUTION":
+                holder.tvTitle.setText(context.getString(R.string.new_solution_notif_title));
+                break;
+            case "OPEN_CHAT":
+                holder.tvTitle.setText(context.getString(R.string.listing_inquiry_title));
+                break;
+            case "LESSON_COMMENT": // Added for Free Lesson Comments
+                holder.tvTitle.setText(context.getString(R.string.new_comment_notif_title));
+                break;
+            case "OPEN_COMMENT": // Standardized Q&A comment title
+                holder.tvTitle.setText(context.getString(R.string.notif_new_comment_title));
+                break;
+            case "KUDOS":
+            case "LIKE":
+                holder.tvTitle.setText(context.getString(R.string.badge_loved_title));
+                break;
+            default:
+                // If actionType is unknown, use a default localized string instead of database text
+                holder.tvTitle.setText(context.getString(R.string.default_notif_title));
+                break;
+        }
+
+        // --- 2. ASYNC MESSAGE LOADING ---
+        // Tag the view to prevent recycling glitches
+        if (n.getSenderId() != null && !n.getSenderId().isEmpty()) {
+            holder.tvMsg.setTag(n.getSenderId());
+            loadSenderNameAndFormatMessage(n.getSenderId(), actionType, holder.tvMsg);
+        } else {
+            holder.tvMsg.setText(n.getMessage());
+        }
+
+        // --- 3. UI STATE (Read/Unread) ---
         if (!n.isRead()) {
-            // UNSEEN: Light Pink
             holder.cardView.setCardBackgroundColor(android.graphics.Color.parseColor("#FFF0F5"));
             holder.tvTitle.setTypeface(null, Typeface.BOLD);
-            holder.itemView.setAlpha(1.0f);
         } else {
-            // SEEN: White
             holder.cardView.setCardBackgroundColor(android.graphics.Color.WHITE);
             holder.tvTitle.setTypeface(null, Typeface.NORMAL);
         }
 
-        // Sender Name Logic
-        if (n.getSenderId() != null && !n.getSenderId().isEmpty()) {
-            loadSenderNameAndFormatMessage(n.getSenderId(), n.getAction_type(), holder.tvMsg, n.getMessage());
-        }
-
-        // Icon Logic
-        String actionType = n.getAction_type() != null ? n.getAction_type().toUpperCase() : "";
+        // --- 4. ICON LOGIC ---
         switch (actionType) {
-            case "OPEN_CHAT": holder.ivIcon.setImageResource(R.drawable.ic_chat_message); break;
+            case "OPEN_CHAT":
+                holder.ivIcon.setImageResource(R.drawable.ic_chat_message);
+                break;
             case "KUDOS":
-            case "LIKE": holder.ivIcon.setImageResource(R.drawable.baseline_thumb_up_24); break;
-            case "OPEN_QUESTION":
+            case "LIKE":
+                holder.ivIcon.setImageResource(R.drawable.baseline_thumb_up_24);
+                break;
+            case "LESSON_COMMENT":
+            case "OPEN_COMMENT":
             case "NEW_SOLUTION":
-            case "OPEN_COMMENT": holder.ivIcon.setImageResource(R.drawable.ic_comment_icon); break;
-            default: holder.ivIcon.setImageResource(R.drawable.outline_notifications_active_24); break;
+                holder.ivIcon.setImageResource(R.drawable.ic_comment_icon);
+                break;
+            default:
+                holder.ivIcon.setImageResource(R.drawable.outline_notifications_active_24);
+                break;
         }
 
-        // Time Logic
+        // --- 5. TIME & CLICK ---
         if (n.getTimestamp() != 0) {
             holder.tvTime.setText(TimeHelper.getMalaysiaTime(n.getTimestamp()));
             holder.tvTime.setVisibility(View.VISIBLE);
@@ -88,52 +122,71 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.tvTime.setVisibility(View.GONE);
         }
 
-        // --- CLICK LISTENER (FIXED) ---
         holder.itemView.setOnClickListener(v -> {
-            // 1. INSTANTLY Change Color (Visual Trick)
-            holder.cardView.setCardBackgroundColor(android.graphics.Color.WHITE);
-            holder.tvTitle.setTypeface(null, Typeface.NORMAL);
-
-            // 2. Update Local Data
             if (!n.isRead()) {
                 n.setRead(true);
-                // We do NOT call notifyItemChanged here because we just updated the view manually above.
-                // This prevents "flickering" or race conditions.
+                notifyItemChanged(position);
             }
-
-            // 3. Trigger Navigation (This will update Firebase in the Fragment)
             if (listener != null) listener.onNotificationClick(n);
         });
     }
 
-    private void loadSenderNameAndFormatMessage(String senderId, String actionType, TextView tvMsg, String originalMsg) {
-        userDbRef.child("student_profiles").child(senderId).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    setDynamicMessage(snapshot.getValue(String.class), actionType, tvMsg, originalMsg);
-                } else {
-                    userDbRef.child("tutor_profiles").child(senderId).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot tutorSnap) {
-                            if (tutorSnap.exists()) {
-                                setDynamicMessage(tutorSnap.getValue(String.class), actionType, tvMsg, originalMsg);
-                            }
+    private void loadSenderNameAndFormatMessage(String senderId, String actionType, TextView tvMsg) {
+        // Search student profiles first
+        userDbRef.child("student_profiles").child(senderId).child("username")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            safeSetText(tvMsg, senderId, snapshot.getValue(String.class), actionType);
+                        } else {
+                            // Search tutor profiles second
+                            userDbRef.child("tutor_profiles").child(senderId).child("username")
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot tutorSnap) {
+                                            String name = tutorSnap.exists() ? tutorSnap.getValue(String.class) :
+                                                    tvMsg.getContext().getString(R.string.user_fallback);
+                                            safeSetText(tvMsg, senderId, name, actionType);
+                                        }
+                                        @Override public void onCancelled(@NonNull DatabaseError error) {}
+                                    });
                         }
-                        @Override public void onCancelled(@NonNull DatabaseError error) {}
-                    });
-                }
-            }
-            @Override public void onCancelled(@NonNull DatabaseError error) {}
-        });
+                    }
+                    @Override public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
 
-    private void setDynamicMessage(String realName, String actionType, TextView tvMsg, String fallbackMsg) {
-        if (realName == null) return;
-        if ("OPEN_COMMENT".equals(actionType)) tvMsg.setText(realName + " commented on your solution.");
-        else if ("NEW_SOLUTION".equals(actionType)) tvMsg.setText(realName + " posted a solution.");
-        else if ("LIKE".equals(actionType) || "KUDOS".equals(actionType)) tvMsg.setText(realName + " liked your post.");
-        else tvMsg.setText(realName + " sent a notification.");
+    private void safeSetText(TextView tvMsg, String expectedSenderId, String realName, String actionType) {
+        if (tvMsg.getTag() != null && tvMsg.getTag().equals(expectedSenderId)) {
+            setDynamicMessage(realName, actionType, tvMsg);
+        }
+    }
+
+    private void setDynamicMessage(String realName, String actionType, TextView tvMsg) {
+        Context context = tvMsg.getContext();
+        // Updated to handle 1-argument string resources to prevent crashes
+        switch (actionType) {
+            case "LESSON_COMMENT":
+                tvMsg.setText(context.getString(R.string.notif_lesson_comment, realName));
+                break;
+            case "NEW_SOLUTION":
+                tvMsg.setText(context.getString(R.string.notif_qna_solution, realName));
+                break;
+            case "OPEN_COMMENT":
+                tvMsg.setText(context.getString(R.string.notif_qna_comment, realName));
+                break;
+            case "LIKE":
+            case "KUDOS":
+                tvMsg.setText(context.getString(R.string.notif_liked, realName));
+                break;
+            case "OPEN_CHAT":
+                tvMsg.setText(context.getString(R.string.notif_chat, realName));
+                break;
+            default:
+                tvMsg.setText(context.getString(R.string.notif_default, realName));
+                break;
+        }
     }
 
     @Override

@@ -162,6 +162,7 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
         int checkedChipId = chipGroupFilter.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
             Chip chip = chipGroupFilter.findViewById(checkedChipId);
+            // This gets "Rendah" if app is in Malay, or "Primary" if English
             selectedLevel = chip.getText().toString().toLowerCase();
         }
 
@@ -171,15 +172,29 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
             boolean matchesSubject = false;
             boolean matchesLevel = false;
 
-            // Subject Check
+            // 1. SUBJECT CHECK (Assume subject names might be English in DB)
+            // If you have a LocalizationHelper for subjects, apply it here too.
             String reqSubject = request.getSubject() != null ? request.getSubject().toLowerCase() : "";
             if (TextUtils.isEmpty(query) || reqSubject.contains(query)) {
                 matchesSubject = true;
             }
 
-            // Level Check
-            String reqLevel = request.getLevel() != null ? request.getLevel().toLowerCase() : "";
-            if (TextUtils.isEmpty(selectedLevel) || reqLevel.contains(selectedLevel)) {
+            // 2. LEVEL CHECK (CRITICAL FIX)
+            // Get raw DB value: "Primary"
+            String rawDbLevel = request.getLevel();
+            String localizedDbLevel = rawDbLevel;
+
+            // Use Helper to translate "Primary" -> "Rendah" (if app is in Malay)
+            // Make sure you import your LocalizationHelper class
+            int resId = com.example.mad_edumatch.helper.LocalizationHelper.getLevelStringId(rawDbLevel);
+            if (resId != 0 && isAdded()) {
+                localizedDbLevel = getString(resId);
+            }
+
+            // Now compare "rendah" (from DB translated) with "rendah" (from Chip)
+            String reqLevelForSearch = localizedDbLevel != null ? localizedDbLevel.toLowerCase() : "";
+
+            if (TextUtils.isEmpty(selectedLevel) || reqLevelForSearch.contains(selectedLevel)) {
                 matchesLevel = true;
             }
 
@@ -188,11 +203,9 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
             }
         }
 
-        // 5. Update UI
         adapter.notifyDataSetChanged();
         updateEmptyView();
     }
-
     private void updateEmptyView() {
         if (displayList.isEmpty()) {
             tvNoRequestFound.setVisibility(View.VISIBLE);

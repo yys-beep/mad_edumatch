@@ -16,11 +16,11 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.chat.ChatDetailFragment;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.example.mad_edumatch.helper.TimeHelper; // IMPORT THIS
+import com.example.mad_edumatch.helper.LocalizationHelper; // Import Helper
+import com.example.mad_edumatch.helper.TimeHelper;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
-import java.util.Locale;
 
 public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearchTutorAdapter.ViewHolder> {
 
@@ -43,38 +43,45 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TutorListing tutor = tutorList.get(position);
 
-        // 1. Bind Data
         holder.tvName.setText(tutor.getName());
         holder.tvSubjects.setText(tutor.getSubject());
 
-        // Helper method from your model for List<String>
-        holder.tvLevels.setText(tutor.getLevelsAsString());
+        // --- 1. Translate Levels ---
+        // Try to translate the level string. If it's complex (comma separated), helper returns 0.
+        int levelResId = LocalizationHelper.getLevelStringId(tutor.getLevelsAsString());
+        if (levelResId != 0) {
+            holder.tvLevels.setText(context.getString(levelResId));
+        } else {
+            holder.tvLevels.setText(tutor.getLevelsAsString());
+        }
 
-        // Format Fee
-        holder.tvFee.setText(String.format(Locale.getDefault(), "RM %.2f/hr", tutor.getFee()));
+        // --- 2. Format Fee (RM %.2f/hr) ---
+        holder.tvFee.setText(context.getString(R.string.budget_per_hour, tutor.getFee()));
 
         holder.tvArea.setText(tutor.getArea());
         holder.tvQualification.setText(tutor.getQualification());
 
-        // 2. Format Timestamp using TimeHelper (FIXED HERE)
+        // --- 3. Format Timestamp ---
         if (tutor.getTimestamp() > 0) {
             String formattedTime = TimeHelper.getMalaysiaTime(tutor.getTimestamp());
-            holder.tvTimestamp.setText("Posted: " + formattedTime);
+            // "Posted: %s"
+            holder.tvTimestamp.setText(context.getString(R.string.posted_time_format, formattedTime));
         } else {
-            holder.tvTimestamp.setText("Posted: Just now");
+            // "Posted: Just now"
+            holder.tvTimestamp.setText(R.string.posted_just_now);
         }
 
-        // 3. Contact Button Logic
+        // --- 4. Contact Button Logic ---
         holder.btnContact.setOnClickListener(v -> {
             String currentUid = CurrentUser.getInstance().getUid();
 
             if (currentUid == null) {
-                Toast.makeText(context, "Please login to contact tutors", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.login_to_contact, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (currentUid.equals(tutor.getTutorId())) {
-                Toast.makeText(context, "You cannot chat with yourself!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.contact_self_error, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -89,7 +96,9 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
         args.putString("listingId", listingId);
-        args.putString("listingTitle", "Tutor Listing: " + subject);
+
+        // "Tutor Listing: %s"
+        args.putString("listingTitle", context.getString(R.string.tutor_listing_title, subject));
 
         chatFragment.setArguments(args);
 

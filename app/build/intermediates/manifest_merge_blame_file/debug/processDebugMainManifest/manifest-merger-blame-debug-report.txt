@@ -102,13 +102,13 @@
 54            android:windowSoftInputMode="adjustResize|stateVisible" />
 54-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:33:13-68
 55        <activity
-55-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:35:9-38:58
+55-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:35:9-38:70
 56            android:name="com.example.mad_edumatch.authentication.LoginActivity"
 56-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:36:13-57
 57            android:exported="true"
 57-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:37:13-36
-58            android:windowSoftInputMode="adjustResize" />
-58-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:38:13-55
+58            android:windowSoftInputMode="adjustResize|stateHidden" />
+58-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:38:13-67
 59        <activity
 59-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:40:9-43:58
 60            android:name="com.example.mad_edumatch.authentication.RegisterActivity"
