@@ -42,7 +42,6 @@ import java.util.Locale;
 
 public class StudentProfileFragment extends Fragment {
 
-    // Views
     private TextView tvStudentName, tvStudentAge, tvStudentAcademic, tvStudentDescription, tvStudentEmail, tvStudentContact;
     private TextView tvStudentAchievementsTitle, tvStudentFreeLessonsTitle;
     private RecyclerView rvAchievements, rvStudentFreeLessons;
@@ -50,21 +49,14 @@ public class StudentProfileFragment extends Fragment {
     private ImageView imgStudentProfilePic;
     private MaterialButton btnLanguage;
 
-    // Toggles and Empty Messages
-    private TextView tvAchievementCollapseToggle;
-    private TextView tvLessonsCollapseToggle;
-    private TextView tvNoAchievements;
-    private TextView tvNoLessons;
+    private TextView tvAchievementCollapseToggle, tvLessonsCollapseToggle, tvNoAchievements, tvNoLessons;
 
-    // Adapters
     private AchievementAdapter achievementAdapter;
     private FreeLessonAdapter freeLessonAdapter;
 
-    // Data Lists
     private ArrayList<String> achievementList = new ArrayList<>();
     private ArrayList<FreeLesson> freeLessonList = new ArrayList<>();
 
-    // State
     private boolean isAchievementExpanded = false;
     private boolean isLessonsExpanded = false;
 
@@ -72,9 +64,6 @@ public class StudentProfileFragment extends Fragment {
     private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
 
     private String profileUserId;
-    private View rootView;
-
-    // --- FIX: Store References to remove them later ---
     private DatabaseReference userRef;
     private ValueEventListener userListener;
     private DatabaseReference participationRef;
@@ -82,55 +71,51 @@ public class StudentProfileFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // REMOVED: if (rootView == null) check to ensure UI elements are always bound correctly
+        View view = inflater.inflate(R.layout.student_fragment_profile, container, false);
+        bindViews(view);
 
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.student_fragment_profile, container, false);
-
-            bindViews(rootView);
-
-            if (getArguments() != null && getArguments().getString("targetUserId") != null) {
-                profileUserId = getArguments().getString("targetUserId");
-            } else {
-                profileUserId = CurrentUser.getInstance().getUid();
-            }
-
-            setupRecyclerViews();
-
-            if (profileUserId != null && profileUserId.equals(CurrentUser.getInstance().getUid())) {
-                btnEditProfile.setVisibility(View.VISIBLE);
-                btnLanguage.setVisibility(View.VISIBLE);
-
-                btnEditProfile.setOnClickListener(v -> {
-                    getParentFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, new StudentEditProfileFragment())
-                            .addToBackStack(null)
-                            .commit();
-                });
-
-                btnLanguage.setOnClickListener(v -> showChangeLanguageDialog());
-
-            } else {
-                btnEditProfile.setVisibility(View.GONE);
-                btnLanguage.setVisibility(View.GONE);
-            }
-
-            // Load data only ONCE when view is created
-            loadStudentProfile();
+        if (getArguments() != null && getArguments().getString("targetUserId") != null) {
+            profileUserId = getArguments().getString("targetUserId");
+        } else {
+            profileUserId = CurrentUser.getInstance().getUid();
         }
 
-        return rootView;
+        setupRecyclerViews();
+
+        if (profileUserId != null && profileUserId.equals(CurrentUser.getInstance().getUid())) {
+            btnEditProfile.setVisibility(View.VISIBLE);
+            btnLanguage.setVisibility(View.VISIBLE);
+            btnEditProfile.setOnClickListener(v -> {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new StudentEditProfileFragment())
+                        .addToBackStack(null).commit();
+            });
+            btnLanguage.setOnClickListener(v -> showChangeLanguageDialog());
+        } else {
+            btnEditProfile.setVisibility(View.GONE);
+            btnLanguage.setVisibility(View.GONE);
+        }
+
+        return view;
     }
 
-    // --- FIX: REMOVED onResume() method ---
-    // Do NOT call loadStudentProfile() in onResume, or it will duplicate listeners.
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Start loading data here to ensure views are ready
+        loadStudentProfile();
+    }
 
-    // --- FIX: Remove Listeners on Destroy ---
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Crucial: Clean up listeners to prevent memory leaks and duplicate updates
+        removeListeners();
+    }
+
+    private void removeListeners() {
         if (userRef != null && userListener != null) {
             userRef.removeEventListener(userListener);
         }
@@ -151,74 +136,12 @@ public class StudentProfileFragment extends Fragment {
         tvStudentFreeLessonsTitle = view.findViewById(R.id.tvStudentFreeLessonsTitle);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnLanguage = view.findViewById(R.id.btnChangeLanguageStudent);
-
         rvAchievements = view.findViewById(R.id.rvStudentAchievements);
         rvStudentFreeLessons = view.findViewById(R.id.rvStudentFreeLessons);
-
         tvAchievementCollapseToggle = view.findViewById(R.id.tvAchievementCollapseToggle);
         tvLessonsCollapseToggle = view.findViewById(R.id.tvLessonsCollapseToggle);
-
         tvNoAchievements = view.findViewById(R.id.tvNoAchievements);
         tvNoLessons = view.findViewById(R.id.tvNoLessons);
-
-        tvStudentName.setText("");
-        tvStudentAge.setText("");
-        tvStudentAcademic.setText("");
-        tvStudentDescription.setText("");
-        tvStudentEmail.setText("");
-        tvStudentContact.setText("");
-
-        tvNoAchievements.setVisibility(View.GONE);
-        tvNoLessons.setVisibility(View.GONE);
-    }
-
-    private void showChangeLanguageDialog() {
-        final String[] listItems = {"English", "Bahasa Malaysia", "简体中文"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getString(R.string.language_option));
-        builder.setSingleChoiceItems(listItems, -1, (dialog, i) -> {
-            if (i == 0) {
-                setLocale("en");
-                dialog.dismiss();
-                restartApp();
-            } else if (i == 1) {
-                setLocale("ms");
-                dialog.dismiss();
-                restartApp();
-            }else if (i == 2) {
-                setLocale("zh");
-                dialog.dismiss();
-                restartApp();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void setLocale(String lang) {
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.setLocale(locale);
-
-        if (getActivity() != null) {
-            getActivity().getResources().updateConfiguration(config, getActivity().getResources().getDisplayMetrics());
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit();
-            editor.putString("My_Lang", lang);
-            editor.apply();
-        }
-    }
-
-    private void restartApp() {
-        if (getActivity() == null) return;
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
-        intent.putExtra("userRole", "Student");
-        String currentName = tvStudentName.getText().toString();
-        intent.putExtra("userName", currentName);
-        intent.putExtra("TARGET_FRAGMENT", "PROFILE");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        getActivity().finish();
     }
 
     private void setupRecyclerViews() {
@@ -235,6 +158,84 @@ public class StudentProfileFragment extends Fragment {
 
         tvAchievementCollapseToggle.setOnClickListener(v -> toggleAchievementView());
         tvLessonsCollapseToggle.setOnClickListener(v -> toggleLessonsView());
+    }
+
+    private void loadStudentProfile() {
+        if (profileUserId == null) return;
+
+        removeListeners(); // Remove old listeners before attaching new ones
+        loadParticipatedLessons(profileUserId);
+
+        userRef = FirebaseDatabase.getInstance(FIREBASE_URL)
+                .getReference("student_profiles")
+                .child(profileUserId);
+
+        userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded() || !snapshot.exists()) return;
+
+                StudentProfile profile = snapshot.getValue(StudentProfile.class);
+                if (profile == null) return;
+
+                // Update Basic Info immediately upon database change
+                tvStudentName.setText(profile.getUsername());
+                tvStudentAge.setText(getString(R.string.age) + ": " + profile.getAge());
+                tvStudentAcademic.setText(profile.getAcademicLevel());
+                tvStudentDescription.setText(profile.getDescription());
+                tvStudentEmail.setText(getString(R.string.email) + ": " + profile.getEmail());
+                tvStudentContact.setText(getString(R.string.profile_contact) + " " + profile.getContact());
+
+                int resId = AvatarManager.getAvatarResourceId(profile.getProfileImageUrl());
+                if (resId != 0) imgStudentProfilePic.setImageResource(resId);
+
+                achievementList.clear();
+                if (profile.getAchievements() != null) {
+                    achievementList.addAll(profile.getAchievements());
+                }
+
+                updateAchievementUI();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        userRef.addValueEventListener(userListener);
+    }
+
+    private void updateAchievementUI() {
+        if (!isAdded()) return;
+
+        tvStudentAchievementsTitle.setText(getString(R.string.achievements) + " (" + achievementList.size() + ")");
+
+        if (achievementList.isEmpty()) {
+            rvAchievements.setVisibility(View.GONE);
+            tvNoAchievements.setVisibility(View.VISIBLE);
+            tvAchievementCollapseToggle.setVisibility(View.GONE);
+        } else {
+            rvAchievements.setVisibility(View.VISIBLE);
+            tvNoAchievements.setVisibility(View.GONE);
+
+            if (achievementList.size() > INITIAL_ITEM_LIMIT) {
+                tvAchievementCollapseToggle.setVisibility(View.VISIBLE);
+                tvAchievementCollapseToggle.setText(isAchievementExpanded ? getString(R.string.collapse) : getString(R.string.view_all));
+                achievementAdapter.setLimit(isAchievementExpanded ? achievementList.size() : INITIAL_ITEM_LIMIT);
+            } else {
+                tvAchievementCollapseToggle.setVisibility(View.GONE);
+                achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
+            }
+        }
+        achievementAdapter.notifyDataSetChanged();
+    }
+
+    private void toggleAchievementView() {
+        isAchievementExpanded = !isAchievementExpanded;
+        updateAchievementUI();
+    }
+
+    private void toggleLessonsView() {
+        isLessonsExpanded = !isLessonsExpanded;
+        refreshLessonUI();
     }
 
     private void refreshLessonUI() {
@@ -260,96 +261,6 @@ public class StudentProfileFragment extends Fragment {
             }
             freeLessonAdapter.notifyDataSetChanged();
         }
-    }
-
-    private void toggleLessonsView() {
-        isLessonsExpanded = !isLessonsExpanded;
-        refreshLessonUI();
-    }
-
-    private void toggleAchievementView() {
-        isAchievementExpanded = !isAchievementExpanded;
-        int limit = isAchievementExpanded ? achievementList.size() : INITIAL_ITEM_LIMIT;
-        achievementAdapter.setLimit(limit);
-        achievementAdapter.notifyDataSetChanged();
-        tvAchievementCollapseToggle.setText(isAchievementExpanded ? getString(R.string.collapse) : getString(R.string.view_all));
-    }
-
-    private void openLessonDetail(FreeLesson lesson) {
-        FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
-        Bundle args = new Bundle();
-        args.putString("lessonId", lesson.getLessonId());
-        args.putString("tutorName", lesson.getTutorName());
-        args.putString("tutorId", lesson.getTutorId());
-        args.putString("title", lesson.getTitle());
-        args.putString("desc", lesson.getDescription());
-        args.putString("videoUrl", lesson.getVideoLink());
-        args.putString("matUrl", lesson.getMaterialUrl());
-        args.putString("matName", lesson.getMaterialName());
-        fragment.setArguments(args);
-        getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-    }
-
-    // ====================================================================
-    // DATA LOADING
-    // ====================================================================
-
-    private void loadStudentProfile() {
-        if (profileUserId == null) return;
-
-        loadParticipatedLessons(profileUserId);
-
-        userRef = FirebaseDatabase.getInstance(FIREBASE_URL)
-                .getReference("student_profiles")
-                .child(profileUserId);
-
-        userListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!isAdded()) return;
-                StudentProfile profile = snapshot.getValue(StudentProfile.class);
-                if (profile == null) return;
-
-                tvStudentName.setText(profile.getUsername());
-                tvStudentAge.setText(getString(R.string.age) + ": " + profile.getAge());
-                tvStudentAcademic.setText(profile.getAcademicLevel());
-                tvStudentDescription.setText(profile.getDescription());
-                tvStudentEmail.setText(getString(R.string.email) + ": " + profile.getEmail());
-                tvStudentContact.setText(getString(R.string.profile_contact) + " " + profile.getContact());
-
-                int resId = AvatarManager.getAvatarResourceId(profile.getProfileImageUrl());
-                if (resId != 0) imgStudentProfilePic.setImageResource(resId);
-
-                achievementList.clear();
-                if (profile.getAchievements() != null) {
-                    achievementList.addAll(profile.getAchievements());
-                }
-
-                if (achievementList.isEmpty()) {
-                    rvAchievements.setVisibility(View.GONE);
-                    tvNoAchievements.setVisibility(View.VISIBLE);
-                    tvAchievementCollapseToggle.setVisibility(View.GONE);
-                } else {
-                    rvAchievements.setVisibility(View.VISIBLE);
-                    tvNoAchievements.setVisibility(View.GONE);
-
-                    if (achievementList.size() > INITIAL_ITEM_LIMIT) {
-                        tvAchievementCollapseToggle.setVisibility(View.VISIBLE);
-                        tvAchievementCollapseToggle.setText(isAchievementExpanded ? getString(R.string.collapse) : getString(R.string.view_all));
-                        achievementAdapter.setLimit(isAchievementExpanded ? achievementList.size() : INITIAL_ITEM_LIMIT);
-                    } else {
-                        tvAchievementCollapseToggle.setVisibility(View.GONE);
-                        achievementAdapter.setLimit(INITIAL_ITEM_LIMIT);
-                    }
-                }
-                achievementAdapter.notifyDataSetChanged();
-                tvStudentAchievementsTitle.setText(getString(R.string.achievements) + " (" + achievementList.size() + ")");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        };
-        userRef.addValueEventListener(userListener);
     }
 
     private void loadParticipatedLessons(String uidToLoad) {
@@ -378,9 +289,7 @@ public class StudentProfileFragment extends Fragment {
     }
 
     private void fetchLessonDetails(List<String> ids) {
-        // Clear list immediately to prevent stacking if this method is called multiple times quickly
         freeLessonList.clear();
-
         if (ids.isEmpty()) {
             finalizeLessonLoad();
             return;
@@ -396,7 +305,6 @@ public class StudentProfileFragment extends Fragment {
                     FreeLesson lesson = snapshot.getValue(FreeLesson.class);
                     if (lesson != null) {
                         lesson.setLessonId(id);
-                        // Prevent duplicates explicitly
                         boolean exists = false;
                         for(FreeLesson fl : freeLessonList) {
                             if(fl.getLessonId().equals(id)) {
@@ -404,9 +312,7 @@ public class StudentProfileFragment extends Fragment {
                                 break;
                             }
                         }
-                        if(!exists) {
-                            freeLessonList.add(lesson);
-                        }
+                        if(!exists) freeLessonList.add(lesson);
                     }
                     count[0]++;
                     if (count[0] == ids.size()) finalizeLessonLoad();
@@ -424,5 +330,53 @@ public class StudentProfileFragment extends Fragment {
         if (!isAdded()) return;
         freeLessonList.sort((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
         refreshLessonUI();
+    }
+
+    private void showChangeLanguageDialog() {
+        final String[] listItems = {"English", "Bahasa Malaysia", "简体中文"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.language_option));
+        builder.setSingleChoiceItems(listItems, -1, (dialog, i) -> {
+            if (i == 0) setLocale("en");
+            else if (i == 1) setLocale("ms");
+            else if (i == 2) setLocale("zh");
+            dialog.dismiss();
+            restartApp();
+        });
+        builder.create().show();
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        if (getActivity() != null) {
+            getActivity().getResources().updateConfiguration(config, getActivity().getResources().getDisplayMetrics());
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit();
+            editor.putString("My_Lang", lang);
+            editor.apply();
+        }
+    }
+
+    private void restartApp() {
+        if (getActivity() == null) return;
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.putExtra("userRole", "Student");
+        intent.putExtra("userName", tvStudentName.getText().toString());
+        intent.putExtra("TARGET_FRAGMENT", "PROFILE");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void openLessonDetail(FreeLesson lesson) {
+        FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
+        Bundle args = new Bundle();
+        args.putString("lessonId", lesson.getLessonId());
+        fragment.setArguments(args);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null).commit();
     }
 }
