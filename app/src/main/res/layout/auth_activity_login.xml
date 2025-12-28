@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@drawable/login_background">
 
     <ScrollView
@@ -20,7 +21,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="8dp"
                 app:cardCornerRadius="50dp"
                 app:cardElevation="4dp"
                 app:cardBackgroundColor="@color/white"
@@ -35,6 +37,61 @@
                     android:contentDescription="@string/app_logo" />
 
             </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLangEn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/en"
+                    android:textColor="#AAAAAA"
+                    android:textStyle="bold"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="12dp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:background="#CCCCCC"
+                    android:layout_gravity="center_vertical"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLangBm"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bm"
+                    android:textColor="#AAAAAA"
+                    android:textStyle="bold"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="12dp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:background="#CCCCCC"
+                    android:layout_gravity="center_vertical"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLangZh"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="12dp"
+                    android:text="@string/zh"
+                    android:textColor="#AAAAAA"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"

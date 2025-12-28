@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:padding="32dp">
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="100dp"
@@ -189,8 +191,24 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp">
-            <TextView android:id="@+id/tvHeaderLessons" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/hosted_free_lessons" android:textSize="18sp" android:textStyle="bold" android:textColor="@color/black"/>
-            <TextView android:id="@+id/tvLessonCollapseToggle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/view_all" android:textColor="@color/pastelBlue" android:textSize="14sp" android:textStyle="bold" android:paddingStart="16dp" android:clickable="true"/>
+            <TextView android:id="@+id/tvHeaderLessons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/hosted_free_lessons"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/tvLessonCollapseToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_all"
+                android:textColor="@color/pastelBlue"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingStart="16dp"
+                android:clickable="true"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -213,6 +231,25 @@
             android:textStyle="bold"
             app:backgroundTint="@color/pastelBlue"
             app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChangeLanguageTutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="12dp"
+            android:paddingVertical="12dp"
+            android:text="@string/language_option"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:strokeColor="@color/pastelBlue"
+            app:strokeWidth="2dp"
+            app:backgroundTint="@color/lightApricot"
+            app:cornerRadius="12dp"
+            app:icon="@android:drawable/ic_menu_manage"
+            app:iconGravity="textStart"
+            app:iconTint="@color/black" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

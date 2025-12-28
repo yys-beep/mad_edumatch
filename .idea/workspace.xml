@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/baseline_check_circle_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/baseline_logout_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/baseline_subject_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/baseline_thumb_up_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_chat_left.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_chat_right.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/card_background.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/circle_background_white.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/circular_bg.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/custom_progress.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_chat_message.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_comment_icon.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_background.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_foreground.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_like_heart.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_notification.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/outline_background_replace_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/outline_link_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/outline_video_library_24.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_card_light.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_dialog_bg.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/shadow_gradient_top.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_upload_material.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_activity_main.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_activity_splash.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_bottom_nav.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_fragment_notifications.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/auth_activity_login.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/auth_activity_register.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/chat_fragment_detail.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/chat_fragment_list.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_edit_free_lesson.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_edit_student_request.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_edit_tutor_listing.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_post_question.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_upload_material.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/free_lesson_fragment_detail.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_avatar.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_badge.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_achievement.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_free_lesson.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_notification.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_student.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_student_request.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_card_tutor_view_student_request.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_chat_left.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_chat_list.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_chat_right.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_community_impact.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_edit_dynamic_row.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_lesson_comment.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_student_view_tutor_listing.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_tutor_dashboard.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_tutor_view_listing.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_forum_fragment_main.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_fragment_comment_detail.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_fragment_question_detail.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_item_answer.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_item_comment.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/qna_item_question.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_edit_profile.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_home.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_notifications.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_post_request.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_profile.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_search_tutor.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_tutor_results.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/student_fragment_view_requests.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_edit_free_lesson.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_edit_profile.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_home.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_notifications.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_post_tutor_listing.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_profile.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_search_student_requests.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_fragment_upload_free_lesson.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/tutor_listing_fragment.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/bottom_nav_menu.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/xml/backup_rules.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/xml/data_extraction_rules.xml">
+        <config>
+          <theme>@style/Theme.Mad_eduMatch</theme>
+        </config>
+      </layout>
+    </layouts>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fe05365b-9194-4d91-846f-39a63a7c8f09" name="Changes" comment="Added feature&#10;1. login, register, logout&#10;2. student &amp; tutor&#10;-home page&#10;-qna forum&#10;-free lesson&#10;-profile page&#10;3. student post request and search tutor listing&#10;4. tutor post lisitng and search student request&#10;5. chat for tutor and student&#10;&#10;Setting and notification haven't implement yet" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\win11\.android\avd\Medium_Phone_2.avd)]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="mad_edumatch" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="layoutResourceFile" />
+        <option value="resourceFile" />
+        <option value="Class" />
+        <option value="valueResourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature---login" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;yys-beep&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/yys-beep/mad_edumatch.git&quot;,
+    &quot;accountId&quot;: &quot;556cca86-3900-4596-9477-2565a3c4afaa&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="35paGngAI2iPJDOgUgBBmm9Ifbl" />
+  <component name="ProjectReloadState">
+    <option name="STATE" value="1" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#15 on Nicole&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/win11/AndroidStudioProjects/test_pull_three/mad_edumatch/app/src/main/res/drawable&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK Location&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.tools&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.example.mad_edumatch" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\res\drawable" />
+      <recent name="C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\res\mipmap" />
+      <recent name="C:\Users\win11\AndroidStudioProjects\mad_eduMatch\app\src\main\res\drawable" />
+      <recent name="C:\Users\win11\AndroidStudioProjects\mad_eduMatch\app" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\res\drawable" />
+      <recent name="C:\Users\win11\AndroidStudioProjects\mad_eduMatch\app" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="mad_edumatch.app" />
+      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
+      <option name="RESTORE_FRESH_INSTALL_ONLY" value="false" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe05365b-9194-4d91-846f-39a63a7c8f09" name="Changes" comment="" />
+      <created>1763809374791</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763809374791</updated>
+    </task>
+    <task id="LOCAL-00001" summary="add activityTwo.java">
+      <option name="closed" value="true" />
+      <created>1763812183443</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763812183444</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added feature&#10;1. login, register, logout&#10;2. student &amp; tutor&#10;-home page&#10;-qna forum&#10;-free lesson&#10;-profile page&#10;3. student post request and search tutor listing&#10;4. tutor post lisitng and search student request&#10;5. chat for tutor and student&#10;&#10;Setting and notification haven't implement yet">
+      <option name="closed" value="true" />
+      <created>1765725622594</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765725622594</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/YeeSyuen" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add activityTwo.java" />
+    <MESSAGE value="Added feature&#10;1. login, register, logout&#10;2. student &amp; tutor&#10;-home page&#10;-qna forum&#10;-free lesson&#10;-profile page&#10;3. student post request and search tutor listing&#10;4. tutor post lisitng and search student request&#10;5. chat for tutor and student&#10;&#10;Setting and notification haven't implement yet" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added feature&#10;1. login, register, logout&#10;2. student &amp; tutor&#10;-home page&#10;-qna forum&#10;-free lesson&#10;-profile page&#10;3. student post request and search tutor listing&#10;4. tutor post lisitng and search student request&#10;5. chat for tutor and student&#10;&#10;Setting and notification haven't implement yet" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/mad_edumatch/tutor/TutorNotificationFragment.java</url>
+          <line>160</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="play_dynamic_filters_status">
+    <option name="appIdToCheckInfo">
+      <map>
+        <entry key="com.example.mad_edumatch">
+          <value>
+            <CheckInfo lastCheckTimestamp="1766901365385" />
+          </value>
+        </entry>
+        <entry key="com.example.mad_edumatch.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1766901365383" />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

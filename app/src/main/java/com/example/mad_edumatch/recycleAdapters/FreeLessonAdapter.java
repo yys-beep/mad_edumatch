@@ -1,5 +1,6 @@
 package com.example.mad_edumatch.recycleAdapters;
 
+import android.content.Context; // Import Context
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,18 +44,23 @@ public class FreeLessonAdapter extends RecyclerView.Adapter<FreeLessonAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FreeLesson lesson = list.get(position);
+        Context context = holder.itemView.getContext(); // Get Context for strings
 
         // 1. Basic Info
         holder.tvTitle.setText(lesson.getTitle());
         holder.tvDesc.setText(lesson.getDescription());
 
-        // 2. Set Placeholder (Old Name) immediately so it's not empty
-        String oldName = lesson.getTutorName() != null ? lesson.getTutorName() : "Tutor";
-        holder.tvTutor.setText("By " + oldName + " • " + lesson.getDurationMinutes() + " mins");
+        // 2. Set Placeholder (Old Name) immediately
+        // Uses: "By %1$s • %2$d mins" or "Oleh %1$s • %2$d minit"
+        String defaultTutor = context.getString(R.string.default_tutor_name);
+        String oldName = lesson.getTutorName() != null ? lesson.getTutorName() : defaultTutor;
+
+        holder.tvTutor.setText(context.getString(R.string.lesson_by_format, oldName, lesson.getDurationMinutes()));
 
         // 3. Kudos Count
         int actualLikes = (lesson.getLikes() != null) ? lesson.getLikes().size() : 0;
-        holder.tvLikes.setText("❤️ " + actualLikes + " Kudos");
+        // "❤️ %d Kudos" (Keeps Kudos as requested)
+        holder.tvLikes.setText(context.getString(R.string.kudos_count_format, actualLikes));
 
         // 4. Button Click
         holder.btnWatch.setOnClickListener(v -> listener.onLessonClick(lesson));
@@ -68,7 +74,6 @@ public class FreeLessonAdapter extends RecyclerView.Adapter<FreeLessonAdapter.Vi
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // Safety check: ensure view is still bound to this position
                     if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
 
                     String freshName = null;
@@ -82,7 +87,7 @@ public class FreeLessonAdapter extends RecyclerView.Adapter<FreeLessonAdapter.Vi
 
                     // Update UI if we found a new name
                     if (freshName != null) {
-                        holder.tvTutor.setText("By " + freshName + " • " + lesson.getDurationMinutes() + " mins");
+                        holder.tvTutor.setText(context.getString(R.string.lesson_by_format, freshName, lesson.getDurationMinutes()));
                     }
                 }
                 @Override public void onCancelled(@NonNull DatabaseError error) {}

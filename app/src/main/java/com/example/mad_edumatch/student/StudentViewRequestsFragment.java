@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout; // Import LinearLayout
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,27 +47,34 @@ public class StudentViewRequestsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 1. Initialize Views
         recyclerView = view.findViewById(R.id.rvStudentRequests);
-        layoutNoRequests = view.findViewById(R.id.layoutNoRequests); // Bind the empty view
+        layoutNoRequests = view.findViewById(R.id.layoutNoRequests);
 
+        // 2. Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
         requestList = new ArrayList<>();
+        // Pass FragmentManager to adapter for Edit/Delete dialogs
         adapter = new StudentRequestAdapter(getContext(), requestList, getChildFragmentManager());
         recyclerView.setAdapter(adapter);
 
+        // 3. Check Auth
         String currentUserId = CurrentUser.getInstance().getUid();
         if (currentUserId == null) {
             if (getContext() != null) {
-                Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+                // Use resource string: "User not logged in" / "Pengguna tidak log masuk"
+                Toast.makeText(getContext(), R.string.user_not_logged_in, Toast.LENGTH_SHORT).show();
             }
             return;
         }
 
+        // 4. Setup Firebase
         databaseRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("student_requests");
 
+        // 5. Load Data
         loadMyRequests(currentUserId);
     }
 
@@ -87,7 +94,7 @@ public class StudentViewRequestsFragment extends Fragment {
                     }
                 }
 
-                // Sorting
+                // Sort by Timestamp (Newest first)
                 Collections.sort(requestList, (o1, o2) -> Long.compare(o2.getTimestamp(), o1.getTimestamp()));
 
                 adapter.notifyDataSetChanged();
@@ -104,20 +111,25 @@ public class StudentViewRequestsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // FIX: Check if user is null (Logged out). If so, ignore the error.
+                // Ignore error if user logged out
                 if (CurrentUser.getInstance().getUid() == null) return;
 
                 if (!isAdded() || getContext() == null) return;
-                Toast.makeText(getContext(), "Failed to load: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                // Use resource string with format: "Failed to load: %s"
+                String errorMsg = getString(R.string.failed_to_load_format, error.getMessage());
+                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
             }
         };
 
+        // Query: Only get requests where studentId matches current user
         databaseRef.orderByChild("studentId").equalTo(userId).addValueEventListener(myRequestsListener);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Remove listener to prevent crashes/memory leaks
         if (databaseRef != null && myRequestsListener != null) {
             databaseRef.removeEventListener(myRequestsListener);
         }

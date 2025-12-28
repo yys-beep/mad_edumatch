@@ -36,7 +36,7 @@ public class ImpactManager {
         TextView tvHosted = dashboardView.findViewById(R.id.tvDashHosted);
         TextView tvHelped = dashboardView.findViewById(R.id.tvDashHelped);
         TextView tvLikes = dashboardView.findViewById(R.id.tvDashLikes);
-        TextView tvCompletions = dashboardView.findViewById(R.id.tvDashCompletions); // NEW
+        TextView tvCompletions = dashboardView.findViewById(R.id.tvDashCompletions);
 
         TextView tvScore = dashboardView.findViewById(R.id.tvDashScore);
         ProgressBar pbScore = dashboardView.findViewById(R.id.pbContribution);
@@ -57,7 +57,6 @@ public class ImpactManager {
 
                     renderBadges(badgeContainer, profile.getBadges(), fragment.getContext());
 
-                    // Pass the new TextView to calculation
                     calculateRealStats(userId, tvHosted, tvHelped, tvLikes, tvCompletions);
                 }
             }
@@ -67,7 +66,6 @@ public class ImpactManager {
 
     private static void calculateRealStats(String tutorId, TextView tvHosted, TextView tvHelped, TextView tvLikes, TextView tvCompletions) {
 
-        // --- 1. HOSTED LESSONS, LIKES, AND GATHER IDs FOR COMPLETION CHECK ---
         DatabaseReference lessonsRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons");
 
         lessonsRef.orderByChild("tutorId").equalTo(tutorId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -79,8 +77,6 @@ public class ImpactManager {
 
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     FreeLesson lesson = ds.getValue(FreeLesson.class);
-
-                    // STRICT FILTER: Only count if ID matches (Ignore ghosts)
                     if (lesson != null && lesson.getTutorId() != null && lesson.getTutorId().equals(tutorId)) {
                         hostedCount++;
                         if (lesson.getLikes() != null) totalLikes += lesson.getLikes().size();
@@ -88,30 +84,40 @@ public class ImpactManager {
                     }
                 }
 
-                tvHosted.setText("Hosted Lessons: " + hostedCount);
-                tvLikes.setText("Total Likes Received: " + totalLikes);
+                // 1. USE CONTEXT FROM VIEW TO GET STRING
+                Context context = tvHosted.getContext();
+                if (context != null) {
+                    tvHosted.setText(context.getString(R.string.stats_hosted_lessons, hostedCount));
+                    tvLikes.setText(context.getString(R.string.stats_total_likes, totalLikes));
+                }
 
-                // NOW FETCH COMPLETIONS FOR THESE SPECIFIC LESSONS
                 countCompletions(myLessonIds, tvCompletions);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
 
-        // --- 2. QUESTIONS ANSWERED ---
+        // --- QUESTIONS ANSWERED ---
         DatabaseReference answersRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("forum_answers");
         answersRef.orderByChild("userId").equalTo(tutorId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 long answerCount = snapshot.getChildrenCount();
-                tvHelped.setText("Questions Answered: " + answerCount);
+                Context context = tvHelped.getContext();
+                if (context != null) {
+                    tvHelped.setText(context.getString(R.string.stats_questions_answered, answerCount));
+                }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     private static void countCompletions(List<String> lessonIds, TextView tvCompletions) {
+        if (tvCompletions == null) return;
+        Context context = tvCompletions.getContext();
+        if (context == null) return;
+
         if (lessonIds.isEmpty()) {
-            tvCompletions.setText("Students Completed: 0");
+            tvCompletions.setText(context.getString(R.string.stats_students_completed, 0));
             return;
         }
 
@@ -131,20 +137,19 @@ public class ImpactManager {
                     }
                     processedCount[0]++;
                     if (processedCount[0] == lessonIds.size()) {
-                        tvCompletions.setText("Students Completed: " + totalCompleted[0]);
+                        tvCompletions.setText(context.getString(R.string.stats_students_completed, totalCompleted[0]));
                     }
                 }
                 @Override public void onCancelled(@NonNull DatabaseError error) {
-                    processedCount[0]++; // Prevent hanging
+                    processedCount[0]++;
                 }
             });
         }
     }
 
-    // --- BADGES RENDERING ---
     private static void renderBadges(LinearLayout container, Map<String, Boolean> badges, Context context) {
         container.removeAllViews();
-        if (badges == null) return;
+        if (badges == null || context == null) return;
 
         for (Map.Entry<String, Boolean> entry : badges.entrySet()) {
             if (entry.getValue()) {
@@ -187,18 +192,51 @@ public class ImpactManager {
         }
     }
 
+    // 2. UPDATED BADGE DIALOG LOGIC
     private static void showBadgeDialog(String key, Context context) {
-        String title, desc;
+        int titleResId;
+        int descResId;
+
+        // Map keys to Resource IDs instead of hardcoded strings
         switch (key) {
-            case "tier_top": title = "Top Rated Tutor"; desc = "Elite educator status!"; break;
-            case "tier_gold": title = "Gold Tier"; desc = "High impact contributor."; break;
-            case "tier_silver": title = "Silver Tier"; desc = "Recognized contributor."; break;
-            case "tier_bronze": title = "Bronze Tier"; desc = "Welcome to the community."; break;
-            case "ach_impact": title = "Impact Creator"; desc = "10+ Students completed your lessons."; break;
-            case "ach_helper": title = "Community Helper"; desc = "10+ Questions answered."; break;
-            case "ach_loved": title = "Crowd Favorite"; desc = "50+ Likes received."; break;
-            default: title = "Achievement"; desc = "Badge unlocked!"; break;
+            case "tier_top":
+                titleResId = R.string.badge_top_title;
+                descResId = R.string.badge_top_desc;
+                break;
+            case "tier_gold":
+                titleResId = R.string.badge_gold_title;
+                descResId = R.string.badge_gold_desc;
+                break;
+            case "tier_silver":
+                titleResId = R.string.badge_silver_title;
+                descResId = R.string.badge_silver_desc;
+                break;
+            case "tier_bronze":
+                titleResId = R.string.badge_bronze_title;
+                descResId = R.string.badge_bronze_desc;
+                break;
+            case "ach_impact":
+                titleResId = R.string.badge_impact_title;
+                descResId = R.string.badge_impact_desc;
+                break;
+            case "ach_helper":
+                titleResId = R.string.badge_helper_title;
+                descResId = R.string.badge_helper_desc;
+                break;
+            case "ach_loved":
+                titleResId = R.string.badge_loved_title;
+                descResId = R.string.badge_loved_desc;
+                break;
+            default:
+                titleResId = R.string.badge_default_title;
+                descResId = R.string.badge_default_desc;
+                break;
         }
-        new AlertDialog.Builder(context).setTitle(title).setMessage(desc).setPositiveButton("OK", null).show();
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(titleResId)) // Load from XML
+                .setMessage(context.getString(descResId)) // Load from XML
+                .setPositiveButton(context.getString(R.string.ok), null)
+                .show();
     }
 }

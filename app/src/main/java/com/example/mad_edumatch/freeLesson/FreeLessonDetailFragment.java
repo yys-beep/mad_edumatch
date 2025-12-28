@@ -1,6 +1,5 @@
 package com.example.mad_edumatch.freeLesson;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -76,7 +75,6 @@ public class FreeLessonDetailFragment extends Fragment {
     private ImageButton btnSendComment, btnAttachFile;
     private TextView tvAttachmentPreview, tvNoComments;
 
-    // RENAMED: videoUrl -> videoLink
     private String lessonId, videoLink, materialUrl, materialName, tutorId, tutorNameStr;
     private long timestampPosted = 0;
     private boolean isCompleted = false;
@@ -113,11 +111,11 @@ public class FreeLessonDetailFragment extends Fragment {
     private final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
                     selectedFileUri = result.getData().getData();
                     selectedFileName = getFileName(selectedFileUri);
                     if (selectedFileUri != null) {
-                        tvAttachmentPreview.setText("📎 " + selectedFileName);
+                        tvAttachmentPreview.setText(getString(R.string.attachment_preview, selectedFileName));
                         tvAttachmentPreview.setVisibility(View.VISIBLE);
                     }
                 }
@@ -134,7 +132,6 @@ public class FreeLessonDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Bind Views
         tvTitle = view.findViewById(R.id.tvDetailTitle);
         tvTutorName = view.findViewById(R.id.tvTutorName);
         tvDesc = view.findViewById(R.id.tvDetailDesc);
@@ -154,7 +151,6 @@ public class FreeLessonDetailFragment extends Fragment {
         btnAttachFile = view.findViewById(R.id.btnAttachFile);
         tvAttachmentPreview = view.findViewById(R.id.tvAttachmentPreview);
 
-        // 2. Process Arguments / Notifications
         if (getArguments() != null) {
             lessonId = getArguments().containsKey("sourceId") ?
                     getArguments().getString("sourceId") : getArguments().getString("lessonId");
@@ -164,8 +160,6 @@ public class FreeLessonDetailFragment extends Fragment {
             }
         }
 
-        // 3. Button Listeners
-        // RENAMED: using videoLink here
         btnWatchVideo.setOnClickListener(v -> openLink(videoLink));
         btnDownloadMaterial.setOnClickListener(v -> openLink(materialUrl));
         btnMarkComplete.setOnClickListener(v -> saveParticipationToFirebase());
@@ -196,10 +190,6 @@ public class FreeLessonDetailFragment extends Fragment {
         }
     }
 
-    // =========================================================
-    // SECTION 0: LOAD DETAILS & SYNC
-    // =========================================================
-
     private void fetchLessonDetailsFromFirebase(String id) {
         this.lessonId = id;
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons").child(id);
@@ -209,21 +199,18 @@ public class FreeLessonDetailFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!isAdded() || !snapshot.exists()) return;
 
-                // 1. Basic Info
                 tvTitle.setText(snapshot.child("title").getValue(String.class));
                 tutorId = snapshot.child("tutorId").getValue(String.class);
 
-                // 2. Description
                 String descText = snapshot.child("description").getValue(String.class);
                 if (descText != null && !descText.isEmpty()) {
                     tvDesc.setText(descText);
                     tvDesc.setVisibility(View.VISIBLE);
                 } else {
-                    tvDesc.setText("No description provided.");
+                    tvDesc.setText(getString(R.string.no_description));
                     tvDesc.setVisibility(View.VISIBLE);
                 }
 
-                // 3. Tutor Name & Time
                 tutorNameStr = snapshot.child("tutorName").getValue(String.class);
                 Long ts = snapshot.child("timestamp").getValue(Long.class);
                 String dateString = "";
@@ -234,15 +221,12 @@ public class FreeLessonDetailFragment extends Fragment {
                 }
                 fetchLatestTutorName(tutorId, dateString);
 
-                // --- FIX: FETCH DURATION ---
                 Long duration = snapshot.child("durationMinutes").getValue(Long.class);
                 if (duration == null) {
-                    duration = 5L; // Default fallback if missing
+                    duration = 5L;
                 }
-                setupTimerData(duration); // <--- THIS WAS MISSING
-                // ---------------------------
+                setupTimerData(duration);
 
-                // 4. BUTTON VALIDATION LOGIC
                 videoLink = snapshot.child("videoLink").getValue(String.class);
                 if (LinkValidator.isValidUrl(videoLink)) {
                     btnWatchVideo.setVisibility(View.VISIBLE);
@@ -255,7 +239,7 @@ public class FreeLessonDetailFragment extends Fragment {
                 if (materialUrl != null && !materialUrl.trim().isEmpty()) {
                     btnDownloadMaterial.setVisibility(View.VISIBLE);
                     if (materialName != null) {
-                        btnDownloadMaterial.setText("Download: " + materialName);
+                        btnDownloadMaterial.setText(getString(R.string.download_format, materialName));
                     }
                 } else {
                     btnDownloadMaterial.setVisibility(View.GONE);
@@ -280,10 +264,9 @@ public class FreeLessonDetailFragment extends Fragment {
             layoutOwnerActions.removeAllViews();
 
             MaterialButton btnEdit = new MaterialButton(getContext());
-            btnEdit.setText("Edit Lesson");
+            btnEdit.setText(getString(R.string.edit_lesson));
             btnEdit.setBackgroundColor(getResources().getColor(R.color.pastelBlue));
             btnEdit.setOnClickListener(v -> {
-                // RENAMED: Pass videoLink to the edit dialog
                 EditLessonDialogFragment dialog = EditLessonDialogFragment.newInstance(
                         lessonId, tvTitle.getText().toString(), tvDesc.getText().toString(),
                         videoLink, materialUrl, materialName);
@@ -291,7 +274,7 @@ public class FreeLessonDetailFragment extends Fragment {
             });
 
             MaterialButton btnDelete = new MaterialButton(getContext());
-            btnDelete.setText("Delete Lesson");
+            btnDelete.setText(getString(R.string.delete_lesson));
             btnDelete.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             btnDelete.setOnClickListener(v -> confirmDeleteLesson());
 
@@ -312,17 +295,17 @@ public class FreeLessonDetailFragment extends Fragment {
     private void confirmDeleteLesson() {
         if (lessonId == null) return;
         new AlertDialog.Builder(getContext())
-                .setTitle("Delete Lesson")
-                .setMessage("Are you sure? This cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> {
+                .setTitle(getString(R.string.delete_confirm_title))
+                .setMessage(getString(R.string.delete_confirm_msg))
+                .setPositiveButton(getString(R.string.delete_btn), (dialog, which) -> {
                     FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lessons").child(lessonId)
                             .removeValue().addOnSuccessListener(aVoid -> {
                                 if (isAdded()) {
-                                    Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), getString(R.string.deleted_toast), Toast.LENGTH_SHORT).show();
                                     if (getActivity() != null) getActivity().onBackPressed();
                                 }
                             });
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(getString(R.string.no), null).show();
     }
 
     private void countParticipation() {
@@ -336,7 +319,7 @@ public class FreeLessonDetailFragment extends Fragment {
                             if (Boolean.TRUE.equals(ds.child("isCompleted").getValue(Boolean.class))) count++;
                         }
                         if (isAdded() && layoutOwnerActions.getVisibility() == View.VISIBLE) {
-                            tvTimerStatus.setText(count + " students completed this lesson.");
+                            tvTimerStatus.setText(getString(R.string.students_completed, count));
                             tvTimerStatus.setVisibility(View.VISIBLE);
                         }
                     }
@@ -344,7 +327,6 @@ public class FreeLessonDetailFragment extends Fragment {
                 });
     }
 
-    // [Kudos Logic Unchanged]
     private void loadKudosStatus() {
         if (lessonId == null) return;
         String uid = CurrentUser.getInstance().getUid();
@@ -358,20 +340,16 @@ public class FreeLessonDetailFragment extends Fragment {
                 if (!isAdded()) return;
 
                 long count = snapshot.getChildrenCount();
-                tvKudosCount.setText(count + " Kudos");
+                tvKudosCount.setText(getString(R.string.kudos_count_format, count));
 
                 if (uid != null && snapshot.hasChild(uid)) {
-                    // STATE: LIKED (User has already liked)
                     isLiked = true;
-                    btnGiveKudos.setText("Liked");
-                    // Set Filled Heart Icon
+                    btnGiveKudos.setText(getString(R.string.liked_btn));
                     btnGiveKudos.setIconResource(R.drawable.baseline_thumb_up_24);
                     btnGiveKudos.setBackgroundColor(getResources().getColor(R.color.pastelGreen, null));
                 } else {
-                    // STATE: NOT LIKED (User can like)
                     isLiked = false;
-                    btnGiveKudos.setText("Like");
-                    // Set Outline Heart Icon
+                    btnGiveKudos.setText(getString(R.string.like_btn));
                     btnGiveKudos.setIconResource(R.drawable.outline_thumb_up_24);
                     btnGiveKudos.setBackgroundColor(getResources().getColor(R.color.white, null));
                 }
@@ -435,7 +413,6 @@ public class FreeLessonDetailFragment extends Fragment {
         ref.push().setValue(data);
     }
 
-    // [Comments Logic Unchanged...]
     private void loadComments() {
         if (lessonId == null) return;
         if (commentList == null) {
@@ -460,8 +437,14 @@ public class FreeLessonDetailFragment extends Fragment {
                         }
                         if (isAdded()) {
                             commentAdapter.notifyDataSetChanged();
-                            tvNoComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
-                            rvComments.setVisibility(commentList.isEmpty() ? View.GONE : View.VISIBLE);
+                            if (commentList.isEmpty()) {
+                                tvNoComments.setText(getString(R.string.no_comments));
+                                tvNoComments.setVisibility(View.VISIBLE);
+                                rvComments.setVisibility(View.GONE);
+                            } else {
+                                tvNoComments.setVisibility(View.GONE);
+                                rvComments.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                     @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -489,21 +472,50 @@ public class FreeLessonDetailFragment extends Fragment {
         DatabaseReference ref = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments");
         String commentId = ref.push().getKey();
         LessonComment newComment = new LessonComment(commentId, lessonId, uid, realName, content, System.currentTimeMillis(), attName, attUrl);
+
         if (commentId != null) {
             ref.child(commentId).setValue(newComment).addOnSuccessListener(unused -> {
                 etCommentInput.setText("");
                 selectedFileUri = null;
                 tvAttachmentPreview.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Comment Posted!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.comment_posted), Toast.LENGTH_SHORT).show();
+
+                // --- ADD NOTIFICATION LOGIC HERE ---
+                // Only notify if someone else (not the tutor) is commenting
+                if (tutorId != null && !uid.equals(tutorId)) {
+                    sendCommentNotification(realName);
+                }
             });
         }
+    }
+
+    // Inside FreeLessonDetailFragment.java
+    private void sendCommentNotification(String commenterName) {
+        if (tutorId == null) return;
+
+        DatabaseReference notifRef = FirebaseDatabase.getInstance(FIREBASE_URL)
+                .getReference("notifications")
+                .child(tutorId);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", getString(R.string.new_comment_notif_title));
+
+        // We send a simple message as a fallback, but the Adapter will override it
+        data.put("message", "New lesson comment");
+
+        data.put("action_type", "LESSON_COMMENT");
+        data.put("sourceId", lessonId);
+        data.put("senderId", CurrentUser.getInstance().getUid());
+        data.put("timestamp", System.currentTimeMillis());
+        data.put("isRead", false);
+
+        notifRef.push().setValue(data);
     }
 
     private void deleteCommentFromFirebase(String id) {
         FirebaseDatabase.getInstance(FIREBASE_URL).getReference("free_lesson_comments").child(id).removeValue();
     }
 
-    // [File Upload Logic Unchanged...]
     private void uploadFileWithOkHttpAndPost() {
         if (getContext() == null) return;
         btnSendComment.setEnabled(false);
@@ -554,7 +566,6 @@ public class FreeLessonDetailFragment extends Fragment {
         return res != null ? res : uri.getLastPathSegment();
     }
 
-    // [Resume/Pause Unchanged]
     @Override public void onResume() {
         super.onResume();
         if (requiredDurationMs > 0 && !isCompleted && !(tutorId != null && CurrentUser.getInstance().getUid().equals(tutorId))) {
@@ -570,19 +581,20 @@ public class FreeLessonDetailFragment extends Fragment {
         if (elapsed > requiredDurationMs) elapsed = requiredDurationMs;
         progressBar.setProgress((int) ((elapsed * 100) / requiredDurationMs));
         long rem = requiredDurationMs - elapsed;
-        if (elapsed < requiredDurationMs) tvTimerStatus.setText(String.format(Locale.getDefault(), "Study time remaining: %02d:%02d", (rem / 1000) / 60, (rem / 1000) % 60));
+        if (elapsed < requiredDurationMs) {
+            tvTimerStatus.setText(getString(R.string.study_time_remaining, (rem / 1000) / 60, (rem / 1000) % 60));
+        }
     }
 
     private void unlockCompletion() {
         if (CurrentUser.getInstance().getUid().equals(tutorId)) return;
         timerHandler.removeCallbacks(timerRunnable);
         progressBar.setProgress(100);
-        tvTimerStatus.setText("Lesson Completed!");
+        tvTimerStatus.setText(getString(R.string.lesson_completed));
         tvTimerStatus.setTextColor(android.graphics.Color.parseColor("#333333"));
         btnMarkComplete.setEnabled(true); btnMarkComplete.setAlpha(1.0f);
     }
 
-    // [checkPreviousParticipation, saveParticipationToFirebase, increment counters... Unchanged]
     private void checkPreviousParticipation() {
         String uid = CurrentUser.getInstance().getUid();
         FirebaseDatabase.getInstance(FIREBASE_URL).getReference("lesson_participation").child(lessonId).child(uid)
@@ -591,10 +603,7 @@ public class FreeLessonDetailFragment extends Fragment {
                         if (snapshot.exists() && Boolean.TRUE.equals(snapshot.child("isCompleted").getValue(Boolean.class))) {
                             isCompleted = true;
                             unlockCompletion();
-
-                            // --- UI UPDATE: Icon and Text ---
-                            btnMarkComplete.setText("Completed");
-                            // Set the Tick Icon (Make sure you have a check icon in drawables)
+                            btnMarkComplete.setText(getString(R.string.completed_btn));
                             btnMarkComplete.setIconResource(R.drawable.baseline_check_circle_24);
                             btnMarkComplete.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
                             btnMarkComplete.setEnabled(false);
@@ -620,20 +629,11 @@ public class FreeLessonDetailFragment extends Fragment {
                         FirebaseDatabase.getInstance(FIREBASE_URL).getReference("lesson_participation").child(lessonId).child(uid)
                                 .setValue(map).addOnSuccessListener(aVoid -> {
                                     isCompleted = true;
-
-                                    // --- UI UPDATE ---
-                                    btnMarkComplete.setText("Completed");
-                                    btnMarkComplete.setIconResource(R.drawable.baseline_check_circle_24); // Add Tick Icon
-
-                                    // FIX: FORCE ICON GRAVITY AGAIN
+                                    btnMarkComplete.setText(getString(R.string.completed_btn));
+                                    btnMarkComplete.setIconResource(R.drawable.baseline_check_circle_24);
                                     btnMarkComplete.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
-
-                                    // OPTIONAL: FORCE CENTER ALIGNMENT IF NEEDED
-                                    // btnMarkComplete.setGravity(Gravity.CENTER);
-
                                     btnMarkComplete.setEnabled(false);
-
-                                    Toast.makeText(getContext(), "Progress Saved!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), getString(R.string.progress_saved), Toast.LENGTH_SHORT).show();
                                     incrementStudentsHelpedCount();
                                 });
                     }
@@ -641,30 +641,19 @@ public class FreeLessonDetailFragment extends Fragment {
                 });
     }
 
-    // =========================================================
-    // FIX 4: SAFE LINK OPENING
-    // =========================================================
     private void openLink(String urlInput) {
         if (urlInput == null || urlInput.trim().isEmpty()) {
-            Toast.makeText(getContext(), "Link unavailable.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.link_unavailable), Toast.LENGTH_SHORT).show();
             return;
         }
 
         String finalUrl = urlInput;
-
-        // CHECK 1: Is it a valid Web URL? (e.g. YouTube)
         if (LinkValidator.isValidUrl(urlInput)) {
-            // It's a good link, do nothing special.
             finalUrl = urlInput;
-        }
-        // CHECK 2: Is it likely an Appwrite File ID? (No spaces, no http, no dots)
-        else if (!urlInput.contains(" ") && !urlInput.contains(".") && !urlInput.startsWith("http")) {
-            // Treat as Appwrite ID -> Format it
+        } else if (!urlInput.contains(" ") && !urlInput.contains(".") && !urlInput.startsWith("http")) {
             finalUrl = String.format(APPWRITE_VIEW_ENDPOINT, urlInput);
-        }
-        // CHECK 3: If it fails both, it's garbage data (e.g. "123 456")
-        else {
-            Toast.makeText(getContext(), "Invalid Link format.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), getString(R.string.invalid_link_format), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -672,7 +661,7 @@ public class FreeLessonDetailFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Unable to open link.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.unable_open_link), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -724,7 +713,6 @@ public class FreeLessonDetailFragment extends Fragment {
     }
 
     private void fetchLatestTutorName(String tId, String dateString) {
-        // 1. CHANGE THIS: Point to "tutor_profiles" instead of "student_profiles"
         DatabaseReference userRef = FirebaseDatabase.getInstance(FIREBASE_URL)
                 .getReference("tutor_profiles").child(tId);
 
@@ -732,30 +720,20 @@ public class FreeLessonDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String latestName = "Unknown Tutor";
-
                 if (snapshot.exists()) {
-                    // 2. Check for the name field.
-                    // Note: Ensure your database uses "username" or "tutorName" inside tutor_profiles.
                     if (snapshot.hasChild("username")) {
                         latestName = snapshot.child("username").getValue(String.class);
                     } else if (snapshot.hasChild("tutorName")) {
-                        // Fallback in case your DB uses 'tutorName'
                         latestName = snapshot.child("tutorName").getValue(String.class);
                     } else if (snapshot.hasChild("fullName")) {
                         latestName = snapshot.child("fullName").getValue(String.class);
                     }
                 }
-
-                // Only update if we actually found a name, otherwise keep the default
                 if (!latestName.equals("Unknown Tutor")) {
-                    tvTutorName.setText("by " + latestName + " • " + dateString);
+                    tvTutorName.setText(getString(R.string.by_tutor_date, latestName, dateString));
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // If fetch fails, do nothing (keeps the default text set earlier)
-            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

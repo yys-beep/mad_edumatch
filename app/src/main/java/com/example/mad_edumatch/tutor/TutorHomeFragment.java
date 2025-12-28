@@ -234,7 +234,7 @@ public class TutorHomeFragment extends Fragment {
                 String realName = snapshot.child("username").getValue(String.class);
                 if (realName == null) realName = "Tutor";
 
-                tvTutorWelcome.setText("Welcome back,\n" + realName + " !");
+                tvTutorWelcome.setText(getString(R.string.welcome_back_comma) + "\n" + realName + " !");
 
                 String avatarName = snapshot.child("profileImageUrl").getValue(String.class);
                 int resId = AvatarManager.getAvatarResourceId(avatarName);

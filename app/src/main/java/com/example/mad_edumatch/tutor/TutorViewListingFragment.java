@@ -134,9 +134,21 @@ public class TutorViewListingFragment extends Fragment {
         } else {
             String lowerCaseQuery = query.toLowerCase();
             for (TutorViewListing item : listingList) {
-                if (item.getSubject().toLowerCase().contains(lowerCaseQuery)) {
+                // Option A: If Subject is just free text, keep it simple:
+                if (item.getSubject() != null && item.getSubject().toLowerCase().contains(lowerCaseQuery)) {
                     filteredList.add(item);
                 }
+
+                // Option B: If you translate subjects, convert DB value first:
+            /* String rawSubject = item.getSubject();
+            String localizedSubject = rawSubject;
+            // int resId = LocalizationHelper.getSubjectStringId(rawSubject); // You need to create this method
+            // if (resId != 0) localizedSubject = getString(resId);
+
+            if (localizedSubject.toLowerCase().contains(lowerCaseQuery)) {
+                filteredList.add(item);
+            }
+            */
             }
         }
         adapter.notifyDataSetChanged();

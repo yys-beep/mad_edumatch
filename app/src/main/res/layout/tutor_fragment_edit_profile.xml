@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Update Avatar"
+                android:text="@string/update_avatar"
                 android:textStyle="bold"
                 android:textColor="@color/pastelBlue"
                 android:layout_marginBottom="8dp"/>
@@ -46,7 +46,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Full Name"
+                android:hint="@string/full_name"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusTopStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -64,7 +64,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email Address"
+                android:hint="@string/email_address"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusTopStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -83,7 +83,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone Number"
+                android:hint="@string/phone_number"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusTopStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -100,7 +100,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Professional Details"
+                android:text="@string/professional_details"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/pastelBlue"
@@ -119,7 +119,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Qualification"
+                    android:hint="@string/qualification"
                     app:boxBackgroundColor="@color/white"
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -137,7 +137,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.6"
-                    android:hint="Fee (RM)"
+                    android:hint="@string/fee_rm"
                     app:boxBackgroundColor="@color/white"
                     app:boxCornerRadiusTopStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
@@ -156,7 +156,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Area / Location"
+                android:hint="@string/area_location"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusTopStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -179,7 +179,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Subjects Taught"
+                    android:text="@string/subjects_taught"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
                 <Button
@@ -187,7 +187,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add"
+                    android:text="@string/add"
                     android:textColor="@color/pastelBlue"/>
             </LinearLayout>
             <LinearLayout
@@ -208,7 +208,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Experience"
+                    android:text="@string/experience"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
                 <Button
@@ -216,7 +216,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add"
+                    android:text="@string/add"
                     android:textColor="@color/pastelBlue"/>
             </LinearLayout>
             <LinearLayout
@@ -237,7 +237,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Achievements"
+                    android:text="@string/achievements"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
                 <Button
@@ -245,7 +245,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add"
+                    android:text="@string/add"
                     android:textColor="@color/pastelBlue"/>
             </LinearLayout>
             <LinearLayout
@@ -260,7 +260,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Self Description / Bio"
+                android:hint="@string/self_description_bio"
                 app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusTopStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -280,7 +280,7 @@
                 android:id="@+id/btnSaveProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save Changes"
+                android:text="@string/save_changes"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
