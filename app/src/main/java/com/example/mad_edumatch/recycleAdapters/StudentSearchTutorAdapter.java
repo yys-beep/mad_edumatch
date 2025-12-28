@@ -6,18 +6,19 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity; // Needed for Fragment transactions
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
-import com.example.mad_edumatch.chat.ChatDetailFragment; // Ensure this import matches your package
+import com.example.mad_edumatch.chat.ChatDetailFragment;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.google.android.material.button.MaterialButton;
+import com.example.mad_edumatch.student.StudentViewTutorProfileFragment; // Ensure this matches your package
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,7 +37,7 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.context = parent.getContext();
-        // Load your specific XML file here
+        // Load the card layout
         View view = LayoutInflater.from(context).inflate(R.layout.item_student_view_tutor_listing, parent, false);
         return new ViewHolder(view);
     }
@@ -45,20 +46,20 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TutorListing tutor = tutorList.get(position);
 
-        // 1. Bind Data
+        // 1. Bind Basic Data
         holder.tvName.setText(tutor.getName());
         holder.tvSubjects.setText(tutor.getSubject());
-
-        // Helper method from your model for List<String>
         holder.tvLevels.setText(tutor.getLevelsAsString());
-
-        // Format Fee
         holder.tvFee.setText(String.format(Locale.getDefault(), "RM %.2f/hr", tutor.getFee()));
-
         holder.tvArea.setText(tutor.getArea());
         holder.tvQualification.setText(tutor.getQualification());
 
-        // 2. Format Timestamp
+        // 2. CLICK LISTENER - NAVIGATE TO PROFILE (The Fix)
+        holder.itemView.setOnClickListener(null);
+        holder.itemView.setClickable(false);
+        holder.itemView.setFocusable(false);
+
+        // 3. Timestamp Logic
         if (tutor.getTimestamp() > 0) {
             Calendar cal = Calendar.getInstance(Locale.getDefault());
             cal.setTimeInMillis(tutor.getTimestamp());
@@ -68,46 +69,58 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
             holder.tvTimestamp.setText("Posted: Just now");
         }
 
-        // 3. Contact Button Logic
+        // 4. Contact Button Logic
         holder.btnContact.setOnClickListener(v -> {
             String currentUid = CurrentUser.getInstance().getUid();
 
-            // A. Check Login
             if (currentUid == null) {
                 Toast.makeText(context, "Please login to contact tutors", Toast.LENGTH_SHORT).show();
                 return;
             }
+<<<<<<< HEAD
 
-            // B. Prevent Self-Contact
+=======
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
             if (currentUid.equals(tutor.getTutorId())) {
                 Toast.makeText(context, "You cannot chat with yourself!", Toast.LENGTH_SHORT).show();
                 return;
             }
+<<<<<<< HEAD
 
-            // C. Open Chat
+            // Pass the Tutor's ID, Name, Subject, and the Listing Key
+            openChatFragment(tutor.getTutorId(), tutor.getName(), tutor.getSubject(), tutor.getKey());
+        });
+    }
+
+    private void openChatFragment(String targetUserId, String targetUserName, String subject, String listingId) {
+        // Create Fragment
+=======
             openChatFragment(tutor.getTutorId(), tutor.getName());
         });
     }
 
     private void openChatFragment(String targetUserId, String targetUserName) {
-        // Create Fragment
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
         ChatDetailFragment chatFragment = new ChatDetailFragment();
-
-        // Pass Data
         Bundle args = new Bundle();
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
+
+        args.putString("listingId", listingId);
+        args.putString("listingTitle", "Tutor Listing: " + subject);
+
         chatFragment.setArguments(args);
 
-        // Perform Navigation
         if (context instanceof AppCompatActivity) {
+<<<<<<< HEAD
+            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+=======
             AppCompatActivity activity = (AppCompatActivity) context;
             activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, chatFragment) // Verify your container ID (e.g., fragment_container)
+>>>>>>> b45ca22883ce934d7371eed32f8c67c3f79f61cf
+                    .replace(R.id.fragment_container, chatFragment)
                     .addToBackStack(null)
                     .commit();
-        } else {
-            Toast.makeText(context, "Error: Navigation context not found", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -118,11 +131,10 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvTimestamp, tvSubjects, tvLevels, tvFee, tvArea, tvQualification;
-        MaterialButton btnContact;
+        Button btnContact; // Changed to Button to match standard Android button if Material isn't working
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Bind IDs from your provided XML
             tvName = itemView.findViewById(R.id.tvName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             tvSubjects = itemView.findViewById(R.id.tvSubjects);
@@ -130,8 +142,6 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
             tvFee = itemView.findViewById(R.id.tvFee);
             tvArea = itemView.findViewById(R.id.tvArea);
             tvQualification = itemView.findViewById(R.id.tvQualification);
-
-            // Contact Button
             btnContact = itemView.findViewById(R.id.btnContactTutor);
         }
     }

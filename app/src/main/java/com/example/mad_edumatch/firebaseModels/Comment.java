@@ -8,6 +8,8 @@ public class Comment {
     private String content;
     private long timestamp;
 
+
+
     public Comment() {}
 
     public Comment(String commentId, String answerId, String userId, String userName, String content, long timestamp) {

@@ -1,52 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pastelBlue">
-
-    <!-- App Logo -->
-
-    <!-- App Name -->
+    android:background="@drawable/splash_bg">
 
     <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="150dp"
-        android:contentDescription="EduMatch Logo"
-        android:src="@drawable/outline_logo_dev_24"
-        app:layout_constraintBottom_toTopOf="@+id/tvAppName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvAppName"
+        android:id="@+id/splash_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EduMatch"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/ivLogo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_splash_logo"
+        android:contentDescription="@string/app_name" />
 
-    <!-- Optional Tagline -->
-    <TextView
-        android:id="@+id/tvTagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Connecting Students n Tutors Easily"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/tvAppName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

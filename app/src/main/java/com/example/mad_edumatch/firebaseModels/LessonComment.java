@@ -1,5 +1,8 @@
 package com.example.mad_edumatch.firebaseModels;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LessonComment {
     private String commentId;
     private String lessonId;
@@ -8,11 +11,16 @@ public class LessonComment {
     private String content;
     private long timestamp;
 
+    private Map<String, Boolean> likes = new HashMap<>();
+
     // Attachment Fields
     private String attachmentUrl; // Stores Appwrite File ID
     private String attachmentName;
 
     public LessonComment() { }
+
+    public Map<String, Boolean> getLikes() { return likes; }
+    public void setLikes(Map<String, Boolean> likes) { this.likes = likes; }
 
     public LessonComment(String commentId, String lessonId, String userId, String userName, String content, long timestamp, String attachmentName, String attachmentUrl) {
         this.commentId = commentId;

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#BBDEFB"
+            android:gravity="center"
+            android:paddingTop="32dp"
+            android:paddingBottom="24dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
+                <ImageView
+                    android:id="@+id/ivTutorAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/avatar_1"
+                    android:scaleType="centerCrop"/>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvTutorName"
+                android:text="Tutor Name"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:id="@+id/tvTutorSubHeader"
+                android:text="Qualification"
+                android:textColor="#555555"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="-20dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:text="About Me"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvTutorDesc"
+                        android:text="No description."
+                        android:textSize="14sp"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="#444"/>
+
+                    <View android:background="#EEE" android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                        <ImageView android:src="@drawable/baseline_subject_24" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" app:tint="#555"/>
+                        <TextView android:id="@+id/tvTutorSubject" android:text="Subjects" android:textColor="#444" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                        <ImageView android:src="@drawable/outline_attach_money_24" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" app:tint="#555"/>
+                        <TextView android:id="@+id/tvTutorFee" android:text="Fee" android:textColor="#444" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+                        <ImageView android:src="@drawable/baseline_perm_contact_calendar_24" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="8dp" app:tint="#555"/>
+                        <TextView android:id="@+id/tvTutorContact" android:text="Contact" android:textColor="#444" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnContactTutor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Chat with Tutor"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:text="Experience"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tvTutorExperience"
+                        android:text="No experience recorded."
+                        android:textColor="#757575"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:text="Achievements"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tvTutorAchievements"
+                        android:text="No achievements recorded."
+                        android:textColor="#757575"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:text="🌻 Community Impact"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#EEEEEE"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/tvDashViews"
+                            android:text="👀 Views: 0"
+                            android:textColor="#000000"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/tvDashHelped"
+                            android:text="🎓 Helped: 0"
+                            android:textColor="#000000"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:text="💌 Score: "
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <ProgressBar
+                            android:id="@+id/pbContribution"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="10dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:max="100"
+                            android:progressDrawable="@drawable/custom_progress"
+                            android:progress="0"/>
+
+                        <TextView
+                            android:id="@+id/tvDashScore"
+                            android:text="0/100"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📬 Badges"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="4dp"/>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+                        <LinearLayout
+                            android:id="@+id/layoutBadgeContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+            <TextView
+                android:id="@+id/tvFreeLessonsTitle"
+                android:text="Hosted Free Lessons (0)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNoLessons"
+                android:text="No lessons uploaded yet."
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTutorFreeLessons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

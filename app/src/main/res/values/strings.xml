@@ -220,7 +220,7 @@
     <string name="search_nstudents">Search\nStudents</string>
     <string name="post_nlisting">Post\nListing</string>
     <string name="upload_nlesson">Upload\nLesson</string>
-    <string name="your_free_lessons">Your Free Lessons</string>
+    <string name="your_free_lessons">New Free Lessons</string>
     <string name="my_nlistings">My\nListings</string>
     <string name="post_new_listing">Post New Listing</string>
     <string name="subjects_e_g_math_science" translatable="false">Subjects (e.g. Math, Science)</string>
