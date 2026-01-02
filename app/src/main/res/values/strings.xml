@@ -480,4 +480,60 @@
     <string name="fee_rm">Fee (RM)</string>
     <string name="subjects_taught">Subjects Taught</string>
     <string name="self_description_bio">Self Description / Bio</string>
+
+    <string name="error_fill_required_fields">Please fill in all required fields</string>
+    <string name="error_invalid_fee">Invalid Fee</string>
+    <string name="msg_listing_posted">Listing Posted!</string>
+    <string name="error_post_failed">Failed to post</string>
+    <string name="text_not_applicable">N/A</string>
+    <string name="error_fill_required_fields_edit">Please fill in all required fields.</string>
+    <string name="error_invalid_fee_edit">Invalid Fee</string>
+    <string name="msg_listing_updated">Listing Updated Successfully!</string>
+    <string name="error_update_failed_2">Update Failed: %1$s</string>
+
+    <string name="val_one_to_one">One-to-One</string>
+    <string name="val_physical">Physical</string>
+    <string name="val_group">Group</string>
+    <string name="val_online">Online</string>
+    <string name="val_na">N/A</string>
+
+    <string name="error_subject_required">Subject is required</string>
+    <string name="error_select_academic_level">Please select an Academic Level</string>
+    <string name="error_area_required">Area is required</string>
+    <string name="error_budget_required">Budget is required</string>
+    <string name="error_description_required">Description is required</string>
+    <string name="error_invalid_budget_format">Invalid budget format</string>
+    <string name="error_select_learning_mode">Please select a learning mode</string>
+    <string name="error_select_delivery_mode">Please select a delivery mode</string>
+    <string name="error_login_required_post">You must be logged in to post</string>
+    <string name="msg_posting_request">Posting request...</string>
+    <string name="msg_request_posted_success">Request posted successfully!</string>
+    <string name="error_post_request_failed">Failed to post request: %1$s</string>
+
+    <string name="error_select_modes">Please select both Learning and Delivery modes</string>
+    <string name="msg_request_updated">Request Updated</string>
+
+    <string name="text_current_file">Current File: %1$s</string>
+    <string name="text_no_file_previously">No file attached previously.</string>
+    <string name="text_new_file_attached">New File Attached: %1$s</string>
+    <string name="error_title_desc_required">Title and Description required</string>
+    <string name="msg_lesson_updated">Lesson Updated</string>
+
+    <string name="error_load_data">Failed to load data</string>
+    <string name="error_update_profile">Failed to update profile</string>
+    <string name="error_failed_message">Failed: %1$s</string>
+
+    <string name="text_material_attached">Material Attached: %1$s</string>
+    <string name="error_title_desc_required_upload">Title and Description required</string>
+    <string name="text_default_tutor_name">Tutor</string>
+    <string name="msg_free_lesson_posted">Free Lesson Posted!</string>
+    <string name="error_message_generic">Error: %1$s</string>
+
+    <string name="title_my_tutor_listings">My Tutor Listings</string>
+    <string name="error_not_logged_in">Not logged in</string>
+    <string name="error_failed_loading_listings">Failed loading listings</string>
+    <string name="title_logout">Logout</string>
+    <string name="msg_confirm_logout">Are you sure you want to logout?</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

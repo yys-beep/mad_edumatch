@@ -224,22 +224,20 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showLogoutConfirmation() {
         new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Logout", (dialog, which) -> {
+                .setTitle(getString(R.string.title_logout))
+                .setMessage(getString(R.string.msg_confirm_logout))
+                .setPositiveButton(getString(R.string.action_logout), (dialog, which) -> {
                     FirebaseAuth.getInstance().signOut();
 
                     Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
 
-                    // --- THIS IS THE FIX ---
                     // These flags clear the old activity stack so Login starts fresh
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    // -----------------------
 
                     startActivity(intent);
                     finish();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show();
     }
 

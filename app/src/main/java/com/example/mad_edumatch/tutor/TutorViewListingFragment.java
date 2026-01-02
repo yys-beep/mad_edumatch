@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorViewListing;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.example.mad_edumatch.recycleAdapters.TutorViewListingAdapter; // Make sure this matches your adapter name
+import com.example.mad_edumatch.recycleAdapters.TutorViewListingAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,13 +32,13 @@ import java.util.Collections;
 public class TutorViewListingFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private TutorViewListingAdapter adapter; // Updated class name
+    private TutorViewListingAdapter adapter;
     private ArrayList<TutorViewListing> listingList;
     private ArrayList<TutorViewListing> filteredList;
     private DatabaseReference listingRef;
     private String currentUserId;
     private EditText etSearchSubject;
-    private ValueEventListener dbListener; // Store listener to remove it later
+    private ValueEventListener dbListener;
 
     @Nullable
     @Override
@@ -53,7 +53,9 @@ public class TutorViewListingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rvTutorListings);
         etSearchSubject = view.findViewById(R.id.etSearchSubject);
         TextView tvTitle = view.findViewById(R.id.tvTutorListingTitle);
-        tvTitle.setText("My Tutor Listings");
+
+        // Use resource ID directly for TextView
+        tvTitle.setText(R.string.title_my_tutor_listings);
 
         listingList = new ArrayList<>();
         filteredList = new ArrayList<>();
@@ -65,7 +67,8 @@ public class TutorViewListingFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         if (!CurrentUser.getInstance().isLoggedIn()) {
-            Toast.makeText(getContext(), "Not logged in", Toast.LENGTH_SHORT).show();
+            // Use resource string
+            Toast.makeText(getContext(), getString(R.string.error_not_logged_in), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -109,7 +112,8 @@ public class TutorViewListingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                if (isAdded()) Toast.makeText(getContext(), "Failed loading listings", Toast.LENGTH_SHORT).show();
+                // Use resource string
+                if (isAdded()) Toast.makeText(getContext(), getString(R.string.error_failed_loading_listings), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -134,21 +138,9 @@ public class TutorViewListingFragment extends Fragment {
         } else {
             String lowerCaseQuery = query.toLowerCase();
             for (TutorViewListing item : listingList) {
-                // Option A: If Subject is just free text, keep it simple:
                 if (item.getSubject() != null && item.getSubject().toLowerCase().contains(lowerCaseQuery)) {
                     filteredList.add(item);
                 }
-
-                // Option B: If you translate subjects, convert DB value first:
-            /* String rawSubject = item.getSubject();
-            String localizedSubject = rawSubject;
-            // int resId = LocalizationHelper.getSubjectStringId(rawSubject); // You need to create this method
-            // if (resId != 0) localizedSubject = getString(resId);
-
-            if (localizedSubject.toLowerCase().contains(lowerCaseQuery)) {
-                filteredList.add(item);
-            }
-            */
             }
         }
         adapter.notifyDataSetChanged();

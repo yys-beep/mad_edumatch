@@ -349,7 +349,7 @@
     <string name="delete_confirm_title">Padam Pelajaran</string>
     <string name="delete_confirm_msg">Adakah anda pasti? Ini tidak boleh dikembalikan.</string>
     <string name="delete_btn">Padam</string>
-    <string name="deleted_toast">Dipadankan</string>
+    <string name="deleted_toast">Dipadamkan</string>
     <string name="liked_btn">Disukai</string>
     <string name="like_btn">Suka</string>
     <string name="comment_posted">Komen Dihantar!</string>
@@ -479,4 +479,60 @@
     <string name="fee_rm">Yuran (RM)</string>
     <string name="subjects_taught">Subjek yang Diajar</string>
     <string name="self_description_bio">Penerangan Diri / Bio</string>
+
+    <string name="error_fill_required_fields">Sila isi semua ruang yang diperlukan</string>
+    <string name="error_invalid_fee">Yuran Tidak Sah</string>
+    <string name="msg_listing_posted">Iklan Berjaya Disiarkan!</string>
+    <string name="error_post_failed">Gagal menyiarkan</string>
+    <string name="text_not_applicable">T/B</string>
+    <string name="error_fill_required_fields_edit">Sila isi semua ruang yang diperlukan.</string>
+    <string name="error_invalid_fee_edit">Yuran Tidak Sah</string>
+    <string name="msg_listing_updated">Iklan Berjaya Dikemaskini!</string>
+    <string name="error_update_failed_2">Gagal Mengemaskini: %1$s</string>
+
+    <string name="val_one_to_one">Satu-dengan-Satu</string>
+    <string name="val_physical">Bersemuka</string>
+    <string name="val_group">Berkumpulan</string>
+    <string name="val_online">Dalam Talian</string>
+    <string name="val_na">T/B</string>
+
+    <string name="error_subject_required">Subjek diperlukan</string>
+    <string name="error_select_academic_level">Sila pilih Tahap Akademik</string>
+    <string name="error_area_required">Kawasan diperlukan</string>
+    <string name="error_budget_required">Bajet diperlukan</string>
+    <string name="error_description_required">Deskripsi diperlukan</string>
+    <string name="error_invalid_budget_format">Format bajet tidak sah</string>
+    <string name="error_select_learning_mode">Sila pilih mod pembelajaran</string>
+    <string name="error_select_delivery_mode">Sila pilih mod penyampaian</string>
+    <string name="error_login_required_post">Anda mesti log masuk untuk menyiarkan</string>
+    <string name="msg_posting_request">Sedang menyiarkan permintaan...</string>
+    <string name="msg_request_posted_success">Permintaan berjaya disiarkan!</string>
+    <string name="error_post_request_failed">Gagal menyiarkan permintaan: %1$s</string>
+
+    <string name="error_select_modes">Sila pilih kedua-dua mod Pembelajaran dan Penyampaian</string>
+    <string name="msg_request_updated">Permintaan Dikemaskini</string>
+
+    <string name="text_current_file">Fail Semasa: %1$s</string>
+    <string name="text_no_file_previously">Tiada fail dilampirkan sebelum ini.</string>
+    <string name="text_new_file_attached">Fail Baru Dilampirkan: %1$s</string>
+    <string name="error_title_desc_required">Tajuk dan Deskripsi diperlukan</string>
+    <string name="msg_lesson_updated">Pelajaran Dikemaskini</string>
+
+    <string name="error_load_data">Gagal memuatkan data</string>
+    <string name="error_update_profile">Gagal mengemaskini profil</string>
+    <string name="error_failed_message">Gagal: %1$s</string>
+
+    <string name="text_material_attached">Bahan Dilampirkan: %1$s</string>
+    <string name="error_title_desc_required_upload">Tajuk dan Deskripsi diperlukan</string>
+    <string name="text_default_tutor_name">Tutor</string>
+    <string name="msg_free_lesson_posted">Pelajaran Percuma Disiarkan!</string>
+    <string name="error_message_generic">Ralat: %1$s</string>
+
+    <string name="title_my_tutor_listings">Senarai Tutor Saya</string>
+    <string name="error_not_logged_in">Belum log masuk</string>
+    <string name="error_failed_loading_listings">Gagal memuatkan senarai</string>
+    <string name="title_logout">Log Keluar</string>
+    <string name="msg_confirm_logout">Adakah anda pasti mahu log keluar?</string>
+    <string name="action_logout">Log Keluar</string>
+    <string name="action_cancel">Batal</string>
 </resources>

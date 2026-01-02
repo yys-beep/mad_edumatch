@@ -26,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class TutorUploadFreeLessonFragment extends Fragment implements UploadMaterialBottom.UploadListener {
 
-    private EditText etTitle, etDesc, etVideoLink, etDuration; // Added etDuration
+    private EditText etTitle, etDesc, etVideoLink, etDuration;
     private Button btnUploadMaterial, btnPost;
     private TextView tvStatus;
 
@@ -48,7 +48,7 @@ public class TutorUploadFreeLessonFragment extends Fragment implements UploadMat
         etTitle = view.findViewById(R.id.etLessonTitle);
         etDesc = view.findViewById(R.id.etLessonDesc);
         etVideoLink = view.findViewById(R.id.etVideoLink);
-        etDuration = view.findViewById(R.id.etDuration); // Bind view
+        etDuration = view.findViewById(R.id.etDuration);
 
         btnUploadMaterial = view.findViewById(R.id.btnUploadMaterial);
         btnPost = view.findViewById(R.id.btnPostLesson);
@@ -69,9 +69,13 @@ public class TutorUploadFreeLessonFragment extends Fragment implements UploadMat
     public void onUploadSuccess(String fileUrl, String fileName) {
         this.tempFileUrl = fileUrl;
         this.tempFileName = fileName;
-        tvStatus.setText("Material Attached: " + fileName);
+        // Use format string
+        tvStatus.setText(getString(R.string.text_material_attached, fileName));
         tvStatus.setVisibility(View.VISIBLE);
-        tvStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        // Check context before getting resources
+        if (getContext() != null) {
+            tvStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        }
     }
 
     private void postLesson() {
@@ -81,7 +85,7 @@ public class TutorUploadFreeLessonFragment extends Fragment implements UploadMat
         String durationStr = etDuration.getText().toString().trim();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(desc)) {
-            Toast.makeText(getContext(), "Title and Description required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_title_desc_required_upload), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -101,14 +105,18 @@ public class TutorUploadFreeLessonFragment extends Fragment implements UploadMat
         DatabaseReference tutorRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("tutor_profiles").child(uid);
 
-        long finalDuration = durationMinutes; // Need final for inner class
+        long finalDuration = durationMinutes;
 
         tutorRef.child("username").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String tutorName = "Tutor";
+                // Use resource string for default name
+                String tutorName = getString(R.string.text_default_tutor_name);
                 if (snapshot.exists()) {
-                    tutorName = snapshot.getValue(String.class);
+                    String fetchedName = snapshot.getValue(String.class);
+                    if (fetchedName != null) {
+                        tutorName = fetchedName;
+                    }
                 }
                 saveToFirebase(uid, tutorName, title, desc, video, finalDuration);
             }
@@ -124,10 +132,17 @@ public class TutorUploadFreeLessonFragment extends Fragment implements UploadMat
         FreeLesson lesson = new FreeLesson(key, uid, name, title, desc, video, tempFileUrl, tempFileName, System.currentTimeMillis(), 0, duration);
 
         lessonRef.child(key).setValue(lesson).addOnSuccessListener(unused -> {
-            Toast.makeText(getContext(), "Free Lesson Posted!", Toast.LENGTH_SHORT).show();
-            getParentFragmentManager().popBackStack();
+            if (getContext() != null) {
+                Toast.makeText(getContext(), getString(R.string.msg_free_lesson_posted), Toast.LENGTH_SHORT).show();
+            }
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().popBackStack();
+            }
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (getContext() != null) {
+                // Use format string for error
+                Toast.makeText(getContext(), getString(R.string.error_message_generic, e.getMessage()), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

@@ -107,9 +107,10 @@ public class TutorEditProfileFragment extends Fragment implements AvatarAdapter.
     }
 
     private void setupDynamicListeners() {
-        btnAddSubject.setOnClickListener(v -> addDynamicItemInput(llSubjectsContainer, "Subject"));
-        btnAddExperience.setOnClickListener(v -> addDynamicItemInput(llExperienceContainer, "Experience"));
-        btnAddAchievement.setOnClickListener(v -> addDynamicItemInput(llAchievementContainer, "Achievement"));
+        // Replace hardcoded "Subject", "Experience", "Achievement"
+        btnAddSubject.setOnClickListener(v -> addDynamicItemInput(llSubjectsContainer, getString(R.string.hint_subject)));
+        btnAddExperience.setOnClickListener(v -> addDynamicItemInput(llExperienceContainer, getString(R.string.hint_experience)));
+        btnAddAchievement.setOnClickListener(v -> addDynamicItemInput(llAchievementContainer, getString(R.string.hint_achievement)));
     }
 
     private void loadTutorProfile() {
@@ -188,16 +189,20 @@ public class TutorEditProfileFragment extends Fragment implements AvatarAdapter.
                             }
 
                             // 8. Load Dynamic Lists
-                            populateDynamicList(llSubjectsContainer, profile.getSubjects(), "Subject");
-                            populateDynamicList(llExperienceContainer, profile.getExperience(), "Experience");
-                            populateDynamicList(llAchievementContainer, profile.getAchievement(), "Achievement");
+                            // Replace hardcoded hints here as well
+                            populateDynamicList(llSubjectsContainer, profile.getSubjects(), getString(R.string.hint_subject));
+                            populateDynamicList(llExperienceContainer, profile.getExperience(), getString(R.string.hint_experience));
+                            populateDynamicList(llAchievementContainer, profile.getAchievement(), getString(R.string.hint_achievement));
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         progressOverlay.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_SHORT).show();
+                        // Replace "Failed to load data"
+                        if (getContext() != null) {
+                            Toast.makeText(getContext(), getString(R.string.error_load_data), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -237,7 +242,7 @@ public class TutorEditProfileFragment extends Fragment implements AvatarAdapter.
         ArrayList<String> achievementList = getItemsFromContainer(llAchievementContainer);
 
         if (TextUtils.isEmpty(username)) {
-            Toast.makeText(requireContext(), "Name is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.error_name_required), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -303,10 +308,10 @@ public class TutorEditProfileFragment extends Fragment implements AvatarAdapter.
                                 if (task.isSuccessful()) {
                                     updateMainUserNode(username, avatarToSave);
 
-                                    Toast.makeText(requireContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), getString(R.string.msg_profile_updated), Toast.LENGTH_SHORT).show();
                                     getParentFragmentManager().popBackStack();
                                 } else {
-                                    Toast.makeText(requireContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), getString(R.string.error_update_profile), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 });

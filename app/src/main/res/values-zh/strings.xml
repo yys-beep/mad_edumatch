@@ -480,4 +480,60 @@
     <string name="fee_rm">费用 (RM)</string>
     <string name="subjects_taught">教授科目</string>
     <string name="self_description_bio">自我介绍 / 个人简介</string>
+
+    <string name="error_fill_required_fields">请填写所有必填项</string>
+    <string name="error_invalid_fee">费用无效</string>
+    <string name="msg_listing_posted">发布成功！</string>
+    <string name="error_post_failed">发布失败</string>
+    <string name="text_not_applicable">不适用</string>
+    <string name="error_fill_required_fields_edit">请填写所有必填项。</string>
+    <string name="error_invalid_fee_edit">费用无效</string>
+    <string name="msg_listing_updated">信息更新成功！</string>
+    <string name="error_update_failed_2">更新失败：%1$s</string>
+
+    <string name="val_one_to_one">一对一</string>
+    <string name="val_physical">线下</string>
+    <string name="val_group">小组</string>
+    <string name="val_online">线上</string>
+    <string name="val_na">不适用</string>
+
+    <string name="error_subject_required">必须填写科目</string>
+    <string name="error_select_academic_level">请选择学术等级</string>
+    <string name="error_area_required">必须填写地区</string>
+    <string name="error_budget_required">必须填写预算</string>
+    <string name="error_description_required">必须填写描述</string>
+    <string name="error_invalid_budget_format">预算格式无效</string>
+    <string name="error_select_learning_mode">请选择学习模式</string>
+    <string name="error_select_delivery_mode">请选择授课模式</string>
+    <string name="error_login_required_post">您必须登录才能发布</string>
+    <string name="msg_posting_request">正在发布请求...</string>
+    <string name="msg_request_posted_success">请求发布成功！</string>
+    <string name="error_post_request_failed">发布请求失败：%1$s</string>
+
+    <string name="error_select_modes">请选择学习模式和授课模式</string>
+    <string name="msg_request_updated">请求已更新</string>
+
+    <string name="text_current_file">当前文件：%1$s</string>
+    <string name="text_no_file_previously">之前未附带文件。</string>
+    <string name="text_new_file_attached">新附带文件：%1$s</string>
+    <string name="error_title_desc_required">必须填写标题和描述</string>
+    <string name="msg_lesson_updated">课程已更新</string>
+
+    <string name="error_load_data">加载数据失败</string>
+    <string name="error_update_profile">更新个人资料失败</string>
+    <string name="error_failed_message">失败：%1$s</string>
+
+    <string name="text_material_attached">已附带材料：%1$s</string>
+    <string name="error_title_desc_required_upload">必须填写标题和描述</string>
+    <string name="text_default_tutor_name">导师</string>
+    <string name="msg_free_lesson_posted">免费课程已发布！</string>
+    <string name="error_message_generic">错误：%1$s</string>
+
+    <string name="title_my_tutor_listings">我的家教发布</string>
+    <string name="error_not_logged_in">未登录</string>
+    <string name="error_failed_loading_listings">加载列表失败</string>
+    <string name="title_logout">登出</string>
+    <string name="msg_confirm_logout">您确定要登出吗？</string>
+    <string name="action_logout">登出</string>
+    <string name="action_cancel">取消</string>
 </resources>

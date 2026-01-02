@@ -117,7 +117,8 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 // Prevent crash if auth is null
                 if (FirebaseAuth.getInstance().getCurrentUser() != null && getContext() != null) {
-                    Toast.makeText(getContext(), "Failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    String message = getString(R.string.error_failed_message, error.getMessage());
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         };
