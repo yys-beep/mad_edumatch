@@ -28,7 +28,7 @@ public class TutorEditFreeLessonFragment extends Fragment implements UploadMater
 
     private EditText etTitle, etDesc, etVideo;
     private Button btnUploadMaterial; // New button
-    private TextView tvFileStatus; // To show current/new file
+    private TextView tvFileStatus;
     private MaterialButton btnSaveChanges;
 
     private String lessonId;
