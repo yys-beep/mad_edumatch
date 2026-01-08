@@ -287,9 +287,9 @@ ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app
 	android:name
 		ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:30:13-41
 activity#com.example.mad_edumatch.authentication.LoginActivity
-ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:35:9-38:58
+ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:35:9-38:70
 	android:windowSoftInputMode
-		ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:38:13-55
+		ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:38:13-67
 	android:exported
 		ADDED from C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:37:13-36
 	android:name

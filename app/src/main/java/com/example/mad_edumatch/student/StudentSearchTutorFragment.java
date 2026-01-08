@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
+import com.example.mad_edumatch.helper.LocalizationHelper; // Import Localization Helper
 import com.example.mad_edumatch.recycleAdapters.StudentSearchTutorAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -69,7 +70,8 @@ public class StudentSearchTutorFragment extends Fragment {
         rvSearchTutors.setAdapter(adapter);
 
         // 3. Setup Firebase
-        dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("tutor_listings");
+        dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("tutor_listings");
 
         // 4. Load Data (ONCE)
         loadAllData();
@@ -96,7 +98,9 @@ public class StudentSearchTutorFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Error loading data", Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -126,12 +130,12 @@ public class StudentSearchTutorFragment extends Fragment {
     private void performFilter() {
         String query = etSearchSubject.getText() != null ? etSearchSubject.getText().toString().trim().toLowerCase() : "";
 
-        // Get selected Chip Text
+        // Get selected Chip Text (This might be in Malay or English depending on app language)
         String selectedLevel = "";
         int checkedChipId = chipGroupFilter.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
             Chip chip = chipGroupFilter.findViewById(checkedChipId);
-            selectedLevel = chip.getText().toString().toLowerCase(); // e.g., "primary", "spm"
+            selectedLevel = chip.getText().toString().toLowerCase(); // e.g., "primary" or "rendah"
         }
 
         // Clear previous results
@@ -153,22 +157,31 @@ public class StudentSearchTutorFragment extends Fragment {
                 }
             }
 
-            // 2. CHECK LEVEL (Chip)
+            // 2. CHECK LEVEL (Chip) - With Localization Support
             boolean matchLevel = false;
             if (selectedLevel.isEmpty()) {
                 matchLevel = true; // If no chip selected, everything matches
             } else {
-                // Check if the tutor's list of levels contains the selected chip text
+                // Check against the tutor's list of levels
                 if (tutor.getAcademicLevels() != null) {
-                    for (String lvl : tutor.getAcademicLevels()) {
-                        if (lvl.toLowerCase().contains(selectedLevel)) {
+                    for (String dbLevel : tutor.getAcademicLevels()) {
+                        // CRITICAL: Translate DB value (e.g. "Primary") to Current Locale (e.g. "Rendah")
+                        // so it matches the Chip text.
+                        String localizedDbLevel = dbLevel;
+                        int resId = LocalizationHelper.getLevelStringId(dbLevel);
+                        if (resId != 0 && isAdded()) {
+                            localizedDbLevel = getString(resId);
+                        }
+
+                        if (localizedDbLevel.toLowerCase().contains(selectedLevel)) {
                             matchLevel = true;
                             break;
                         }
                     }
                 }
-                // Fallback: If you store levels as a single string
+                // Fallback: If levels are stored as a single comma-separated string
                 else if (tutor.getLevelsAsString() != null) {
+                    // Try to translate the whole string or check raw
                     if (tutor.getLevelsAsString().toLowerCase().contains(selectedLevel)) {
                         matchLevel = true;
                     }
@@ -181,7 +194,7 @@ public class StudentSearchTutorFragment extends Fragment {
             }
         }
 
-        // 4. SORT (Optional: Newest first)
+        // 4. SORT (Newest first)
         Collections.sort(displayedTutorList, (o1, o2) ->
                 Long.compare(o2.getTimestamp(), o1.getTimestamp())
         );

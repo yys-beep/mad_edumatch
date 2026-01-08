@@ -51,10 +51,10 @@ public class EditTutorListingDialog extends DialogFragment {
         etFee = view.findViewById(R.id.etEditFee);
         etArea = view.findViewById(R.id.etEditArea);
         etContact = view.findViewById(R.id.etEditContact);
-        etQualification = view.findViewById(R.id.etEditQualification); // Bind Qualification
+        etQualification = view.findViewById(R.id.etEditQualification);
 
         chipGroupLevels = view.findViewById(R.id.chipGroupEditLevels);
-        rgLearningMode = view.findViewById(R.id.rgEditLearningMode); // Bind RadioGroups
+        rgLearningMode = view.findViewById(R.id.rgEditLearningMode);
         rgDeliveryMode = view.findViewById(R.id.rgEditDeliveryMode);
 
         Button btnSave = view.findViewById(R.id.btnSaveEdit);
@@ -72,8 +72,12 @@ public class EditTutorListingDialog extends DialogFragment {
             preSelectLevels(listing.getAcademicLevels());
 
             // Pre-select Radio Buttons
-            selectRadioButton(rgLearningMode, listing.getLearningMode(), "One-to-One", R.id.rbEditOneToOne, R.id.rbEditOneToMany);
-            selectRadioButton(rgDeliveryMode, listing.getDeliveryMode(), "Physical", R.id.rbEditPhysical, R.id.rbEditOnline);
+            // Use string resources for comparison values
+            String oneToOneVal = getString(R.string.val_one_to_one); // "One-to-One"
+            String physicalVal = getString(R.string.val_physical);   // "Physical"
+
+            selectRadioButton(rgLearningMode, listing.getLearningMode(), oneToOneVal, R.id.rbEditOneToOne, R.id.rbEditOneToMany);
+            selectRadioButton(rgDeliveryMode, listing.getDeliveryMode(), physicalVal, R.id.rbEditPhysical, R.id.rbEditOnline);
         }
 
         btnSave.setOnClickListener(v -> updateListing());
@@ -114,7 +118,7 @@ public class EditTutorListingDialog extends DialogFragment {
 
     private String getSelectedRadioText(RadioGroup group) {
         int id = group.getCheckedRadioButtonId();
-        if (id == -1) return "N/A";
+        if (id == -1) return getString(R.string.val_na); // "N/A"
         RadioButton btn = group.findViewById(id);
         return btn.getText().toString();
     }
@@ -131,7 +135,7 @@ public class EditTutorListingDialog extends DialogFragment {
         String newDMode = getSelectedRadioText(rgDeliveryMode);
 
         if (TextUtils.isEmpty(newSubjects) || TextUtils.isEmpty(newFeeStr) || newLevels.isEmpty() || TextUtils.isEmpty(newQual)) {
-            Toast.makeText(getContext(), "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_fill_required_fields_edit), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -139,7 +143,7 @@ public class EditTutorListingDialog extends DialogFragment {
         try {
             newFee = Double.parseDouble(newFeeStr);
         } catch (NumberFormatException e) {
-            etFee.setError("Invalid Fee");
+            etFee.setError(getString(R.string.error_invalid_fee_edit));
             return;
         }
 
@@ -159,10 +163,16 @@ public class EditTutorListingDialog extends DialogFragment {
         updates.put("timestamp", System.currentTimeMillis());
 
         ref.updateChildren(updates).addOnSuccessListener(unused -> {
-            Toast.makeText(getContext(), "Listing Updated Successfully!", Toast.LENGTH_SHORT).show();
+            if (getContext() != null) {
+                Toast.makeText(getContext(), getString(R.string.msg_listing_updated), Toast.LENGTH_SHORT).show();
+            }
             dismiss();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Update Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (getContext() != null) {
+                // Using format string for dynamic error message
+                String errorMsg = getString(R.string.error_update_failed_2, e.getMessage());
+                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

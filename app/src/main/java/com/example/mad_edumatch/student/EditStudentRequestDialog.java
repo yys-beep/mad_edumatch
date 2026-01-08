@@ -102,18 +102,19 @@ public class EditStudentRequestDialog extends DialogFragment {
 
     private void preSelectRadios() {
         // Learning Mode
-        String lMode = request.getLearningMode(); // Ensure getter exists in StudentRequest model
-        if ("One-to-One".equalsIgnoreCase(lMode)) {
+        String lMode = request.getLearningMode();
+        // Use resources for comparison to ensure consistency
+        if (getString(R.string.val_one_to_one).equalsIgnoreCase(lMode)) {
             rbOneToOne.setChecked(true);
-        } else if ("Group".equalsIgnoreCase(lMode)) {
+        } else if (getString(R.string.val_group).equalsIgnoreCase(lMode)) {
             rbGroup.setChecked(true);
         }
 
         // Delivery Mode
-        String dMode = request.getDeliveryMode(); // Ensure getter exists in StudentRequest model
-        if ("Physical".equalsIgnoreCase(dMode)) {
+        String dMode = request.getDeliveryMode();
+        if (getString(R.string.val_physical).equalsIgnoreCase(dMode)) {
             rbPhysical.setChecked(true);
-        } else if ("Online".equalsIgnoreCase(dMode)) {
+        } else if (getString(R.string.val_online).equalsIgnoreCase(dMode)) {
             rbOnline.setChecked(true);
         }
     }
@@ -126,7 +127,7 @@ public class EditStudentRequestDialog extends DialogFragment {
         String newDesc = etDescription.getText().toString().trim();
 
         if (TextUtils.isEmpty(newSubject) || TextUtils.isEmpty(newArea) || TextUtils.isEmpty(newBudgetStr)) {
-            Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_fill_required_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -137,21 +138,21 @@ public class EditStudentRequestDialog extends DialogFragment {
             Chip chip = chipGroupLevel.findViewById(checkedChipId);
             newLevel = chip.getText().toString();
         } else {
-            Toast.makeText(getContext(), "Please select an academic level", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_select_academic_level), Toast.LENGTH_SHORT).show();
             return;
         }
 
         // C. Get Radio Selections
         String newLearningMode = "";
-        if (rbOneToOne.isChecked()) newLearningMode = "One-to-One";
-        else if (rbGroup.isChecked()) newLearningMode = "Group";
+        if (rbOneToOne.isChecked()) newLearningMode = getString(R.string.val_one_to_one);
+        else if (rbGroup.isChecked()) newLearningMode = getString(R.string.val_group);
 
         String newDeliveryMode = "";
-        if (rbPhysical.isChecked()) newDeliveryMode = "Physical";
-        else if (rbOnline.isChecked()) newDeliveryMode = "Online";
+        if (rbPhysical.isChecked()) newDeliveryMode = getString(R.string.val_physical);
+        else if (rbOnline.isChecked()) newDeliveryMode = getString(R.string.val_online);
 
         if (newLearningMode.isEmpty() || newDeliveryMode.isEmpty()) {
-            Toast.makeText(getContext(), "Please select both Learning and Delivery modes", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_select_modes), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -160,7 +161,7 @@ public class EditStudentRequestDialog extends DialogFragment {
         try {
             newBudget = Double.parseDouble(newBudgetStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Invalid budget format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_invalid_budget_format), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -183,11 +184,12 @@ public class EditStudentRequestDialog extends DialogFragment {
 
         ref.updateChildren(updates).addOnSuccessListener(unused -> {
             if (!isAdded() || getActivity() == null) return;
-            Toast.makeText(getContext(), "Request Updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.msg_request_updated), Toast.LENGTH_SHORT).show();
             dismiss();
         }).addOnFailureListener(e -> {
             if (!isAdded() || getActivity() == null) return;
-            Toast.makeText(getContext(), "Update Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            String errorMsg = getString(R.string.error_update_failed_2, e.getMessage());
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
         });
     }
 }

@@ -17,7 +17,8 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.chat.ChatDetailFragment;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.example.mad_edumatch.helper.TimeHelper; // IMPORT TimeHelper
+import com.example.mad_edumatch.helper.LocalizationHelper;
+import com.example.mad_edumatch.helper.TimeHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,7 +40,6 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.context = parent.getContext();
-        // Make sure this matches your XML file name exactly
         View view = LayoutInflater.from(context).inflate(R.layout.item_card_tutor_view_student_request, parent, false);
         return new ViewHolder(view);
     }
@@ -48,51 +48,71 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StudentRequest request = requestList.get(position);
 
+        // --- 1. Translate Level ---
+        int levelResId = LocalizationHelper.getLevelStringId(request.getLevel());
+        if (levelResId != 0) {
+            holder.tvLevel.setText(context.getString(levelResId));
+        } else {
+            holder.tvLevel.setText(request.getLevel());
+        }
+
+        // --- 2. Translate Modes ---
+        String deliveryRaw = request.getDeliveryMode();
+        String learningRaw = request.getLearningMode();
+        String deliveryDisplay = deliveryRaw;
+        String learningDisplay = learningRaw;
+
+        int deliveryId = LocalizationHelper.getDeliveryModeStringId(deliveryRaw);
+        if (deliveryId != 0) deliveryDisplay = context.getString(deliveryId);
+
+        int learningId = LocalizationHelper.getLearningModeStringId(learningRaw);
+        if (learningId != 0) learningDisplay = context.getString(learningId);
+
+        // Uses format: "%1$s (%2$s)"
+        holder.tvMode.setText(context.getString(R.string.mode_format_brackets, deliveryDisplay, learningDisplay));
+
+
+        // --- Normal Binding ---
         holder.tvSubject.setText(request.getSubject());
-        holder.tvLevel.setText(request.getLevel());
         holder.tvArea.setText(request.getArea());
-        holder.tvBudget.setText(String.format(Locale.getDefault(), "RM %.2f/hr", request.getBudget()));
-        holder.tvMode.setText(request.getDeliveryMode() + " (" + request.getLearningMode() + ")");
+
+        // Uses format: "RM %.2f/hr"
+        holder.tvBudget.setText(context.getString(R.string.budget_per_hour, request.getBudget()));
+
         holder.tvDesc.setText(request.getDescription());
 
-        // --- NEW: BIND TIMESTAMP ---
+        // --- Timestamp ---
         if (request.getTimestamp() > 0) {
             String formattedTime = TimeHelper.getMalaysiaTime(request.getTimestamp());
-            holder.tvTimestamp.setText("Posted: " + formattedTime);
+            // Uses format: "Posted: %s"
+            holder.tvTimestamp.setText(context.getString(R.string.posted_time_format, formattedTime));
         } else {
-            holder.tvTimestamp.setText("Posted: Just now");
+            holder.tvTimestamp.setText(R.string.posted_just_now);
         }
-        // ---------------------------
 
-        // --- CONTACT BUTTON LOGIC ---
+        // --- Contact Button ---
         holder.btnContact.setOnClickListener(v -> {
             String currentUid = CurrentUser.getInstance().getUid();
-
             if (currentUid == null) {
-                Toast.makeText(context, "Please login to contact", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.login_to_contact, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             if (currentUid.equals(request.getStudentId())) {
-                Toast.makeText(context, "You cannot contact yourself", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.contact_self_error, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             fetchStudentNameAndOpenChat(request.getStudentId(), request.getSubject(), request.getRequestId());
         });
     }
 
     private void fetchStudentNameAndOpenChat(String studentId, String listingTitle, String listingId) {
-        // Note: Assuming student names are stored under "student_profiles" or "users"
-        // Adjust the path "student_profiles" if your database structure is different
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("student_profiles").child(studentId) // changed from "users" to be safer, adjust if needed
+                .getReference("student_profiles").child(studentId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String studentName = "Student";
+                        String studentName = context.getString(R.string.student_default_name); // Fallback: "Student" or "Pelajar"
                         if (snapshot.exists()) {
-                            // Check for "username" or "name" depending on your DB
                             if (snapshot.hasChild("username")) {
                                 studentName = snapshot.child("username").getValue(String.class);
                             } else if (snapshot.hasChild("name")) {
@@ -104,7 +124,7 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        openChatFragment(studentId, "Student", listingTitle, listingId);
+                        openChatFragment(studentId, context.getString(R.string.student_default_name), listingTitle, listingId);
                     }
                 });
     }
@@ -115,7 +135,10 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
         args.putString("listingId", listingId);
-        args.putString("listingTitle", "Student Request: " + listingTitle);
+
+        // Uses format: "Student Request: %s"
+        args.putString("listingTitle", context.getString(R.string.student_request_title, listingTitle));
+
         chatFragment.setArguments(args);
 
         if (context instanceof AppCompatActivity) {
@@ -133,15 +156,13 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSubject, tvLevel, tvArea, tvBudget, tvMode, tvDesc, tvTimestamp; // Added tvTimestamp
+        TextView tvSubject, tvLevel, tvArea, tvBudget, tvMode, tvDesc, tvTimestamp;
         Button btnContact;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvSubject = itemView.findViewById(R.id.tvSubject);
-            // --- NEW: Bind the ID from XML ---
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
-            // ---------------------------------
             tvLevel = itemView.findViewById(R.id.tvLevel);
             tvArea = itemView.findViewById(R.id.tvArea);
             tvBudget = itemView.findViewById(R.id.tvBudget);

@@ -57,13 +57,13 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
         // Attachment Logic
         if (answer.getAttachmentUrl() != null && !answer.getAttachmentUrl().isEmpty()) {
             holder.tvAttachment.setVisibility(View.VISIBLE);
-            holder.tvAttachment.setText("📎 Attachment Available");
+            holder.tvAttachment.setText(context.getString(R.string.attachment_available));
         } else {
             holder.tvAttachment.setVisibility(View.GONE);
         }
 
         // --- NEW: Set placeholder & Fetch Live Profile ---
-        holder.tvUser.setText("Loading...");
+        holder.tvUser.setText(context.getString(R.string.loading_dot));
         loadUserProfile(answer.getUserId(), holder.tvUser, holder.ivAvatar);
 
         holder.itemView.setOnClickListener(v -> listener.onAnswerClick(answer));
@@ -92,7 +92,7 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
                                 String imgUrl = s2.child("profileImageUrl").getValue(String.class);
                                 updateUI(name, imgUrl, tvName, ivAvatar);
                             } else {
-                                updateUI("Unknown User", null, tvName, ivAvatar);
+                                updateUI(context.getString(R.string.unknown_user), null, tvName, ivAvatar);
                             }
                         }
                         @Override public void onCancelled(@NonNull DatabaseError e) {}
@@ -104,7 +104,7 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
     }
 
     private void updateUI(String name, String imgUrl, TextView tvName, ImageView ivAvatar) {
-        if (name == null) name = "Unknown";
+        if (name == null) name = context.getString(R.string.unknown_user);
         tvName.setText(name);
 
         if (imgUrl != null && !imgUrl.isEmpty()) {

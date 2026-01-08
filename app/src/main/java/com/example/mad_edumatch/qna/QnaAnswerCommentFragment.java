@@ -79,19 +79,14 @@ public class QnaAnswerCommentFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            // Check for sourceId (Notification Path) or answerId (Normal Path)
             answerId = args.getString("answerId");
-
-            // Fallback if you used "sourceId" in the Notification Fragment
             if (answerId == null) {
                 answerId = args.getString("sourceId");
             }
 
-            // --- ADDED: NOTIFICATION DEEP LINK LOGIC ---
             if (!args.containsKey("answerContent") && answerId != null) {
                 fetchAnswerDetailsFromFirebase(answerId);
             } else {
-                // Normal Path: Already has arguments
                 answerUserId = args.getString("answerUserId");
                 tvContent.setText(args.getString("answerContent"));
                 tvDate.setText(TimeHelper.getMalaysiaTime(args.getLong("answerTime")));
@@ -105,39 +100,35 @@ public class QnaAnswerCommentFragment extends Fragment {
         rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
         commentList = new ArrayList<>();
         adapter = new CommentAdapter(commentList, commentId -> {
-            commentRef.child(commentId).removeValue();
-            Toast.makeText(getContext(), "Comment Deleted", Toast.LENGTH_SHORT).show();
+            commentRef.child(commentId).removeValue().addOnSuccessListener(unused -> {
+                if(isAdded()) Toast.makeText(getContext(), getString(R.string.comment_deleted_success), Toast.LENGTH_SHORT).show();
+            });
         });
         rvComments.setAdapter(adapter);
         loadComments();
 
-        // Post Comment
         etCommentInput = view.findViewById(R.id.etCommentInput);
         btnPostComment = view.findViewById(R.id.btnPostComment);
         btnPostComment.setOnClickListener(v -> postComment());
     }
 
-    // --- ADDED: HELPER TO FETCH SOLUTION DETAILS ---
     private void fetchAnswerDetailsFromFirebase(String aId) {
         answerRef.child(aId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!isAdded() || !snapshot.exists()) {
-                    if (snapshot.exists() == false) {
-                        Toast.makeText(getContext(), "This solution was deleted.", Toast.LENGTH_SHORT).show();
-                        getParentFragmentManager().popBackStack();
-                    }
+                if (!isAdded()) return;
+                if (!snapshot.exists()) {
+                    Toast.makeText(getContext(), getString(R.string.solution_deleted_error), Toast.LENGTH_SHORT).show();
+                    getParentFragmentManager().popBackStack();
                     return;
                 }
 
-                // Extract and Set Data
                 answerUserId = snapshot.child("userId").getValue(String.class);
                 tvContent.setText(snapshot.child("content").getValue(String.class));
                 long time = snapshot.child("timestamp").getValue(Long.class);
                 String link = snapshot.child("solutionLink").getValue(String.class);
 
                 tvDate.setText(TimeHelper.getMalaysiaTime(time));
-
                 loadAnswerUserProfile(answerUserId);
 
                 String url = snapshot.child("attachmentUrl").getValue(String.class);
@@ -148,12 +139,11 @@ public class QnaAnswerCommentFragment extends Fragment {
         });
     }
 
-    // --- ADDED: HELPER TO REUSE UI LOGIC ---
     private void setupAnswerUI(String link, String url, String name) {
         answerLink = link;
         if (!TextUtils.isEmpty(answerLink)) {
             tvLink.setVisibility(View.VISIBLE);
-            tvLink.setText("Refer Link: " + answerLink);
+            tvLink.setText(getString(R.string.refer_link, answerLink));
         } else {
             tvLink.setVisibility(View.GONE);
         }
@@ -162,7 +152,7 @@ public class QnaAnswerCommentFragment extends Fragment {
         attName = name;
         if (attUrl != null && !attUrl.isEmpty()) {
             btnDownloadAttachment.setVisibility(View.VISIBLE);
-            btnDownloadAttachment.setText("Download: " + (attName != null ? attName : "File"));
+            btnDownloadAttachment.setText(getString(R.string.download_file_label, (attName != null ? attName : "File")));
             btnDownloadAttachment.setOnClickListener(v -> downloadFile(attUrl));
         } else {
             btnDownloadAttachment.setVisibility(View.GONE);
@@ -192,7 +182,7 @@ public class QnaAnswerCommentFragment extends Fragment {
                             if (tutorSnap.exists()) {
                                 updateUI(tutorSnap.child("username").getValue(String.class), tutorSnap.child("profileImageUrl").getValue(String.class));
                             } else {
-                                updateUI("Unknown User", null);
+                                updateUI(getString(R.string.unknown_user), null);
                             }
                         }
                         @Override public void onCancelled(@NonNull DatabaseError error) {}
@@ -217,8 +207,10 @@ public class QnaAnswerCommentFragment extends Fragment {
     private void deleteSolution() {
         if (answerId != null) {
             answerRef.child(answerId).removeValue().addOnSuccessListener(aVoid -> {
-                Toast.makeText(getContext(), "Solution Deleted", Toast.LENGTH_SHORT).show();
-                getParentFragmentManager().popBackStack();
+                if(isAdded()) {
+                    Toast.makeText(getContext(), getString(R.string.solution_deleted_success), Toast.LENGTH_SHORT).show();
+                    getParentFragmentManager().popBackStack();
+                }
             });
         }
     }
@@ -228,7 +220,7 @@ public class QnaAnswerCommentFragment extends Fragment {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl)));
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Error opening file", Toast.LENGTH_SHORT).show();
+            if(isAdded()) Toast.makeText(getContext(), getString(R.string.file_open_error), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,54 +233,38 @@ public class QnaAnswerCommentFragment extends Fragment {
 
         DatabaseReference db = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
 
-        // 1. Try fetching from Student Profile
         db.child("student_profiles").child(uid).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists() && snapshot.getValue() != null) {
-                    // It is a Student -> Post Comment with their name
-                    String name = snapshot.getValue(String.class);
+                String name = (snapshot.exists() && snapshot.getValue() != null) ? snapshot.getValue(String.class) : null;
+                if (name != null) {
                     saveComment(uid, name, content);
                 } else {
-                    // 2. Not a Student? Check Tutor Profile
                     db.child("tutor_profiles").child(uid).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot tutorSnap) {
-                            String name = "User"; // Fallback default
-                            if (tutorSnap.exists() && tutorSnap.getValue() != null) {
-                                // It is a Tutor -> Post Comment with their name
-                                name = tutorSnap.getValue(String.class);
-                            }
-                            // Save with whatever name we found
-                            saveComment(uid, name, content);
+                            String tutorName = (tutorSnap.exists() && tutorSnap.getValue() != null) ? tutorSnap.getValue(String.class) : getString(R.string.unknown_user);
+                            saveComment(uid, tutorName, content);
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // On error, post as "User" so the app doesn't crash
-                            saveComment(uid, "User", content);
-                        }
+                        @Override public void onCancelled(@NonNull DatabaseError error) {}
                     });
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // On error, post as "User"
-                saveComment(uid, "User", content);
-            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     private void saveComment(String uid, String name, String content) {
         String key = commentRef.push().getKey();
         Comment comment = new Comment(key, answerId, uid, name, content, System.currentTimeMillis());
-        commentRef.child(key).setValue(comment).addOnSuccessListener(unused -> {
-            if (answerUserId != null && !answerUserId.equals(uid)) {
-                sendCommentNotification(answerUserId, name);
-            }
-            etCommentInput.setText("");
-        });
+        if (key != null) {
+            commentRef.child(key).setValue(comment).addOnSuccessListener(unused -> {
+                if (answerUserId != null && !answerUserId.equals(uid)) {
+                    sendCommentNotification(answerUserId, name);
+                }
+                etCommentInput.setText("");
+            });
+        }
     }
 
     private void loadComments() {
@@ -301,34 +277,31 @@ public class QnaAnswerCommentFragment extends Fragment {
                     Comment c = ds.getValue(Comment.class);
                     if (c != null) commentList.add(c);
                 }
-                adapter.notifyDataSetChanged();
-                tvNoComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
-                rvComments.setVisibility(commentList.isEmpty() ? View.GONE : View.VISIBLE);
+                if(isAdded()) {
+                    adapter.notifyDataSetChanged();
+                    tvNoComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
+                    tvNoComments.setText(getString(R.string.no_comments_yet));
+                    rvComments.setVisibility(commentList.isEmpty() ? View.GONE : View.VISIBLE);
+                }
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
+    // Inside QnaAnswerCommentFragment.java
     private void sendCommentNotification(String recipientId, String commenterName) {
         DatabaseReference notifRef = FirebaseDatabase.getInstance(FIREBASE_URL).getReference("notifications").child(recipientId);
-        String notifId = notifRef.push().getKey();
 
         HashMap<String, Object> notifData = new HashMap<>();
-        notifData.put("title", "New Comment!");
+        notifData.put("title", getString(R.string.notif_new_comment_title));
 
-        // This message is now just a fallback/placeholder
-        notifData.put("message", commenterName + " commented on your solution.");
-
+        // Standard Q&A Comment Action Type
         notifData.put("action_type", "OPEN_COMMENT");
-        notifData.put("sourceId", answerId);
-
-        // --- NEW: SAVE THE SENDER ID ---
+        notifData.put("sourceId", answerId); // Points to the Answer node
         notifData.put("senderId", CurrentUser.getInstance().getUid());
-        // -------------------------------
-
         notifData.put("timestamp", System.currentTimeMillis());
         notifData.put("isRead", false);
 
-        notifRef.child(notifId).setValue(notifData);
+        notifRef.push().setValue(notifData);
     }
 }

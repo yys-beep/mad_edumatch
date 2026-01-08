@@ -19,17 +19,14 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
 import com.example.mad_edumatch.helper.CurrentUser;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup; // Import this!
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class StudentPostRequestFragment extends Fragment {
 
     // UI Components
     private EditText etSubject, etArea, etBudget, etDescription;
-
-    // CHANGED: Use ChipGroup instead of Spinner
     private ChipGroup chipGroupLevel;
-
     private RadioGroup rgLearningMode, rgDeliveryMode;
     private Button btnPostRequest;
 
@@ -51,7 +48,6 @@ public class StudentPostRequestFragment extends Fragment {
         etBudget = view.findViewById(R.id.etBudget);
         etDescription = view.findViewById(R.id.etDescription);
 
-        // CHANGED: Find view as ChipGroup
         chipGroupLevel = view.findViewById(R.id.chipGroupLevel);
 
         rgLearningMode = view.findViewById(R.id.rgLearningMode);
@@ -59,18 +55,16 @@ public class StudentPostRequestFragment extends Fragment {
 
         btnPostRequest = view.findViewById(R.id.btnPostRequest);
 
-        // Note: No setupLevelSpinner() needed because chips are in XML
-
         btnPostRequest.setOnClickListener(v -> saveStudentRequest(view));
     }
 
-    private void saveStudentRequest(View view) { // Pass View to find chip
+    private void saveStudentRequest(View view) {
         String subject = etSubject.getText().toString().trim();
         String area = etArea.getText().toString().trim();
         String budgetStr = etBudget.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
 
-        // CHANGED: Get Level from ChipGroup
+        // Get Level from ChipGroup
         String level = "";
         int selectedChipId = chipGroupLevel.getCheckedChipId();
         if (selectedChipId != View.NO_ID) {
@@ -79,52 +73,63 @@ public class StudentPostRequestFragment extends Fragment {
         }
 
         // Validation
-        if (TextUtils.isEmpty(subject)) { etSubject.setError("Subject is required"); return; }
-
-        // Check if level is empty
-        if (level.isEmpty()) {
-            Toast.makeText(requireContext(), "Please select an Academic Level", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(subject)) {
+            etSubject.setError(getString(R.string.error_subject_required));
             return;
         }
 
-        if (TextUtils.isEmpty(area)) { etArea.setError("Area is required"); return; }
-        if (TextUtils.isEmpty(budgetStr)) { etBudget.setError("Budget is required"); return; }
-        if (TextUtils.isEmpty(description)) { etDescription.setError("Description is required"); return; }
+        if (level.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.error_select_academic_level), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(area)) {
+            etArea.setError(getString(R.string.error_area_required));
+            return;
+        }
+        if (TextUtils.isEmpty(budgetStr)) {
+            etBudget.setError(getString(R.string.error_budget_required));
+            return;
+        }
+        if (TextUtils.isEmpty(description)) {
+            etDescription.setError(getString(R.string.error_description_required));
+            return;
+        }
 
         double budget;
         try {
             budget = Double.parseDouble(budgetStr);
         } catch (NumberFormatException e) {
-            etBudget.setError("Invalid budget format");
+            etBudget.setError(getString(R.string.error_invalid_budget_format));
             return;
         }
 
         // Learning Mode
         int selectedModeId = rgLearningMode.getCheckedRadioButtonId();
         if (selectedModeId == -1) {
-            Toast.makeText(requireContext(), "Please select a learning mode", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.error_select_learning_mode), Toast.LENGTH_SHORT).show();
             return;
         }
-        String learningMode = (selectedModeId == R.id.rbOneToOne) ? "One-to-One" : "Group";
+        String learningMode = (selectedModeId == R.id.rbOneToOne) ? getString(R.string.val_one_to_one) : getString(R.string.val_group);
 
         // Delivery Mode
         int selectedDeliveryId = rgDeliveryMode.getCheckedRadioButtonId();
         if (selectedDeliveryId == -1) {
-            Toast.makeText(requireContext(), "Please select a delivery mode", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.error_select_delivery_mode), Toast.LENGTH_SHORT).show();
             return;
         }
-        String deliveryMode = (selectedDeliveryId == R.id.rbPhysical) ? "Physical" : "Online";
+        String deliveryMode = (selectedDeliveryId == R.id.rbPhysical) ? getString(R.string.val_physical) : getString(R.string.val_online);
 
         // Auth Check
         String studentId = CurrentUser.getInstance().getUid();
         if (studentId == null) {
-            Toast.makeText(requireContext(), "You must be logged in to post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.error_login_required_post), Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Progress Dialog
         ProgressDialog dialog = new ProgressDialog(requireContext());
-        dialog.setMessage("Posting request...");
+        dialog.setMessage(getString(R.string.msg_posting_request));
         dialog.setCancelable(false);
         dialog.show();
 
@@ -155,12 +160,15 @@ public class StudentPostRequestFragment extends Fragment {
                 .setValue(request)
                 .addOnSuccessListener(unused -> {
                     dialog.dismiss();
-                    Toast.makeText(requireContext(), "Request posted successfully!", Toast.LENGTH_SHORT).show();
-                    requireActivity().getSupportFragmentManager().popBackStack();
+                    Toast.makeText(requireContext(), getString(R.string.msg_request_posted_success), Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null) {
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     dialog.dismiss();
-                    Toast.makeText(requireContext(), "Failed to post request: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String errorMsg = getString(R.string.error_post_request_failed, e.getMessage());
+                    Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
                 });
     }
 }

@@ -64,9 +64,10 @@ public class TutorEditFreeLessonFragment extends Fragment implements UploadMater
             currentMatName = getArguments().getString("currentMatName");
 
             if (!TextUtils.isEmpty(currentMatName)) {
-                tvFileStatus.setText("Current File: " + currentMatName);
+                // Use format string for "Current File: [Name]"
+                tvFileStatus.setText(getString(R.string.text_current_file, currentMatName));
             } else {
-                tvFileStatus.setText("No file attached previously.");
+                tvFileStatus.setText(getString(R.string.text_no_file_previously));
             }
         }
 
@@ -84,8 +85,14 @@ public class TutorEditFreeLessonFragment extends Fragment implements UploadMater
         // Callback when new file is uploaded
         this.newMatUrl = fileUrl;
         this.newMatName = fileName;
-        tvFileStatus.setText("New File Attached: " + fileName);
-        tvFileStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+
+        // Use format string for "New File Attached: [Name]"
+        tvFileStatus.setText(getString(R.string.text_new_file_attached, fileName));
+
+        // Check if context is available before accessing resources for color
+        if (getContext() != null) {
+            tvFileStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        }
     }
 
     private void saveChanges() {
@@ -94,7 +101,7 @@ public class TutorEditFreeLessonFragment extends Fragment implements UploadMater
         String newVideo = etVideo.getText().toString().trim();
 
         if (TextUtils.isEmpty(newTitle) || TextUtils.isEmpty(newDesc)) {
-            Toast.makeText(getContext(), "Title and Description required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_title_desc_required), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -115,9 +122,13 @@ public class TutorEditFreeLessonFragment extends Fragment implements UploadMater
         }
 
         ref.updateChildren(updates).addOnSuccessListener(unused -> {
-            Toast.makeText(getContext(), "Lesson Updated", Toast.LENGTH_SHORT).show();
-            getParentFragmentManager().popBackStack();
-            getParentFragmentManager().popBackStack(); // Go back twice to refresh list
+            if (getContext() != null) {
+                Toast.makeText(getContext(), getString(R.string.msg_lesson_updated), Toast.LENGTH_SHORT).show();
+            }
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().popBackStack(); // Go back twice to refresh list
+            }
         });
     }
 }

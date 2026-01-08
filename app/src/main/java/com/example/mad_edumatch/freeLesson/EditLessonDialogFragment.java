@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +40,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-// OkHttp Imports (Necessary for your file upload method)
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -53,41 +51,33 @@ import okhttp3.Response;
 
 public class EditLessonDialogFragment extends DialogFragment {
 
-    // --- UI VIEWS ---
-    // RENAMED: etVideoUrl -> etVideoLink
     private EditText etTitle, etDescription, etVideoLink;
     private MaterialButton btnChooseMaterial, btnSaveChanges;
     private ProgressBar progressBar;
     private TextView tvMaterialStatus;
     private TextView tvCurrentMaterialName;
 
-    // --- ARGUMENTS RECEIVED ---
     private String lessonId;
     private String initialMaterialUrl;
     private String initialMaterialName;
 
-    // --- STATE MANAGEMENT ---
     private String currentMaterialUrl;
     private String currentMaterialName;
     private Uri newFileUri;
     private String newFileName;
     private boolean isUploading = false;
 
-    // --- APPWRITE CONFIG (Must match other fragments) ---
     private static final String FIREBASE_URL = "https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app";
     private static final String PROJECT_ID = "693c16f700198f0a2ed3";
     private static final String BUCKET_ID = "693c1807002ab38e1751";
     private static final String APPWRITE_ENDPOINT_FILE = "https://sgp.cloud.appwrite.io/v1/storage/buckets/" + BUCKET_ID + "/files";
 
-    // --- FACTORY METHOD ---
-    // RENAMED parameter: videoUrl -> videoLink
     public static EditLessonDialogFragment newInstance(String lessonId, String title, String desc, String videoLink, String materialUrl, String materialName) {
         EditLessonDialogFragment fragment = new EditLessonDialogFragment();
         Bundle args = new Bundle();
         args.putString("lessonId", lessonId);
         args.putString("title", title);
         args.putString("description", desc);
-        // UPDATED KEY: "videoLink"
         args.putString("videoLink", videoLink);
         args.putString("materialUrl", materialUrl);
         args.putString("materialName", materialName);
@@ -95,7 +85,6 @@ public class EditLessonDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    // --- FILE PICKER LAUNCHER ---
     private final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -103,9 +92,8 @@ public class EditLessonDialogFragment extends DialogFragment {
                     newFileUri = result.getData().getData();
                     newFileName = getFileName(newFileUri);
                     if (newFileUri != null) {
-                        tvMaterialStatus.setText("New file selected: " + newFileName);
+                        tvMaterialStatus.setText(getString(R.string.new_file_selected, newFileName));
                         tvMaterialStatus.setVisibility(View.VISIBLE);
-                        // Flag to use new file, clear old state
                         currentMaterialUrl = null;
                         currentMaterialName = null;
                         tvCurrentMaterialName.setVisibility(View.GONE);
@@ -117,14 +105,12 @@ public class EditLessonDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set style to show a proper dialog (optional)
         setStyle(DialogFragment.STYLE_NORMAL, com.google.android.material.R.style.Theme_MaterialComponents_Light_Dialog);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // You MUST reuse or create a layout specifically for the dialog: dialog_edit_lesson
         return inflater.inflate(R.layout.dialog_edit_free_lesson, container, false);
     }
 
@@ -132,10 +118,8 @@ public class EditLessonDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Bind Views
         etTitle = view.findViewById(R.id.etEditLessonTitle);
         etDescription = view.findViewById(R.id.etEditLessonDescription);
-        // Note: The ID in XML (R.id.etEditVideoUrl) can stay the same, but we bind it to our new variable
         etVideoLink = view.findViewById(R.id.etEditVideoUrl);
 
         btnChooseMaterial = view.findViewById(R.id.btnEditChooseMaterial);
@@ -144,10 +128,8 @@ public class EditLessonDialogFragment extends DialogFragment {
         tvMaterialStatus = view.findViewById(R.id.tvEditMaterialStatus);
         tvCurrentMaterialName = view.findViewById(R.id.tvEditCurrentMaterialName);
 
-        // 2. Load and Pre-fill Data
         loadDataFromArguments();
 
-        // 3. Set Listeners
         btnChooseMaterial.setOnClickListener(v -> openFilePicker());
         btnSaveChanges.setOnClickListener(v -> handleSaveAttempt());
     }
@@ -155,38 +137,30 @@ public class EditLessonDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Set the dialog width to match_parent
         if (getDialog() != null && getDialog().getWindow() != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
             getDialog().getWindow().setLayout(width, height);
         }
     }
-
 
     private void loadDataFromArguments() {
         Bundle args = getArguments();
         if (args != null) {
             lessonId = args.getString("lessonId");
-
-            // Pre-fill fields
             etTitle.setText(args.getString("title"));
             etDescription.setText(args.getString("description"));
-            // UPDATED KEY: "videoLink"
             etVideoLink.setText(args.getString("videoLink"));
 
             initialMaterialUrl = args.getString("materialUrl");
             initialMaterialName = args.getString("materialName");
 
-            // Initialize runtime state with initial data
             currentMaterialUrl = initialMaterialUrl;
             currentMaterialName = initialMaterialName;
 
-            // Display current material status
             if (!TextUtils.isEmpty(currentMaterialUrl)) {
-                tvCurrentMaterialName.setText("Current Material: " + (TextUtils.isEmpty(currentMaterialName) ? "File Attached" : currentMaterialName));
+                String displayName = TextUtils.isEmpty(currentMaterialName) ? getString(R.string.file_attached) : currentMaterialName;
+                tvCurrentMaterialName.setText(getString(R.string.current_material_label, displayName));
                 tvCurrentMaterialName.setVisibility(View.VISIBLE);
             } else {
                 tvCurrentMaterialName.setVisibility(View.GONE);
@@ -199,34 +173,29 @@ public class EditLessonDialogFragment extends DialogFragment {
         intent.setType("*/*");
         String[] mimeTypes = {"application/pdf", "image/*", "video/*"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        filePickerLauncher.launch(Intent.createChooser(intent, "Select New Material"));
+        filePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.select_new_material)));
     }
 
     private void handleSaveAttempt() {
         if (isUploading) {
-            Toast.makeText(getContext(), "Upload is in progress. Please wait.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.upload_progress), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(etTitle.getText())) {
-            etTitle.setError("Title is required.");
+            etTitle.setError(getString(R.string.title_required));
             return;
         }
 
-        // --- NEW VALIDATION BLOCK ---
         String linkInput = etVideoLink.getText().toString().trim();
-
-        // Only validate if the user actually typed something (since it might be optional)
         if (!TextUtils.isEmpty(linkInput)) {
             if (!LinkValidator.isValidUrl(linkInput)) {
-                etVideoLink.setError("Invalid link! Must start with http:// or https://");
+                etVideoLink.setError(getString(R.string.invalid_link_error));
                 etVideoLink.requestFocus();
-                return; // Stop here. Do not save.
+                return;
             }
         }
-        // ----------------------------
 
-        // Check if a new file needs uploading...
         if (newFileUri != null) {
             uploadNewMaterialAndSave();
         } else {
@@ -238,11 +207,10 @@ public class EditLessonDialogFragment extends DialogFragment {
         isUploading = true;
         progressBar.setVisibility(View.VISIBLE);
         btnSaveChanges.setEnabled(false);
-        tvMaterialStatus.setText("Uploading new material...");
+        tvMaterialStatus.setText(getString(R.string.uploading_material));
 
         File file = getFileFromUri(newFileUri);
         if (file == null) {
-            // Error handled in getFileFromUri
             isUploading = false;
             progressBar.setVisibility(View.GONE);
             btnSaveChanges.setEnabled(true);
@@ -276,8 +244,11 @@ public class EditLessonDialogFragment extends DialogFragment {
                     isUploading = false;
                     progressBar.setVisibility(View.GONE);
                     btnSaveChanges.setEnabled(true);
-                    tvMaterialStatus.setText("Upload failed.");
-                    Toast.makeText(getContext(), "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Use getActivity/getContext check for safety inside async callback
+                    if (getContext() != null) {
+                        tvMaterialStatus.setText(getString(R.string.upload_failed_msg, e.getMessage()));
+                        Toast.makeText(getContext(), getString(R.string.upload_failed_msg, e.getMessage()), Toast.LENGTH_SHORT).show();
+                    }
                 });
             }
 
@@ -289,21 +260,21 @@ public class EditLessonDialogFragment extends DialogFragment {
                     progressBar.setVisibility(View.GONE);
                     btnSaveChanges.setEnabled(true);
 
+                    if (getContext() == null) return;
+
                     if (response.isSuccessful()) {
                         try {
                             JSONObject json = new JSONObject(responseBody);
                             String fileId = json.getString("$id");
-
-                            // Success! Now save the changes with the new file ID
                             saveLessonChanges(fileId, newFileName);
 
                         } catch (JSONException e) {
-                            tvMaterialStatus.setText("Parsing Error");
-                            Toast.makeText(getContext(), "Error parsing response.", Toast.LENGTH_SHORT).show();
+                            tvMaterialStatus.setText(getString(R.string.parsing_error));
+                            Toast.makeText(getContext(), getString(R.string.error_parsing_response), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        tvMaterialStatus.setText("Server Error");
-                        Toast.makeText(getContext(), "Upload Failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                        tvMaterialStatus.setText(getString(R.string.server_error));
+                        Toast.makeText(getContext(), getString(R.string.upload_failed_msg, response.message()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -319,23 +290,17 @@ public class EditLessonDialogFragment extends DialogFragment {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("title", etTitle.getText().toString());
         updates.put("description", etDescription.getText().toString());
-
-        // UPDATED KEY: "videoLink"
         updates.put("videoLink", etVideoLink.getText().toString());
-
-        // Use the new or old material data
         updates.put("materialUrl", materialFileId);
         updates.put("materialName", materialFileName);
 
         lessonRef.updateChildren(updates).addOnSuccessListener(aVoid -> {
-            Toast.makeText(getContext(), "Lesson updated successfully!", Toast.LENGTH_SHORT).show();
-            dismiss(); // Close the dialog
+            Toast.makeText(getContext(), getString(R.string.lesson_updated_success), Toast.LENGTH_SHORT).show();
+            dismiss();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Failed to save changes: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.save_failed_msg, e.getMessage()), Toast.LENGTH_LONG).show();
         });
     }
-
-    // --- HELPER METHODS (Copied from Fragment) ---
 
     private File getFileFromUri(Uri uri) {
         if (getContext() == null || uri == null) return null;
@@ -353,7 +318,7 @@ public class EditLessonDialogFragment extends DialogFragment {
             is.close();
             return tempFile;
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Error reading file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_reading_file, e.getMessage()), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -376,11 +341,9 @@ public class EditLessonDialogFragment extends DialogFragment {
         return result;
     }
 
-    // Optional: Refresh the parent fragment when the dialog closes
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        // This ensures the parent detail fragment updates the title/description immediately
         if (getParentFragment() instanceof FreeLessonDetailFragment) {
             ((FreeLessonDetailFragment) getParentFragment()).loadLessonDetails();
         }

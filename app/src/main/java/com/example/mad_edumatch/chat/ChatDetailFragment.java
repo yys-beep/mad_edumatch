@@ -21,8 +21,8 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.ChatMessage;
 import com.example.mad_edumatch.helper.CurrentUser;
 import com.example.mad_edumatch.recycleAdapters.ChatAdapter;
-import com.example.mad_edumatch.student.StudentProfileFragment; // Import Student Fragment
-import com.example.mad_edumatch.tutor.TutorProfileFragment;   // Import Tutor Fragment
+import com.example.mad_edumatch.student.StudentProfileFragment;
+import com.example.mad_edumatch.tutor.TutorProfileFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,11 +73,9 @@ public class ChatDetailFragment extends Fragment {
         }
 
         if (targetUserId == null) {
-            // If we are coming from Bottom Nav, there is no "target".
-            // We should show a "Select a chat" message or go back to the Chat List.
-            Toast.makeText(getContext(), "Please select a conversation from the list.", Toast.LENGTH_SHORT).show();
+            // Updated to use resource string
+            Toast.makeText(getContext(), R.string.select_conversation_toast, Toast.LENGTH_SHORT).show();
 
-            // Safety check to ensure we don't crash the activity
             if (getParentFragmentManager().getBackStackEntryCount() > 0) {
                 getParentFragmentManager().popBackStack();
             }
@@ -96,9 +94,9 @@ public class ChatDetailFragment extends Fragment {
         etMessage = view.findViewById(R.id.etChatMessage);
         btnSend = view.findViewById(R.id.btnSendMessage);
 
-        tvUserName.setText(targetUserName != null ? targetUserName : "User");
+        // Updated to use resource string
+        tvUserName.setText(targetUserName != null ? targetUserName : getString(R.string.default_user));
 
-        // Setup Recycler
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -108,7 +106,6 @@ public class ChatDetailFragment extends Fragment {
         chatAdapter = new ChatAdapter(getContext(), messageList, "", "");
         recyclerView.setAdapter(chatAdapter);
 
-        // Fetch Data
         fetchTargetUserDetails(targetUserId);
         fetchMyDetails();
         loadMessages();
@@ -116,16 +113,14 @@ public class ChatDetailFragment extends Fragment {
         btnSend.setOnClickListener(v -> sendMessage());
         seenMessage();
 
-        // --- CLICK LISTENER FOR PROFILE PIC ---
         imgTopAvatar.setOnClickListener(v -> openUserProfile());
     }
 
     private void openUserProfile() {
         Fragment profileFragment;
         Bundle args = new Bundle();
-        args.putString("targetUserId", targetUserId); // Pass the ID to the fragment
+        args.putString("targetUserId", targetUserId);
 
-        // Check the role string we fetched earlier
         if ("Tutor".equalsIgnoreCase(targetUserRoleStr)) {
             profileFragment = new TutorProfileFragment();
         } else {
@@ -153,13 +148,18 @@ public class ChatDetailFragment extends Fragment {
                 String name = snapshot.child("name").getValue(String.class);
                 if (name != null) tvUserName.setText(name);
 
-                // --- CAPTURE ROLE ---
                 if (snapshot.hasChild("role")) {
                     targetUserRoleStr = snapshot.child("role").getValue(String.class);
-                    tvUserRole.setText(targetUserRoleStr);
+                    if ("Student".equalsIgnoreCase(targetUserRoleStr)) {
+                        tvUserRole.setText(getString(R.string.role_student));
+                    } else if ("Tutor".equalsIgnoreCase(targetUserRoleStr)) {
+                        tvUserRole.setText(getString(R.string.role_tutor));
+                    } else {
+                        // Fallback if role is something else or null
+                        tvUserRole.setText(targetUserRoleStr);
+                    }
                 }
 
-                // --- IMAGE ---
                 if (snapshot.hasChild("profileImageUrl")) {
                     targetProfileImageName = snapshot.child("profileImageUrl").getValue(String.class);
                     int resId = getResources().getIdentifier(targetProfileImageName, "drawable", requireContext().getPackageName());
@@ -192,16 +192,15 @@ public class ChatDetailFragment extends Fragment {
         String msg = etMessage.getText().toString().trim();
         if (TextUtils.isEmpty(msg)) return;
 
-        // --- ADDED: ID Safety check to prevent crashes ---
         if (currentUserId == null || targetUserId == null) return;
 
-        // --- ADDED: Fetch listing details from arguments with fallbacks ---
+        // Updated default ID and Title to use resource string if possible, or simple "general"
         String tempListingId = "general";
-        String tempListingTitle = "Chat";
+        String tempListingTitle = getString(R.string.default_chat_title); // "Chat" or "Sembang"
 
         if (getArguments() != null) {
             tempListingId = getArguments().getString("listingId", "general");
-            tempListingTitle = getArguments().getString("listingTitle", "Chat");
+            tempListingTitle = getArguments().getString("listingTitle", getString(R.string.default_chat_title));
         }
 
         final String finalListingId = tempListingId;
@@ -218,14 +217,12 @@ public class ChatDetailFragment extends Fragment {
         messageMap.put("receiverId", targetUserId);
         messageMap.put("message", msg);
         messageMap.put("timestamp", timestamp);
-        // --- ADDED: Store listingId in the message for tracking ---
         messageMap.put("listingId", finalListingId);
 
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("chats/" + currentUserId + "/" + targetUserId + "/" + messagePushId, messageMap);
         updateMap.put("chats/" + targetUserId + "/" + currentUserId + "/" + messagePushId, messageMap);
 
-        // Update Chat Lists
         Map<String, Object> listMap = new HashMap<>();
         listMap.put("id", targetUserId);
         listMap.put("lastMessage", msg);
@@ -244,8 +241,6 @@ public class ChatDetailFragment extends Fragment {
             if (task.isSuccessful()) {
                 etMessage.setText("");
 
-                // --- ADDED: SMART NOTIFICATION LOGIC ---
-                // Triggers for every different subject listing inquired about
                 if (!"general".equals(finalListingId) && messageList != null) {
                     boolean alreadyNotifiedForThisListing = false;
 
@@ -257,9 +252,8 @@ public class ChatDetailFragment extends Fragment {
                     }
 
                     if (!alreadyNotifiedForThisListing) {
-                        // Safe name check to avoid Firebase null value crash
                         String safeSenderName = CurrentUser.getInstance().getName();
-                        if (safeSenderName == null) safeSenderName = "User";
+                        if (safeSenderName == null) safeSenderName = getString(R.string.default_user);
 
                         sendChatNotification(targetUserId, safeSenderName, finalListingTitle, finalListingId);
                     }
@@ -296,11 +290,14 @@ public class ChatDetailFragment extends Fragment {
         DatabaseReference notifRef = rootRef.child("notifications").child(recipientId);
 
         HashMap<String, Object> data = new HashMap<>();
-        data.put("title", "Listing Inquiry");
-        data.put("message", senderName + " inquired about " + listingTitle);
+        // Updated to use resource string
+        data.put("title", getString(R.string.listing_inquiry_title));
+        // Updated format: "%1$s inquired about %2$s"
+        data.put("message", getString(R.string.listing_inquiry_msg_format, senderName, listingTitle));
+
         data.put("action_type", "OPEN_CHAT");
-        data.put("sourceId", listingId); // This is the listing ID
-        data.put("senderId", currentUserId); // Your ID so they can reply
+        data.put("sourceId", listingId);
+        data.put("senderId", currentUserId);
         data.put("timestamp", System.currentTimeMillis());
         data.put("isRead", false);
 

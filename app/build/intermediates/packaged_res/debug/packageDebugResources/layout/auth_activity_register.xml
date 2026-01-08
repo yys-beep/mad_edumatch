@@ -21,17 +21,76 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvRegisterTitle"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/create_account"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/tvRegisterTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/register_title"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegLangEn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EN"
+                        android:textColor="#AAAAAA"
+                        android:textStyle="bold"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="8dp"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="16dp"
+                        android:background="#CCCCCC"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegLangBm"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BM"
+                        android:textColor="#AAAAAA"
+                        android:textStyle="bold"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="8dp"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="16dp"
+                        android:background="#CCCCCC"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegLangZh"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:text="简体中文"
+                        android:textColor="#AAAAAA"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </RelativeLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -49,7 +108,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/select_your_avatar"
+                        android:text="@string/select_avatar"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:layout_marginBottom="8dp"/>
@@ -90,7 +149,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/student"
+                            android:text="@string/role_student"
                             android:buttonTint="@color/pastelBlue"/>
 
                         <RadioButton
@@ -98,7 +157,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/tutor"
+                            android:text="@string/role_tutor"
                             android:buttonTint="@color/pastelBlue"/>
                     </RadioGroup>
 
@@ -106,7 +165,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/full_name"
+                        android:hint="@string/full_name_hint"
                         android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etName"
@@ -119,7 +178,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/email"
+                        android:hint="@string/email_address"
                         android:layout_marginBottom="16dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEmail"
@@ -152,7 +211,7 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/academic_level_e_g_spm"
+                            android:hint="@string/academic_level_hint"
                             android:layout_marginBottom="16dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etAcademicLevel"
@@ -170,7 +229,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/you_can_complete_your_tutor_profile_details_after_registration"
+                            android:text="@string/tutor_profile_note"
                             android:textColor="#888"
                             android:textSize="12sp"
                             android:layout_marginBottom="16dp"/>
@@ -180,7 +239,7 @@
                         android:id="@+id/btnRegister"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="@string/create_account"
+                        android:text="@string/register_btn"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:cornerRadius="8dp"
@@ -202,7 +261,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/already_have_an_account"
+                    android:text="@string/already_have_account"
                     android:textColor="#555555"
                     android:layout_marginEnd="4dp" />
 
@@ -212,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="@string/login"
+                    android:text="@string/login_here"
                     android:textColor="#021289"
                     android:textStyle="bold" />
 

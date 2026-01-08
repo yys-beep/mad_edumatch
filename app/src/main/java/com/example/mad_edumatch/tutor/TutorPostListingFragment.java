@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class TutorPostListingFragment extends Fragment {
 
-    private EditText etName, etSubjects, etFee, etArea, etContact, etQualification; // Added etQualification
+    private EditText etName, etSubjects, etFee, etArea, etContact, etQualification;
     private RadioGroup rgLearningMode, rgDeliveryMode;
     private ChipGroup chipGroupLevels;
     private Button btnSubmit;
@@ -47,7 +47,7 @@ public class TutorPostListingFragment extends Fragment {
         etFee = view.findViewById(R.id.etTutorFee);
         etArea = view.findViewById(R.id.etTutorArea);
         etContact = view.findViewById(R.id.etTutorContact);
-        etQualification = view.findViewById(R.id.etTutorQualification); // Bind Qualification
+        etQualification = view.findViewById(R.id.etTutorQualification);
 
         rgLearningMode = view.findViewById(R.id.rgLearningMode);
         rgDeliveryMode = view.findViewById(R.id.rgDeliveryMode);
@@ -64,10 +64,10 @@ public class TutorPostListingFragment extends Fragment {
         String feeStr = etFee.getText().toString().trim();
         String area = etArea.getText().toString().trim();
         String contact = etContact.getText().toString().trim();
-        String qualification = etQualification.getText().toString().trim(); // Get Qualification
+        String qualification = etQualification.getText().toString().trim();
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(subject) || TextUtils.isEmpty(feeStr) || TextUtils.isEmpty(qualification)) {
-            Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_fill_required_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -75,7 +75,7 @@ public class TutorPostListingFragment extends Fragment {
         try {
             fee = Double.parseDouble(feeStr);
         } catch (NumberFormatException e) {
-            etFee.setError("Invalid Fee");
+            etFee.setError(getString(R.string.error_invalid_fee));
             return;
         }
 
@@ -97,13 +97,14 @@ public class TutorPostListingFragment extends Fragment {
 
         long timestamp = System.currentTimeMillis();
         String tutorId = CurrentUser.getInstance().getUid();
+        String notAvailable = getString(R.string.text_not_applicable);
 
-        // Create Object (Achievement passed as "N/A" for now)
+        // Create Object
         TutorViewListing listing = new TutorViewListing(
                 tutorId, name, subject, fee, area, contact,
                 learningMode, deliveryMode,
-                qualification, // Pass real qualification
-                "N/A",
+                qualification,
+                notAvailable, // achievement passed as "N/A"
                 timestamp,
                 selectedLevels
         );
@@ -114,19 +115,19 @@ public class TutorPostListingFragment extends Fragment {
                 .setValue(listing)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Listing Posted!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.msg_listing_posted), Toast.LENGTH_SHORT).show();
                         if (getParentFragmentManager() != null) {
                             getParentFragmentManager().popBackStack();
                         }
                     } else {
-                        Toast.makeText(getContext(), "Failed to post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_post_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private String getSelectedRadioText(RadioGroup group) {
         int id = group.getCheckedRadioButtonId();
-        if (id == -1) return "N/A";
+        if (id == -1) return getString(R.string.text_not_applicable);
         RadioButton btn = group.findViewById(id);
         return btn.getText().toString();
     }

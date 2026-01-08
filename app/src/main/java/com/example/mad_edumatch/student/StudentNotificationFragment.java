@@ -62,66 +62,32 @@ public class StudentNotificationFragment extends Fragment {
             markNotificationAsRead(notification.getId());
 
             String actionType = notification.getAction_type() != null ? notification.getAction_type().toUpperCase() : "";
-            String targetId = notification.getSourceId(); // Standardized key
+            String targetId = notification.getSourceId();
 
-            if (actionType == null || targetId == null) return;
+            if (targetId == null) return;
 
-            if (actionType.equals("OPEN_LESSON") || actionType.equals("KUDOS")) {
+            // --- PATH 1: LESSONS (Comments or Kudos) ---
+            if (actionType.equals("LESSON_COMMENT") || actionType.equals("KUDOS") || actionType.equals("OPEN_LESSON")) {
                 FreeLessonDetailFragment fragment = new FreeLessonDetailFragment();
                 Bundle args = new Bundle();
-                args.putString("sourceId", targetId);
+                args.putString("lessonId", targetId); // Use lessonId key
                 fragment.setArguments(args);
                 navigateTo(fragment);
             }
-            else if (actionType.equals("OPEN_QUESTION") || actionType.equals("OPEN_QUESTION_DETAIL") || actionType.equals("MY_QUESTIONS_NOTIF")) {
+            // --- PATH 2: Q&A SOLUTIONS (A new answer to your question) ---
+            else if (actionType.equals("NEW_SOLUTION") || actionType.equals("OPEN_QUESTION")) {
                 FirebaseDatabase.getInstance(DB_URL).getReference("forum_questions")
                         .child(targetId).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (!isAdded()) return;
-
-                                // 2. CHECK: If the question is gone, show toast and DON'T navigate
                                 if (!snapshot.exists()) {
-                                    Toast.makeText(getContext(), "This question has been deleted.", Toast.LENGTH_SHORT).show();
-
-                                    // Optional: Delete the "dead" notification so it's not clicked again
-                                    String uid = FirebaseAuth.getInstance().getUid();
-                                    if (uid != null) {
-                                        FirebaseDatabase.getInstance(DB_URL).getReference("notifications")
-                                                .child(uid).child(notification.getId()).removeValue();
-                                    }
+                                    Toast.makeText(getContext(), getString(R.string.solution_deleted_error), Toast.LENGTH_SHORT).show();
+                                    removeNotification(notification.getId());
                                 } else {
-                                    // 3. SUCCESS: Navigate only if the data exists
                                     QnaDetailFragment fragment = new QnaDetailFragment();
                                     Bundle args = new Bundle();
-                                    args.putString("sourceId", targetId);
-                                    fragment.setArguments(args);
-                                    navigateTo(fragment);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-            }
-            else if (actionType.equals("OPEN_COMMENT") || "NEW_SOLUTION".equals(actionType)) {                // We must check if the ANSWER still exists
-                FirebaseDatabase.getInstance(DB_URL).getReference("forum_answers")
-                        .child(targetId).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (!isAdded()) return;
-
-                                if (!snapshot.exists()) {
-                                    // If the solution was deleted, don't navigate
-                                    Toast.makeText(getContext(), "This solution was deleted.", Toast.LENGTH_SHORT).show();
-                                    // Clean up the dead notification
-                                    FirebaseDatabase.getInstance(DB_URL).getReference("notifications")
-                                            .child(FirebaseAuth.getInstance().getUid()).child(notification.getId()).removeValue();
-                                } else {
-                                    // SOLUTION EXISTS: Navigate to comment fragment
-                                    QnaAnswerCommentFragment fragment = new QnaAnswerCommentFragment();
-                                    Bundle args = new Bundle();
-                                    args.putString("answerId", targetId); // Pass the answerId
+                                    args.putString("questionId", targetId);
                                     fragment.setArguments(args);
                                     navigateTo(fragment);
                                 }
@@ -129,18 +95,35 @@ public class StudentNotificationFragment extends Fragment {
                             @Override public void onCancelled(@NonNull DatabaseError error) {}
                         });
             }
+            // --- PATH 3: Q&A COMMENTS (Someone commented on your solution) ---
+            else if (actionType.equals("OPEN_COMMENT")) {
+                FirebaseDatabase.getInstance(DB_URL).getReference("forum_answers")
+                        .child(targetId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (!isAdded()) return;
+                                if (!snapshot.exists()) {
+                                    Toast.makeText(getContext(), getString(R.string.solution_deleted_error), Toast.LENGTH_SHORT).show();
+                                    removeNotification(notification.getId());
+                                } else {
+                                    QnaAnswerCommentFragment fragment = new QnaAnswerCommentFragment();
+                                    Bundle args = new Bundle();
+                                    args.putString("answerId", targetId);
+                                    fragment.setArguments(args);
+                                    navigateTo(fragment);
+                                }
+                            }
+                            @Override public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+            }
+            // --- PATH 4: CHAT ---
             else if ("OPEN_CHAT".equals(actionType)) {
-                // Navigation for "Listing Inquiry"
                 ChatDetailFragment fragment = new ChatDetailFragment();
                 Bundle args = new Bundle();
                 args.putString("targetUserId", notification.getSenderId());
                 args.putString("listingId", notification.getSourceId());
                 fragment.setArguments(args);
-
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                navigateTo(fragment);
             }
         });
 
@@ -285,5 +268,13 @@ public class StudentNotificationFragment extends Fragment {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(rvNotifications);
+    }
+
+    private void removeNotification(String notificationId) {
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid != null) {
+            FirebaseDatabase.getInstance(DB_URL).getReference("notifications")
+                    .child(uid).child(notificationId).removeValue();
+        }
     }
 }
