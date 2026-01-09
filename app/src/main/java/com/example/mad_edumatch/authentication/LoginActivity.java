@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
-    // ---------------- LANGUAGE LOGIC ----------------
+    
     private void setLocale(String lang) {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
