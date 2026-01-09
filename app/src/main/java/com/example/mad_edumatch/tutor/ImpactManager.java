@@ -197,7 +197,7 @@ public class ImpactManager {
         int titleResId;
         int descResId;
 
-        // Map keys to Resource IDs instead of hardcoded strings
+        
         switch (key) {
             case "tier_top":
                 titleResId = R.string.badge_top_title;
