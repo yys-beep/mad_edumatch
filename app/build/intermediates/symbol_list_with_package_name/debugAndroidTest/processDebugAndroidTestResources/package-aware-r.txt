@@ -1,3 +1,0 @@
-com.example.mad_edumatch.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
