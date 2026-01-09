@@ -1,10 +1,10 @@
 package com.example.mad_edumatch.tutor;
 
-import android.app.AlertDialog; // Import for Dialog
-import android.content.Context; // Import for Context
-import android.content.Intent;  // Import for Intent
-import android.content.SharedPreferences; // Import for Saving Settings
-import android.content.res.Configuration; // Import for Locale Config
+import android.app.AlertDialog; 
+import android.content.Context; 
+import android.content.Intent;  
+import android.content.SharedPreferences; 
+import android.content.res.Configuration; 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
