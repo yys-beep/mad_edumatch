@@ -57,26 +57,26 @@ public class StudentSearchTutorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Initialize Views
+        // 1.Initialize Views
         etSearchSubject = view.findViewById(R.id.etSearchSubject);
         chipGroupFilter = view.findViewById(R.id.chipGroupFilter);
         rvSearchTutors = view.findViewById(R.id.rvSearchTutors);
         tvNoTutorFound = view.findViewById(R.id.tvNoTutorFound);
 
-        // 2. Setup RecyclerView
+        // 2.Setup RecyclerView
         rvSearchTutors.setLayoutManager(new LinearLayoutManager(requireContext()));
         // Initialize adapter with the display list
         adapter = new StudentSearchTutorAdapter(displayedTutorList);
         rvSearchTutors.setAdapter(adapter);
 
-        // 3. Setup Firebase
+        // 3.Setup Firebase
         dbRef = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("tutor_listings");
 
-        // 4. Load Data (ONCE)
+        // 4.Load Data (ONCE)
         loadAllData();
 
-        // 5. Setup Listeners
+        // 5.Setup Listeners
         setupListeners();
     }
 
