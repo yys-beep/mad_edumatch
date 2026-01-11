@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
-import com.example.mad_edumatch.helper.LocalizationHelper; // Import Localization Helper
+import com.example.mad_edumatch.helper.LocalizationHelper; 
 import com.example.mad_edumatch.recycleAdapters.StudentSearchTutorAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
