@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+// Dialog used to edit an existing student tutoring request.
 public class EditStudentRequestDialog extends DialogFragment {
 
     private StudentRequest request;
@@ -119,6 +120,7 @@ public class EditStudentRequestDialog extends DialogFragment {
         }
     }
 
+    // Check if all required fields are filled in correctly.
     private void updateRequest() {
         // A. Validate Text Inputs
         String newSubject = etSubject.getText().toString().trim();
@@ -164,7 +166,8 @@ public class EditStudentRequestDialog extends DialogFragment {
             Toast.makeText(getContext(), getString(R.string.error_invalid_budget_format), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        
+        // Save the updated request details to Firebase.
         // E. Update Firebase
         DatabaseReference ref = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("student_requests")
