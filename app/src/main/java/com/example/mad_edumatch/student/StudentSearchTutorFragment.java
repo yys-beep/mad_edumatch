@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Student tutor search and filter screen.
 public class StudentSearchTutorFragment extends Fragment {
 
     private TextInputEditText etSearchSubject;
