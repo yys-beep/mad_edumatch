@@ -13,20 +13,19 @@ import com.example.mad_edumatch.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DURATION = 2000; // 2 seconds
+    private static final int SPLASH_DURATION = 2000; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_activity_splash); // your splash XML
+        setContentView(R.layout.app_activity_splash); 
 
-        // Set the splash logo (if your teammate's logo is ic_splash_logo)
         ImageView splashLogo = findViewById(R.id.splash_logo);
         if (splashLogo != null) {
             splashLogo.setImageResource(R.drawable.ic_splash_logo);
         }
 
-        // Delay and go to LoginActivity
+    
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
             startActivity(intent);
