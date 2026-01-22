@@ -12,7 +12,7 @@ import com.example.mad_edumatch.authentication.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DURATION = 2000;
+    private static final int SPLASH_DURATION = 2000; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,19 +20,14 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_activity_splash);
+        setContentView(R.layout.app_activity_splash); 
 
-        // --- ERROR WAS HERE ---
-        // REMOVED: splashScreen.setKeepOnScreenCondition(() -> true );
-        // REASON: We want the system icon to disappear so your custom XML can be seen.
-
-        // 2. Set your custom logo (optional, if not set in XML)
         ImageView splashLogo = findViewById(R.id.splash_logo);
         if (splashLogo != null) {
             splashLogo.setImageResource(R.drawable.ic_splash_logo);
         }
 
-        // 3. Wait 2 seconds, then move to Login
+    
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
             startActivity(intent);

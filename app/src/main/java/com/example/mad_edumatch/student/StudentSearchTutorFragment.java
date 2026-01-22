@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
-import com.example.mad_edumatch.helper.ListingDataHelper; // Import New Helper
+import com.example.mad_edumatch.helper.LocalizationHelper; 
 import com.example.mad_edumatch.recycleAdapters.StudentSearchTutorAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Student tutor search and filter screen.
 public class StudentSearchTutorFragment extends Fragment {
 
     private TextInputEditText etSearchSubject;
@@ -53,11 +54,13 @@ public class StudentSearchTutorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 1.Initialize Views
         etSearchSubject = view.findViewById(R.id.etSearchSubject);
         chipGroupFilter = view.findViewById(R.id.chipGroupFilter);
         rvSearchTutors = view.findViewById(R.id.rvSearchTutors);
         tvNoTutorFound = view.findViewById(R.id.tvNoTutorFound);
 
+        // 2.Setup RecyclerView
         rvSearchTutors.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new StudentSearchTutorAdapter(displayedTutorList);
         rvSearchTutors.setAdapter(adapter);

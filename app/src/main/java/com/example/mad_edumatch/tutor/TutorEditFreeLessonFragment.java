@@ -27,8 +27,8 @@ import java.util.Map;
 public class TutorEditFreeLessonFragment extends Fragment implements UploadMaterialBottom.UploadListener {
 
     private EditText etTitle, etDesc, etVideo;
-    private Button btnUploadMaterial; // New button
-    private TextView tvFileStatus; // To show current/new file
+    private Button btnUploadMaterial;
+    private TextView tvFileStatus;
     private MaterialButton btnSaveChanges;
 
     private String lessonId;
