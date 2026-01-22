@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorViewListing;
-import com.example.mad_edumatch.helper.LocalizationHelper;
+// Use the new helper we created
+import com.example.mad_edumatch.helper.ListingDataHelper;
 import com.example.mad_edumatch.tutor.EditTutorListingDialog;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,38 +48,29 @@ public class TutorListingAdapter extends RecyclerView.Adapter<TutorListingAdapte
         holder.tvName.setText(listing.getName());
         holder.tvSubjects.setText(listing.getSubject());
 
-        // --- 1. Translate Levels ---
-        // Attempt to translate the string. If it's a comma-separated list like "Primary, SPM",
-        // the helper returns 0 and we fall back to the original string.
-        int levelResId = LocalizationHelper.getLevelStringId(listing.getLevelsAsString());
-        if (levelResId != 0) {
-            holder.tvLevels.setText(context.getString(levelResId));
-        } else {
-            holder.tvLevels.setText(listing.getLevelsAsString());
-        }
+        // --- 1. TRANSLATE LEVELS (Updated) ---
+        // Instead of trying to translate a combined string, we pass the List<String> of KEYS
+        // to the helper, which translates each one and joins them with commas.
+        String displayLevels = ListingDataHelper.getLevelsAsString(context, listing.getAcademicLevels());
+        holder.tvLevels.setText(displayLevels);
 
         holder.tvFee.setText(listing.getFeeString());
         holder.tvArea.setText(listing.getArea());
 
-        // --- 2. Translate Modes ---
-        String deliveryRaw = listing.getDeliveryMode();
-        String learningRaw = listing.getLearningMode();
-        String deliveryDisplay = deliveryRaw;
-        String learningDisplay = learningRaw;
+        // --- 2. TRANSLATE MODES (Updated) ---
+        // We pass the KEY (e.g., "ONE_TO_ONE") and get back the localized text (e.g., "Satu-ke-satu")
+        String displayDelivery = ListingDataHelper.getDeliveryModeDisplayName(context, listing.getDeliveryMode());
+        String displayLearning = ListingDataHelper.getLearningModeDisplayName(context, listing.getLearningMode());
 
-        int deliveryId = LocalizationHelper.getDeliveryModeStringId(deliveryRaw);
-        if (deliveryId != 0) deliveryDisplay = context.getString(deliveryId);
-
-        int learningId = LocalizationHelper.getLearningModeStringId(learningRaw);
-        if (learningId != 0) learningDisplay = context.getString(learningId);
-
-        // Uses " %1$s / %2$s " format from XML
-        holder.tvMode.setText(context.getString(R.string.mode_format, deliveryDisplay, learningDisplay));
+        // Format: "Physical / One-to-One"
+        // Ensure you have <string name="mode_format">%1$s / %2$s</string> in strings.xml
+        // If not, use: displayDelivery + " / " + displayLearning
+        holder.tvMode.setText(context.getString(R.string.mode_format, displayDelivery, displayLearning));
 
         holder.tvQualification.setText(listing.getQualification());
         holder.tvContact.setText(listing.getContact());
 
-        // EDIT BUTTON LOGIC
+        // EDIT BUTTON
         holder.btnEdit.setOnClickListener(v -> {
             if (fragmentManager != null) {
                 EditTutorListingDialog dialog = new EditTutorListingDialog(listing);
@@ -88,7 +80,7 @@ public class TutorListingAdapter extends RecyclerView.Adapter<TutorListingAdapte
             }
         });
 
-        // DELETE BUTTON LOGIC
+        // DELETE BUTTON
         holder.btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.delete_listing_title)

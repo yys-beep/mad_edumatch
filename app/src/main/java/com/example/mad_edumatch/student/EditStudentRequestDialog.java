@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Import Helper
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DatabaseReference;
@@ -30,12 +31,8 @@ import java.util.Map;
 public class EditStudentRequestDialog extends DialogFragment {
 
     private StudentRequest request;
-
-    // Text Fields
     private EditText etSubject, etArea, etBudget, etDescription;
-    // Chips
     private ChipGroup chipGroupLevel;
-    // Radio Groups & Buttons
     private RadioGroup rgLearningMode, rgDeliveryMode;
     private RadioButton rbOneToOne, rbGroup, rbPhysical, rbOnline;
 
@@ -48,39 +45,32 @@ public class EditStudentRequestDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-
-        // Ensure this layout filename matches your XML file
         View view = inflater.inflate(R.layout.dialog_edit_student_request, null);
 
-        // 1. Initialize Views
+        // Bind Views
         etSubject = view.findViewById(R.id.etEditSubject);
         etArea = view.findViewById(R.id.etEditArea);
         etBudget = view.findViewById(R.id.etEditBudget);
         etDescription = view.findViewById(R.id.etEditDescription);
-
         chipGroupLevel = view.findViewById(R.id.chipGroupEditLevel);
-
         rgLearningMode = view.findViewById(R.id.rgEditLearningMode);
         rgDeliveryMode = view.findViewById(R.id.rgEditDeliveryMode);
-
         rbOneToOne = view.findViewById(R.id.rbEditOneToOne);
         rbGroup = view.findViewById(R.id.rbEditGroup);
         rbPhysical = view.findViewById(R.id.rbEditPhysical);
         rbOnline = view.findViewById(R.id.rbEditOnline);
-
         Button btnSave = view.findViewById(R.id.btnSaveChanges);
 
-        // 2. Pre-fill Data
         if (request != null) {
             etSubject.setText(request.getSubject());
             etArea.setText(request.getArea());
             etBudget.setText(String.valueOf(request.getBudget()));
             etDescription.setText(request.getDescription());
 
-            // Set Chips
+            // 1. Pre-select Level (Using Key)
             preSelectChip(request.getLevel());
 
-            // Set Radio Buttons
+            // 2. Pre-select Radios (Using Key)
             preSelectRadios();
         }
 
@@ -90,39 +80,45 @@ public class EditStudentRequestDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void preSelectChip(String level) {
-        if (level == null) return;
-        for (int i = 0; i < chipGroupLevel.getChildCount(); i++) {
-            Chip chip = (Chip) chipGroupLevel.getChildAt(i);
-            if (chip.getText().toString().equalsIgnoreCase(level)) {
-                chip.setChecked(true);
+    private void preSelectChip(String levelKey) {
+        if (levelKey == null) return;
+
+        // Find index of this key in our Helper Array
+        int indexToSelect = -1;
+        for(int i=0; i < ListingDataHelper.LEVEL_KEYS.length; i++){
+            if(ListingDataHelper.LEVEL_KEYS[i].equals(levelKey)){
+                indexToSelect = i;
                 break;
             }
+        }
+
+        // If found and within ChipGroup bounds, check it
+        if (indexToSelect != -1 && indexToSelect < chipGroupLevel.getChildCount()) {
+            Chip chip = (Chip) chipGroupLevel.getChildAt(indexToSelect);
+            chip.setChecked(true);
         }
     }
 
     private void preSelectRadios() {
-        // Learning Mode
+        // Learning Mode Key
         String lMode = request.getLearningMode();
-        // Use resources for comparison to ensure consistency
-        if (getString(R.string.val_one_to_one).equalsIgnoreCase(lMode)) {
+        if (ListingDataHelper.KEY_ONE_TO_ONE.equals(lMode)) {
             rbOneToOne.setChecked(true);
-        } else if (getString(R.string.val_group).equalsIgnoreCase(lMode)) {
+        } else if (ListingDataHelper.KEY_GROUP.equals(lMode)) {
             rbGroup.setChecked(true);
         }
 
-        // Delivery Mode
+        // Delivery Mode Key
         String dMode = request.getDeliveryMode();
-        if (getString(R.string.val_physical).equalsIgnoreCase(dMode)) {
+        if (ListingDataHelper.KEY_PHYSICAL.equals(dMode)) {
             rbPhysical.setChecked(true);
-        } else if (getString(R.string.val_online).equalsIgnoreCase(dMode)) {
+        } else if (ListingDataHelper.KEY_ONLINE.equals(dMode)) {
             rbOnline.setChecked(true);
         }
     }
 
     // Check if all required fields are filled in correctly.
     private void updateRequest() {
-        // A. Validate Text Inputs
         String newSubject = etSubject.getText().toString().trim();
         String newArea = etArea.getText().toString().trim();
         String newBudgetStr = etBudget.getText().toString().trim();
@@ -133,32 +129,36 @@ public class EditStudentRequestDialog extends DialogFragment {
             return;
         }
 
-        // B. Get Selected Chip
-        String newLevel = "";
+        // --- 3. GET NEW LEVEL KEY ---
+        String newLevelKey = "";
         int checkedChipId = chipGroupLevel.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
             Chip chip = chipGroupLevel.findViewById(checkedChipId);
-            newLevel = chip.getText().toString();
-        } else {
+            int index = chipGroupLevel.indexOfChild(chip);
+            if(index >= 0 && index < ListingDataHelper.LEVEL_KEYS.length){
+                newLevelKey = ListingDataHelper.LEVEL_KEYS[index];
+            }
+        }
+
+        if (newLevelKey.isEmpty()) {
             Toast.makeText(getContext(), getString(R.string.error_select_academic_level), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // C. Get Radio Selections
-        String newLearningMode = "";
-        if (rbOneToOne.isChecked()) newLearningMode = getString(R.string.val_one_to_one);
-        else if (rbGroup.isChecked()) newLearningMode = getString(R.string.val_group);
+        // --- 4. GET NEW MODE KEYS ---
+        String newLearningModeKey = "";
+        if (rbOneToOne.isChecked()) newLearningModeKey = ListingDataHelper.KEY_ONE_TO_ONE;
+        else if (rbGroup.isChecked()) newLearningModeKey = ListingDataHelper.KEY_GROUP;
 
-        String newDeliveryMode = "";
-        if (rbPhysical.isChecked()) newDeliveryMode = getString(R.string.val_physical);
-        else if (rbOnline.isChecked()) newDeliveryMode = getString(R.string.val_online);
+        String newDeliveryModeKey = "";
+        if (rbPhysical.isChecked()) newDeliveryModeKey = ListingDataHelper.KEY_PHYSICAL;
+        else if (rbOnline.isChecked()) newDeliveryModeKey = ListingDataHelper.KEY_ONLINE;
 
-        if (newLearningMode.isEmpty() || newDeliveryMode.isEmpty()) {
+        if (newLearningModeKey.isEmpty() || newDeliveryModeKey.isEmpty()) {
             Toast.makeText(getContext(), getString(R.string.error_select_modes), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // D. Parse Budget
         double newBudget;
         try {
             newBudget = Double.parseDouble(newBudgetStr);
@@ -178,11 +178,9 @@ public class EditStudentRequestDialog extends DialogFragment {
         updates.put("area", newArea);
         updates.put("budget", newBudget);
         updates.put("description", newDesc);
-        updates.put("level", newLevel);
-        updates.put("learningMode", newLearningMode);
-        updates.put("deliveryMode", newDeliveryMode);
-
-        // Update timestamp to show as "Just now" or move to top
+        updates.put("level", newLevelKey);         // Save Key
+        updates.put("learningMode", newLearningModeKey); // Save Key
+        updates.put("deliveryMode", newDeliveryModeKey); // Save Key
         updates.put("timestamp", System.currentTimeMillis());
 
         ref.updateChildren(updates).addOnSuccessListener(unused -> {

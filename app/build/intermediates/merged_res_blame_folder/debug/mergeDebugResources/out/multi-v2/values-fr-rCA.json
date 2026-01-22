@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-fr-rCA/values-fr-rCA.xml",
+            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-59:/values-fr-rCA/values-fr-rCA.xml",
             "map": [
                 {
                     "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\cbc8d093c5269911e7d2f677202958d8\\transformed\\core-1.16.0\\res\\values-fr-rCA\\values-fr-rCA.xml",

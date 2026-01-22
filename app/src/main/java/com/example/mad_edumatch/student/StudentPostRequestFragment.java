@@ -18,13 +18,13 @@ import androidx.fragment.app.Fragment;
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
 import com.example.mad_edumatch.helper.CurrentUser;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Import Helper
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class StudentPostRequestFragment extends Fragment {
 
-    // UI Components
     private EditText etSubject, etArea, etBudget, etDescription;
     private ChipGroup chipGroupLevel;
     private RadioGroup rgLearningMode, rgDeliveryMode;
@@ -32,9 +32,7 @@ public class StudentPostRequestFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.student_fragment_post_request, container, false);
     }
 
@@ -42,17 +40,13 @@ public class StudentPostRequestFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Bind Views
         etSubject = view.findViewById(R.id.etSubject);
         etArea = view.findViewById(R.id.etArea);
         etBudget = view.findViewById(R.id.etBudget);
         etDescription = view.findViewById(R.id.etDescription);
-
         chipGroupLevel = view.findViewById(R.id.chipGroupLevel);
-
         rgLearningMode = view.findViewById(R.id.rgLearningMode);
         rgDeliveryMode = view.findViewById(R.id.rgDeliveryMode);
-
         btnPostRequest = view.findViewById(R.id.btnPostRequest);
 
         btnPostRequest.setOnClickListener(v -> saveStudentRequest(view));
@@ -64,12 +58,17 @@ public class StudentPostRequestFragment extends Fragment {
         String budgetStr = etBudget.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
 
-        // Get Level from ChipGroup
-        String level = "";
+        // --- 1. GET LEVEL KEY ---
+        String levelKey = "";
+        // We assume Chips are ordered: Primary(0), LowerSec(1)... matching LEVEL_KEYS array
         int selectedChipId = chipGroupLevel.getCheckedChipId();
         if (selectedChipId != View.NO_ID) {
             Chip selectedChip = view.findViewById(selectedChipId);
-            level = selectedChip.getText().toString();
+            // Find index of this chip in the group
+            int index = chipGroupLevel.indexOfChild(selectedChip);
+            if (index >= 0 && index < ListingDataHelper.LEVEL_KEYS.length) {
+                levelKey = ListingDataHelper.LEVEL_KEYS[index]; // Save "PRIMARY"
+            }
         }
 
         // Validation
@@ -78,7 +77,7 @@ public class StudentPostRequestFragment extends Fragment {
             return;
         }
 
-        if (level.isEmpty()) {
+        if (levelKey.isEmpty()) {
             Toast.makeText(requireContext(), getString(R.string.error_select_academic_level), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -104,21 +103,25 @@ public class StudentPostRequestFragment extends Fragment {
             return;
         }
 
-        // Learning Mode
+        // --- 2. GET LEARNING MODE KEY ---
         int selectedModeId = rgLearningMode.getCheckedRadioButtonId();
         if (selectedModeId == -1) {
             Toast.makeText(requireContext(), getString(R.string.error_select_learning_mode), Toast.LENGTH_SHORT).show();
             return;
         }
-        String learningMode = (selectedModeId == R.id.rbOneToOne) ? getString(R.string.val_one_to_one) : getString(R.string.val_group);
+        String learningModeKey = (selectedModeId == R.id.rbOneToOne)
+                ? ListingDataHelper.KEY_ONE_TO_ONE
+                : ListingDataHelper.KEY_GROUP;
 
-        // Delivery Mode
+        // --- 3. GET DELIVERY MODE KEY ---
         int selectedDeliveryId = rgDeliveryMode.getCheckedRadioButtonId();
         if (selectedDeliveryId == -1) {
             Toast.makeText(requireContext(), getString(R.string.error_select_delivery_mode), Toast.LENGTH_SHORT).show();
             return;
         }
-        String deliveryMode = (selectedDeliveryId == R.id.rbPhysical) ? getString(R.string.val_physical) : getString(R.string.val_online);
+        String deliveryModeKey = (selectedDeliveryId == R.id.rbPhysical)
+                ? ListingDataHelper.KEY_PHYSICAL
+                : ListingDataHelper.KEY_ONLINE;
 
         // Auth Check
         String studentId = CurrentUser.getInstance().getUid();
@@ -127,13 +130,11 @@ public class StudentPostRequestFragment extends Fragment {
             return;
         }
 
-        // Progress Dialog
         ProgressDialog dialog = new ProgressDialog(requireContext());
         dialog.setMessage(getString(R.string.msg_posting_request));
         dialog.setCancelable(false);
         dialog.show();
 
-        // Firebase Logic
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app");
         String requestId = database.getReference("student_requests").push().getKey();
 
@@ -142,14 +143,15 @@ public class StudentPostRequestFragment extends Fragment {
             return;
         }
 
+        // SAVE OBJECT WITH KEYS
         StudentRequest request = new StudentRequest(
                 requestId,
                 studentId,
                 subject,
-                level,
+                levelKey,        // Saving Key
                 area,
-                learningMode,
-                deliveryMode,
+                learningModeKey, // Saving Key
+                deliveryModeKey, // Saving Key
                 budget,
                 description,
                 System.currentTimeMillis()

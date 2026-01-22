@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorViewListing;
 import com.example.mad_edumatch.helper.CurrentUser;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Ensure this exists
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,7 +42,7 @@ public class TutorPostListingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Bind Views
+        // Bind Views matching your XML
         etName = view.findViewById(R.id.etTutorName);
         etSubjects = view.findViewById(R.id.etTutorSubjects);
         etFee = view.findViewById(R.id.etTutorFee);
@@ -79,34 +80,56 @@ public class TutorPostListingFragment extends Fragment {
             return;
         }
 
-        // Get Radio Button Selections
-        String learningMode = getSelectedRadioText(rgLearningMode);
-        String deliveryMode = getSelectedRadioText(rgDeliveryMode);
+        // --- 1. GET LEARNING MODE KEY ---
+        String learningModeKey = "N/A";
+        int checkedLearningId = rgLearningMode.getCheckedRadioButtonId();
+        if (checkedLearningId == R.id.rbOneToOne) {
+            learningModeKey = ListingDataHelper.KEY_ONE_TO_ONE;
+        } else if (checkedLearningId == R.id.rbOneToMany) {
+            learningModeKey = ListingDataHelper.KEY_GROUP;
+        }
 
-        // Get Academic Levels from Chips
-        ArrayList<String> selectedLevels = new ArrayList<>();
+        // --- 2. GET DELIVERY MODE KEY ---
+        String deliveryModeKey = "N/A";
+        int checkedDeliveryId = rgDeliveryMode.getCheckedRadioButtonId();
+        if (checkedDeliveryId == R.id.rbPhysical) {
+            deliveryModeKey = ListingDataHelper.KEY_PHYSICAL;
+        } else if (checkedDeliveryId == R.id.rbOnline) {
+            deliveryModeKey = ListingDataHelper.KEY_ONLINE;
+        }
+
+        // --- 3. GET LEVEL KEYS ---
+        ArrayList<String> selectedLevelKeys = new ArrayList<>();
+        // Iterate through chips by index to map them to keys
         for (int i = 0; i < chipGroupLevels.getChildCount(); i++) {
             View child = chipGroupLevels.getChildAt(i);
             if (child instanceof Chip) {
-                Chip chip = (Chip) child;
-                if (chip.isChecked()) {
-                    selectedLevels.add(chip.getText().toString());
+                if (((Chip) child).isChecked()) {
+                    // Safety check index bounds
+                    if (i < ListingDataHelper.LEVEL_KEYS.length) {
+                        selectedLevelKeys.add(ListingDataHelper.LEVEL_KEYS[i]);
+                    }
                 }
             }
         }
 
+        if (selectedLevelKeys.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.error_select_academic_level), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         long timestamp = System.currentTimeMillis();
         String tutorId = CurrentUser.getInstance().getUid();
-        String notAvailable = getString(R.string.text_not_applicable);
 
-        // Create Object
+        // Create Object using KEYS
         TutorViewListing listing = new TutorViewListing(
                 tutorId, name, subject, fee, area, contact,
-                learningMode, deliveryMode,
+                learningModeKey, // Save KEY (e.g., "ONE_TO_ONE")
+                deliveryModeKey, // Save KEY (e.g., "PHYSICAL")
                 qualification,
-                notAvailable, // achievement passed as "N/A"
+                "N/A",
                 timestamp,
-                selectedLevels
+                selectedLevelKeys // Save LIST OF KEYS
         );
 
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -123,12 +146,5 @@ public class TutorPostListingFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.error_post_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private String getSelectedRadioText(RadioGroup group) {
-        int id = group.getCheckedRadioButtonId();
-        if (id == -1) return getString(R.string.text_not_applicable);
-        RadioButton btn = group.findViewById(id);
-        return btn.getText().toString();
     }
 }

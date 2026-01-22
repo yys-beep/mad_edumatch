@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
-import com.example.mad_edumatch.helper.LocalizationHelper; // Import Helper
+import com.example.mad_edumatch.helper.ListingDataHelper; // Import Helper
 import com.example.mad_edumatch.student.EditStudentRequestDialog;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,55 +48,40 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
         holder.tvArea.setText(req.getArea());
         holder.tvDesc.setText(req.getDescription());
 
-        // --- 1. Translate Level ---
-        int levelResId = LocalizationHelper.getLevelStringId(req.getLevel());
-        if (levelResId != 0) {
-            holder.tvLevel.setText(context.getString(levelResId));
-        } else {
-            holder.tvLevel.setText(req.getLevel());
-        }
+        // --- 1. Translate Level (Corrected) ---
+        // Converts Key (e.g. "PRIMARY") to Display (e.g. "Rendah")
+        String displayLevel = ListingDataHelper.getLevelDisplayName(context, req.getLevel());
+        holder.tvLevel.setText(displayLevel);
 
-        // --- 2. Format Budget (RM %.2f/hr) ---
-        // Assuming budget is stored as Double, use format string.
-        // If stored as String in your model, parse it or use simple concatenation if prefered.
+        // --- 2. Format Budget ---
         try {
             double budgetVal = Double.parseDouble(String.valueOf(req.getBudget()));
             holder.tvBudget.setText(context.getString(R.string.budget_per_hour, budgetVal));
         } catch (NumberFormatException e) {
-            holder.tvBudget.setText("RM " + req.getBudget()); // Fallback
+            holder.tvBudget.setText("RM " + req.getBudget());
         }
 
-        // --- 3. Translate Modes ---
-        String deliveryRaw = req.getDeliveryMode();
-        String learningRaw = req.getLearningMode();
-        String deliveryDisplay = deliveryRaw;
-        String learningDisplay = learningRaw;
-
-        int deliveryId = LocalizationHelper.getDeliveryModeStringId(deliveryRaw);
-        if (deliveryId != 0) deliveryDisplay = context.getString(deliveryId);
-
-        int learningId = LocalizationHelper.getLearningModeStringId(learningRaw);
-        if (learningId != 0) learningDisplay = context.getString(learningId);
+        // --- 3. Translate Modes (Corrected) ---
+        String deliveryDisplay = ListingDataHelper.getDeliveryModeDisplayName(context, req.getDeliveryMode());
+        String learningDisplay = ListingDataHelper.getLearningModeDisplayName(context, req.getLearningMode());
 
         // Format: "%1$s (%2$s)" -> e.g., "Online (One-to-One)"
         holder.tvMode.setText(context.getString(R.string.mode_format_brackets, deliveryDisplay, learningDisplay));
 
-
-        // --- 4. Time Ago Logic ---
+        // --- 4. Time Ago ---
         if (req.getTimestamp() != 0) {
             CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                     req.getTimestamp(),
                     System.currentTimeMillis(),
                     DateUtils.MINUTE_IN_MILLIS
             );
-            // "Last updated: %s"
             holder.tvTimestamp.setText(context.getString(R.string.last_updated_format, timeAgo));
             holder.tvTimestamp.setVisibility(View.VISIBLE);
         } else {
             holder.tvTimestamp.setVisibility(View.GONE);
         }
 
-        // DELETE BUTTON LOGIC
+        // Buttons
         holder.btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.delete_request_title)
@@ -111,7 +96,6 @@ public class StudentRequestAdapter extends RecyclerView.Adapter<StudentRequestAd
                     .show();
         });
 
-        // EDIT BUTTON LOGIC
         holder.btnEdit.setOnClickListener(v -> {
             EditStudentRequestDialog dialog = new EditStudentRequestDialog(req);
             dialog.show(fragmentManager, "EditRequest");

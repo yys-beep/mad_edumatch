@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-hi/values-hi.xml",
+            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-59:/values-hi/values-hi.xml",
             "map": [
                 {
                     "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\8d8c416851b9ff96368f6c80c470c325\\transformed\\play-services-base-18.5.0\\res\\values-hi\\values.xml",

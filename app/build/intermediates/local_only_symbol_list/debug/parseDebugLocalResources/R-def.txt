@@ -54,6 +54,7 @@ drawable ic_comment_icon
 drawable ic_home_local
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_launcher_playstore
 drawable ic_like_heart
 drawable ic_notification
 drawable ic_splash_logo
@@ -198,6 +199,7 @@ id etEditDescription
 id etEditFee
 id etEditLessonDescription
 id etEditLessonTitle
+id etEditName
 id etEditQualification
 id etEditSubject
 id etEditSubjects
@@ -716,6 +718,7 @@ string language_option
 string last_message
 string last_updated_format
 string last_updated_just_now
+string learning_amp_delivery_mode
 string learning_mode
 string lesson_by_format
 string lesson_completed
@@ -1008,6 +1011,7 @@ style CircularImageView
 style DetailIconStyle
 style DetailRowStyle
 style DetailTextStyle
+style Theme.App.Starting
 style Theme.Mad_eduMatch
 xml backup_rules
 xml data_extraction_rules

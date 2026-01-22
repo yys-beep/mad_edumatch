@@ -223,6 +223,7 @@
     <string name="last_message">最新消息...</string>
     <string name="last_updated_format">最后更新：%s</string>
     <string name="last_updated_just_now">最后更新：刚刚</string>
+    <string name="learning_amp_delivery_mode"><![CDATA[学习与授课模式：]]></string>
     <string name="learning_mode">学习模式</string>
     <string name="lesson_by_format">由 %1$s 发布 • %2$d 分钟</string>
     <string name="lesson_completed">课程已完成！</string>

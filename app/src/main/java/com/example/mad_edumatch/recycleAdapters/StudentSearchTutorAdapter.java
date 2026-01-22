@@ -16,7 +16,7 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.chat.ChatDetailFragment;
 import com.example.mad_edumatch.firebaseModels.TutorListing;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.example.mad_edumatch.helper.LocalizationHelper; // Import Helper
+import com.example.mad_edumatch.helper.ListingDataHelper;
 import com.example.mad_edumatch.helper.TimeHelper;
 import com.google.android.material.button.MaterialButton;
 
@@ -46,32 +46,33 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
         holder.tvName.setText(tutor.getName());
         holder.tvSubjects.setText(tutor.getSubject());
 
-        // --- 1. Translate Levels ---
-        // Try to translate the level string. If it's complex (comma separated), helper returns 0.
-        int levelResId = LocalizationHelper.getLevelStringId(tutor.getLevelsAsString());
-        if (levelResId != 0) {
-            holder.tvLevels.setText(context.getString(levelResId));
-        } else {
-            holder.tvLevels.setText(tutor.getLevelsAsString());
-        }
+        // Levels
+        String displayLevels = ListingDataHelper.getLevelsAsString(context, tutor.getAcademicLevels());
+        holder.tvLevels.setText(displayLevels);
 
-        // --- 2. Format Fee (RM %.2f/hr) ---
+        // Fee
         holder.tvFee.setText(context.getString(R.string.budget_per_hour, tutor.getFee()));
 
         holder.tvArea.setText(tutor.getArea());
         holder.tvQualification.setText(tutor.getQualification());
 
-        // --- 3. Format Timestamp ---
+        // NEW: Display Contact
+        holder.tvContact.setText(tutor.getContact());
+
+        // Modes
+        String deliveryDisplay = ListingDataHelper.getDeliveryModeDisplayName(context, tutor.getDeliveryMode());
+        String learningDisplay = ListingDataHelper.getLearningModeDisplayName(context, tutor.getLearningMode());
+        holder.tvMode.setText(context.getString(R.string.mode_format_brackets, deliveryDisplay, learningDisplay));
+
+        // Timestamp
         if (tutor.getTimestamp() > 0) {
             String formattedTime = TimeHelper.getMalaysiaTime(tutor.getTimestamp());
-            // "Posted: %s"
             holder.tvTimestamp.setText(context.getString(R.string.posted_time_format, formattedTime));
         } else {
-            // "Posted: Just now"
             holder.tvTimestamp.setText(R.string.posted_just_now);
         }
 
-        // --- 4. Contact Button Logic ---
+        // Contact Button
         holder.btnContact.setOnClickListener(v -> {
             String currentUid = CurrentUser.getInstance().getUid();
 
@@ -96,8 +97,6 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
         args.putString("listingId", listingId);
-
-        // "Tutor Listing: %s"
         args.putString("listingTitle", context.getString(R.string.tutor_listing_title, subject));
 
         chatFragment.setArguments(args);
@@ -116,7 +115,7 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvTimestamp, tvSubjects, tvLevels, tvFee, tvArea, tvQualification;
+        TextView tvName, tvTimestamp, tvSubjects, tvLevels, tvFee, tvArea, tvQualification, tvMode, tvContact;
         MaterialButton btnContact;
 
         public ViewHolder(@NonNull View itemView) {
@@ -127,7 +126,10 @@ public class StudentSearchTutorAdapter extends RecyclerView.Adapter<StudentSearc
             tvLevels = itemView.findViewById(R.id.tvLevels);
             tvFee = itemView.findViewById(R.id.tvFee);
             tvArea = itemView.findViewById(R.id.tvArea);
+            tvMode = itemView.findViewById(R.id.tvMode);
             tvQualification = itemView.findViewById(R.id.tvQualification);
+            // Added tvContact
+            tvContact = itemView.findViewById(R.id.tvContact);
             btnContact = itemView.findViewById(R.id.btnContactTutor);
         }
     }

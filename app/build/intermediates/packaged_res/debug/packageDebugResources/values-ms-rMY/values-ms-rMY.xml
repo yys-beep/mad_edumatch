@@ -223,6 +223,7 @@
     <string name="last_message">Mesej terakhir...</string>
     <string name="last_updated_format">Dikemas kini: %s</string>
     <string name="last_updated_just_now">Dikemas kini: Baru tadi</string>
+    <string name="learning_amp_delivery_mode"><![CDATA[Mod Pembelajaran & Penyampaian:]]></string>
     <string name="learning_mode">Mod Pembelajaran</string>
     <string name="lesson_by_format">Oleh %1$s • %2$d minit</string>
     <string name="lesson_completed">Pelajaran Selesai!</string>
@@ -484,11 +485,11 @@
     <string name="user_name">Nama Pengguna</string>
     <string name="user_not_logged_in">Pengguna tidak log masuk</string>
     <string name="username">Nama Pengguna</string>
-    <string name="val_group">Berkumpulan</string>
+    <string name="val_group">Kumpulan</string>
     <string name="val_na">T/B</string>
     <string name="val_one_to_one">Satu-dengan-Satu</string>
     <string name="val_online">Dalam Talian</string>
-    <string name="val_physical">Bersemuka</string>
+    <string name="val_physical">Fizikal</string>
     <string name="video_link">Pautan Video</string>
     <string name="video_link_youtube_zoom_drive">Pautan Video (YouTube/Zoom/Drive)</string>
     <string name="video_url">URL Video</string>

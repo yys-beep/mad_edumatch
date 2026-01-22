@@ -17,7 +17,7 @@ import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.chat.ChatDetailFragment;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
 import com.example.mad_edumatch.helper.CurrentUser;
-import com.example.mad_edumatch.helper.LocalizationHelper;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Import New Helper
 import com.example.mad_edumatch.helper.TimeHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
-import java.util.Locale;
 
 public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStudentRequestAdapter.ViewHolder> {
 
@@ -48,43 +47,35 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StudentRequest request = requestList.get(position);
 
-        // --- 1. Translate Level ---
-        int levelResId = LocalizationHelper.getLevelStringId(request.getLevel());
-        if (levelResId != 0) {
-            holder.tvLevel.setText(context.getString(levelResId));
-        } else {
-            holder.tvLevel.setText(request.getLevel());
-        }
+        // --- 1. Translate Level (Corrected) ---
+        // Converts Key (e.g. "PRIMARY") to Display Text (e.g. "Rendah")
+        String displayLevel = ListingDataHelper.getLevelDisplayName(context, request.getLevel());
+        holder.tvLevel.setText(displayLevel);
 
-        // --- 2. Translate Modes ---
-        String deliveryRaw = request.getDeliveryMode();
-        String learningRaw = request.getLearningMode();
-        String deliveryDisplay = deliveryRaw;
-        String learningDisplay = learningRaw;
-
-        int deliveryId = LocalizationHelper.getDeliveryModeStringId(deliveryRaw);
-        if (deliveryId != 0) deliveryDisplay = context.getString(deliveryId);
-
-        int learningId = LocalizationHelper.getLearningModeStringId(learningRaw);
-        if (learningId != 0) learningDisplay = context.getString(learningId);
+        // --- 2. Translate Modes (Corrected) ---
+        String deliveryDisplay = ListingDataHelper.getDeliveryModeDisplayName(context, request.getDeliveryMode());
+        String learningDisplay = ListingDataHelper.getLearningModeDisplayName(context, request.getLearningMode());
 
         // Uses format: "%1$s (%2$s)"
         holder.tvMode.setText(context.getString(R.string.mode_format_brackets, deliveryDisplay, learningDisplay));
-
 
         // --- Normal Binding ---
         holder.tvSubject.setText(request.getSubject());
         holder.tvArea.setText(request.getArea());
 
         // Uses format: "RM %.2f/hr"
-        holder.tvBudget.setText(context.getString(R.string.budget_per_hour, request.getBudget()));
+        try {
+            double budget = Double.parseDouble(String.valueOf(request.getBudget()));
+            holder.tvBudget.setText(context.getString(R.string.budget_per_hour, budget));
+        } catch (NumberFormatException e) {
+            holder.tvBudget.setText("RM " + request.getBudget());
+        }
 
         holder.tvDesc.setText(request.getDescription());
 
         // --- Timestamp ---
         if (request.getTimestamp() > 0) {
             String formattedTime = TimeHelper.getMalaysiaTime(request.getTimestamp());
-            // Uses format: "Posted: %s"
             holder.tvTimestamp.setText(context.getString(R.string.posted_time_format, formattedTime));
         } else {
             holder.tvTimestamp.setText(R.string.posted_just_now);
@@ -111,7 +102,7 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String studentName = context.getString(R.string.student_default_name); // Fallback: "Student" or "Pelajar"
+                        String studentName = context.getString(R.string.student_default_name);
                         if (snapshot.exists()) {
                             if (snapshot.hasChild("username")) {
                                 studentName = snapshot.child("username").getValue(String.class);
@@ -135,10 +126,7 @@ public class TutorStudentRequestAdapter extends RecyclerView.Adapter<TutorStuden
         args.putString("targetUserId", targetUserId);
         args.putString("targetUserName", targetUserName);
         args.putString("listingId", listingId);
-
-        // Uses format: "Student Request: %s"
         args.putString("listingTitle", context.getString(R.string.student_request_title, listingTitle));
-
         chatFragment.setArguments(args);
 
         if (context instanceof AppCompatActivity) {
