@@ -536,4 +536,5 @@
     <string name="msg_confirm_logout">Are you sure you want to logout?</string>
     <string name="action_logout">Logout</string>
     <string name="action_cancel">Cancel</string>
+    <string name="learning_amp_delivery_mode"><![CDATA[Learning & Delivery Mode:]]></string>
 </resources>

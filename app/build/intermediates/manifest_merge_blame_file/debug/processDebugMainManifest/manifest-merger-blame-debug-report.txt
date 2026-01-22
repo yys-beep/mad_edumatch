@@ -79,7 +79,7 @@
 42-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:20:13-43
 43            android:exported="true"
 43-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:21:13-36
-44            android:theme="@style/Theme.Mad_eduMatch" >
+44            android:theme="@style/Theme.App.Starting" >
 44-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:22:13-54
 45            <intent-filter>
 45-->C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\src\main\AndroidManifest.xml:23:13-26:29

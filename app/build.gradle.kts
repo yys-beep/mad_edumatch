@@ -62,4 +62,6 @@ dependencies {
     // 2. Manual OkHttp import
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

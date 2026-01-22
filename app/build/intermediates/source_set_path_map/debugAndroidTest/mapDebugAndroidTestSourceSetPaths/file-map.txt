@@ -1,0 +1,7 @@
+com.example.mad_edumatch.test.app-tracing-1.2.0-0 C:\Users\win11\.gradle\caches\9.0-milestone-1\transforms\af9f8f8ae7825b39c68fc6eff032b09a\transformed\tracing-1.2.0\res
+com.example.mad_edumatch.test.app-core-1.7.0-1 C:\Users\win11\.gradle\caches\9.0-milestone-1\transforms\f1eada43b0b4f13f0f64b74da69bb675\transformed\core-1.7.0\res
+com.example.mad_edumatch.test.app-androidTest-2 C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\build\generated\res\resValues\androidTest\debug
+com.example.mad_edumatch.test.app-updated_navigation_xml-3 C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\build\generated\updated_navigation_xml\debugAndroidTest
+com.example.mad_edumatch.test.app-mergeDebugAndroidTestResources-4 C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.example.mad_edumatch.test.app-mergeDebugAndroidTestResources-5 C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.example.mad_edumatch.test.app-debugAndroidTest-6 C:\Users\win11\AndroidStudioProjects\test_pull_three\mad_edumatch\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

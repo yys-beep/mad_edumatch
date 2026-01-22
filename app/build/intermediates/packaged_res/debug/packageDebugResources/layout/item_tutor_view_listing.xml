@@ -108,24 +108,19 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:text="@string/profile_mode"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvMode"
+            android:text="@string/physical_one_to_one"
+            android:textColor="#444444"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-            <TextView
-                android:text="@string/profile_mode"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvMode"
-                android:text="@string/physical_one_to_one"
-                android:textColor="#444444"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:text="@string/profile_qualification"
@@ -141,24 +136,19 @@
             android:textColor="#444444"
             android:layout_marginBottom="8dp"/>
 
-        <LinearLayout
+        <TextView
+            android:text="@string/profile_contact"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvContact"
+            android:text="@string/_012_3456789"
+            android:textColor="#444444"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:text="@string/profile_contact"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvContact"
-                android:text="@string/_012_3456789"
-                android:textColor="#444444"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/tvTimestamp"

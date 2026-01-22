@@ -41,7 +41,7 @@
         <activity
             android:name="com.example.mad_edumatch.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.Mad_eduMatch" >
+            android:theme="@style/Theme.App.Starting" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

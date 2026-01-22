@@ -9,4 +9,12 @@
     </style>
 
     <style name="Theme.Mad_eduMatch" parent="Base.Theme.Mad_eduMatch" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_playstore</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.Mad_eduMatch</item>
+    </style>
 </resources>

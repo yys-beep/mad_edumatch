@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-58:/values-zh-rTW/values-zh-rTW.xml",
+            "outputFile": "com.example.mad_edumatch.app-mergeDebugResources-59:/values-zh-rTW/values-zh-rTW.xml",
             "map": [
                 {
                     "source": "C:\\Users\\win11\\.gradle\\caches\\9.0-milestone-1\\transforms\\103ba29690cd48325517219ee1d39c50\\transformed\\credentials-1.2.0-rc01\\res\\values-zh-rTW\\values-zh-rTW.xml",

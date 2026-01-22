@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorViewListing;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Ensure this exists
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class EditTutorListingDialog extends DialogFragment {
 
     private TutorViewListing listing;
-    private EditText etSubjects, etFee, etArea, etContact, etQualification;
+    private EditText etName, etSubjects, etFee, etArea, etContact, etQualification;
     private ChipGroup chipGroupLevels;
     private RadioGroup rgLearningMode, rgDeliveryMode;
 
@@ -46,7 +47,8 @@ public class EditTutorListingDialog extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_tutor_listing, null);
 
-        // Bind Views
+        // Bind Views matching your XML
+        etName = view.findViewById(R.id.etEditName);
         etSubjects = view.findViewById(R.id.etEditSubjects);
         etFee = view.findViewById(R.id.etEditFee);
         etArea = view.findViewById(R.id.etEditArea);
@@ -62,22 +64,24 @@ public class EditTutorListingDialog extends DialogFragment {
 
         // Pre-fill Data
         if (listing != null) {
+            etName.setText(listing.getName());
             etSubjects.setText(listing.getSubject());
             etFee.setText(String.valueOf(listing.getFee()));
             etArea.setText(listing.getArea());
             etContact.setText(listing.getContact());
             etQualification.setText(listing.getQualification());
 
-            // Pre-select Chips
+            // --- 1. PRE-SELECT CHIPS USING KEYS ---
             preSelectLevels(listing.getAcademicLevels());
 
-            // Pre-select Radio Buttons
-            // Use string resources for comparison values
-            String oneToOneVal = getString(R.string.val_one_to_one); // "One-to-One"
-            String physicalVal = getString(R.string.val_physical);   // "Physical"
+            // --- 2. PRE-SELECT RADIOS USING KEYS ---
+            selectRadioButton(rgLearningMode, listing.getLearningMode(),
+                    ListingDataHelper.KEY_ONE_TO_ONE, // Compare with Key
+                    R.id.rbEditOneToOne, R.id.rbEditOneToMany);
 
-            selectRadioButton(rgLearningMode, listing.getLearningMode(), oneToOneVal, R.id.rbEditOneToOne, R.id.rbEditOneToMany);
-            selectRadioButton(rgDeliveryMode, listing.getDeliveryMode(), physicalVal, R.id.rbEditPhysical, R.id.rbEditOnline);
+            selectRadioButton(rgDeliveryMode, listing.getDeliveryMode(),
+                    ListingDataHelper.KEY_PHYSICAL,   // Compare with Key
+                    R.id.rbEditPhysical, R.id.rbEditOnline);
         }
 
         btnSave.setOnClickListener(v -> updateListing());
@@ -87,54 +91,59 @@ public class EditTutorListingDialog extends DialogFragment {
         return builder.create();
     }
 
-    // Helper to select correct radio button based on string value
-    private void selectRadioButton(RadioGroup group, String value, String compareValue, int id1, int id2) {
-        if (value == null) return;
-        if (value.equalsIgnoreCase(compareValue)) {
-            group.check(id1);
-        } else {
-            group.check(id2);
-        }
-    }
+    private void preSelectLevels(List<String> selectedLevelKeys) {
+        if (selectedLevelKeys == null || selectedLevelKeys.isEmpty()) return;
 
-    private void preSelectLevels(List<String> selectedLevels) {
-        if (selectedLevels == null || selectedLevels.isEmpty()) return;
+        // Iterate UI chips and match with keys by index
         for (int i = 0; i < chipGroupLevels.getChildCount(); i++) {
-            Chip chip = (Chip) chipGroupLevels.getChildAt(i);
-            if (selectedLevels.contains(chip.getText().toString())) {
+            if (i >= ListingDataHelper.LEVEL_KEYS.length) break;
+
+            String keyForThisChip = ListingDataHelper.LEVEL_KEYS[i];
+
+            if (selectedLevelKeys.contains(keyForThisChip)) {
+                Chip chip = (Chip) chipGroupLevels.getChildAt(i);
                 chip.setChecked(true);
             }
         }
     }
 
-    private ArrayList<String> getSelectedLevels() {
-        ArrayList<String> selected = new ArrayList<>();
-        for (int id : chipGroupLevels.getCheckedChipIds()) {
-            Chip chip = chipGroupLevels.findViewById(id);
-            selected.add(chip.getText().toString());
+    private void selectRadioButton(RadioGroup group, String dbValue, String targetKey, int idMatch, int idMismatch) {
+        if (dbValue == null) return;
+        // Compare DB value against KEY
+        if (dbValue.equals(targetKey)) {
+            group.check(idMatch);
+        } else {
+            group.check(idMismatch);
         }
-        return selected;
-    }
-
-    private String getSelectedRadioText(RadioGroup group) {
-        int id = group.getCheckedRadioButtonId();
-        if (id == -1) return getString(R.string.val_na); // "N/A"
-        RadioButton btn = group.findViewById(id);
-        return btn.getText().toString();
     }
 
     private void updateListing() {
+        String newName = etName.getText().toString().trim();
         String newSubjects = etSubjects.getText().toString().trim();
         String newFeeStr = etFee.getText().toString().trim();
         String newArea = etArea.getText().toString().trim();
         String newContact = etContact.getText().toString().trim();
         String newQual = etQualification.getText().toString().trim();
 
-        ArrayList<String> newLevels = getSelectedLevels();
-        String newLMode = getSelectedRadioText(rgLearningMode);
-        String newDMode = getSelectedRadioText(rgDeliveryMode);
+        // --- 3. GET KEYS TO SAVE ---
+        String newLModeKey = (rgLearningMode.getCheckedRadioButtonId() == R.id.rbEditOneToOne)
+                ? ListingDataHelper.KEY_ONE_TO_ONE
+                : ListingDataHelper.KEY_GROUP;
 
-        if (TextUtils.isEmpty(newSubjects) || TextUtils.isEmpty(newFeeStr) || newLevels.isEmpty() || TextUtils.isEmpty(newQual)) {
+        String newDModeKey = (rgDeliveryMode.getCheckedRadioButtonId() == R.id.rbEditPhysical)
+                ? ListingDataHelper.KEY_PHYSICAL
+                : ListingDataHelper.KEY_ONLINE;
+
+        ArrayList<String> newLevelKeys = new ArrayList<>();
+        for (int i = 0; i < chipGroupLevels.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroupLevels.getChildAt(i);
+            if (chip.isChecked() && i < ListingDataHelper.LEVEL_KEYS.length) {
+                newLevelKeys.add(ListingDataHelper.LEVEL_KEYS[i]);
+            }
+        }
+
+        // Validation
+        if (TextUtils.isEmpty(newName) || TextUtils.isEmpty(newSubjects) || TextUtils.isEmpty(newFeeStr) || newLevelKeys.isEmpty() || TextUtils.isEmpty(newQual)) {
             Toast.makeText(getContext(), getString(R.string.error_fill_required_fields_edit), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -152,14 +161,15 @@ public class EditTutorListingDialog extends DialogFragment {
                 .child(listing.getKey());
 
         Map<String, Object> updates = new HashMap<>();
+        updates.put("name", newName);
         updates.put("subject", newSubjects);
         updates.put("fee", newFee);
         updates.put("area", newArea);
         updates.put("contact", newContact);
         updates.put("qualification", newQual);
-        updates.put("learningMode", newLMode);
-        updates.put("deliveryMode", newDMode);
-        updates.put("academicLevels", newLevels);
+        updates.put("learningMode", newLModeKey); // Save Key
+        updates.put("deliveryMode", newDModeKey); // Save Key
+        updates.put("academicLevels", newLevelKeys); // Save Keys
         updates.put("timestamp", System.currentTimeMillis());
 
         ref.updateChildren(updates).addOnSuccessListener(unused -> {
@@ -169,7 +179,6 @@ public class EditTutorListingDialog extends DialogFragment {
             dismiss();
         }).addOnFailureListener(e -> {
             if (getContext() != null) {
-                // Using format string for dynamic error message
                 String errorMsg = getString(R.string.error_update_failed_2, e.getMessage());
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
             }

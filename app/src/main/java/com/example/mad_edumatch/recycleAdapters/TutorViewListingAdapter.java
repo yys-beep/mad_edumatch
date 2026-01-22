@@ -1,5 +1,6 @@
 package com.example.mad_edumatch.recycleAdapters;
 
+import android.app.AlertDialog; // Import AlertDialog
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.TutorViewListing;
-import com.example.mad_edumatch.helper.LocalizationHelper;
+import com.example.mad_edumatch.helper.ListingDataHelper;
 import com.example.mad_edumatch.tutor.EditTutorListingDialog;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,35 +46,19 @@ public class TutorViewListingAdapter extends RecyclerView.Adapter<TutorViewListi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TutorViewListing item = list.get(position);
 
-        // --- 1. Translate Level ---
-        int levelResId = LocalizationHelper.getLevelStringId(item.getLevelsAsString());
-        if (levelResId != 0) {
-            holder.tvLevel.setText(context.getString(levelResId));
-        } else {
-            holder.tvLevel.setText(item.getLevelsAsString());
-        }
+        // --- 1. Translate Levels ---
+        String displayLevels = ListingDataHelper.getLevelsAsString(context, item.getAcademicLevels());
+        holder.tvLevels.setText(displayLevels);
 
         // --- 2. Translate Modes ---
-        String deliveryRaw = item.getDeliveryMode();
-        String learningRaw = item.getLearningMode();
-        String deliveryDisplay = deliveryRaw;
-        String learningDisplay = learningRaw;
+        String deliveryDisplay = ListingDataHelper.getDeliveryModeDisplayName(context, item.getDeliveryMode());
+        String learningDisplay = ListingDataHelper.getLearningModeDisplayName(context, item.getLearningMode());
 
-        // Translate Delivery Mode
-        int deliveryId = LocalizationHelper.getDeliveryModeStringId(deliveryRaw);
-        if (deliveryId != 0) deliveryDisplay = context.getString(deliveryId);
-
-        // Translate Learning Mode
-        int learningId = LocalizationHelper.getLearningModeStringId(learningRaw);
-        if (learningId != 0) learningDisplay = context.getString(learningId);
-
-        // Combine Translated Strings (Using Resource Format "%1$s / %2$s")
-        holder.tvMode.setText(context.getString(R.string.mode_format, deliveryDisplay, learningDisplay));
+        holder.tvMode.setText(context.getString(R.string.mode_format_brackets, deliveryDisplay, learningDisplay));
 
         // --- Normal Data Binding ---
         holder.tvName.setText(item.getName());
         holder.tvSubjects.setText(item.getSubject());
-        holder.tvLevels.setText(item.getLevelsAsString());
         holder.tvFee.setText(item.getFeeString());
         holder.tvArea.setText(item.getArea());
         holder.tvQualification.setText(item.getQualification());
@@ -84,23 +69,27 @@ public class TutorViewListingAdapter extends RecyclerView.Adapter<TutorViewListi
                 item.getTimestamp(),
                 System.currentTimeMillis(),
                 DateUtils.MINUTE_IN_MILLIS);
-        // Using Resource Format "Last updated: %s"
+
         holder.tvTimestamp.setText(context.getString(R.string.last_updated_format, timeAgo));
 
         // --- Button Logic ---
-        holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnDelete.setVisibility(View.VISIBLE);
-
         holder.btnEdit.setOnClickListener(v -> {
             EditTutorListingDialog dialog = new EditTutorListingDialog(item);
-            dialog.show(fragmentManager, "EditListing"); // Tags are internal IDs, safe to keep hardcoded
+            dialog.show(fragmentManager, "EditListing");
         });
 
-        holder.btnDelete.setOnClickListener(v -> deleteListing(item.getKey()));
+        // --- DELETE CONFIRMATION DIALOG ---
+        holder.btnDelete.setOnClickListener(v -> {
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.delete_listing_title)      // "Delete Listing"
+                    .setMessage(R.string.delete_listing_message)  // "Are you sure...?"
+                    .setPositiveButton(R.string.yes, (dialog, which) -> deleteListing(item.getKey()))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        });
     }
 
     private void deleteListing(String key) {
-        // Ideally, move URL to a Constants file, but keeping as requested
         FirebaseDatabase.getInstance("https://edumatch-74070-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("tutor_listings")
                 .child(key)
@@ -120,20 +109,18 @@ public class TutorViewListingAdapter extends RecyclerView.Adapter<TutorViewListi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvSubjects, tvLevels, tvFee, tvArea, tvMode, tvQualification, tvContact, tvTimestamp;
-        TextView tvLevel;
         Button btnEdit, btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
-            tvLevel = itemView.findViewById(R.id.tvLevels); // Warning: Ensure IDs match your XML
             tvSubjects = itemView.findViewById(R.id.tvSubjects);
             tvLevels = itemView.findViewById(R.id.tvLevels);
             tvFee = itemView.findViewById(R.id.tvFee);
             tvArea = itemView.findViewById(R.id.tvArea);
+            tvMode = itemView.findViewById(R.id.tvMode);
             tvQualification = itemView.findViewById(R.id.tvQualification);
             tvContact = itemView.findViewById(R.id.tvContact);
-            tvMode = itemView.findViewById(R.id.tvMode);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             btnEdit = itemView.findViewById(R.id.btnEditListing);
             btnDelete = itemView.findViewById(R.id.btnDeleteListing);

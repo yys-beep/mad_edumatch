@@ -491,8 +491,8 @@
     <string name="error_update_failed_2">Gagal Mengemaskini: %1$s</string>
 
     <string name="val_one_to_one">Satu-dengan-Satu</string>
-    <string name="val_physical">Bersemuka</string>
-    <string name="val_group">Berkumpulan</string>
+    <string name="val_physical">Fizikal</string>
+    <string name="val_group">Kumpulan</string>
     <string name="val_online">Dalam Talian</string>
     <string name="val_na">T/B</string>
 
@@ -535,4 +535,5 @@
     <string name="msg_confirm_logout">Adakah anda pasti mahu log keluar?</string>
     <string name="action_logout">Log Keluar</string>
     <string name="action_cancel">Batal</string>
+    <string name="learning_amp_delivery_mode"><![CDATA[Mod Pembelajaran & Penyampaian:]]></string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.mad_edumatch.tutor;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -8,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mad_edumatch.R;
 import com.example.mad_edumatch.firebaseModels.StudentRequest;
+import com.example.mad_edumatch.helper.ListingDataHelper; // Import the NEW Helper
 import com.example.mad_edumatch.recycleAdapters.TutorStudentRequestAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -47,8 +46,6 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
     private List<StudentRequest> displayList;
 
     private DatabaseReference databaseRef;
-
-    // 1. Variable to hold the listener (Prevents crash on logout)
     private ValueEventListener requestsListener;
 
     @Nullable
@@ -89,7 +86,6 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
     }
 
     private void loadAllRequests() {
-        // 2. Assign listener to variable
         requestsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -103,19 +99,16 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
                     }
                 }
 
-                // --- 3. FIX: SORT BY TIMESTAMP (Newest First) ---
+                // SORT BY TIMESTAMP (Newest First)
                 Collections.sort(fullRequestList, (r1, r2) ->
                         Long.compare(r2.getTimestamp(), r1.getTimestamp())
                 );
-                // ------------------------------------------------
 
-                // Refresh the search view with the new data
                 performSearch();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Prevent crash if auth is null
                 if (FirebaseAuth.getInstance().getCurrentUser() != null && getContext() != null) {
                     String message = getString(R.string.error_failed_message, error.getMessage());
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -126,7 +119,6 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
         databaseRef.addValueEventListener(requestsListener);
     }
 
-    // 4. Cleanup listener to prevent crash on Logout
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -136,21 +128,15 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
     }
 
     private void setupSearchListeners() {
-        // A. Real-time Text Search (Better than EditorActionListener)
         etSearchSubject.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 performSearch();
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
-        // B. Chip Selection
         chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
             performSearch();
         });
@@ -159,12 +145,28 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
     private void performSearch() {
         String query = etSearchSubject.getText() != null ? etSearchSubject.getText().toString().trim().toLowerCase() : "";
 
-        String selectedLevel = "";
+        // --- STEP 1: Determine Selected KEY from Chip Index ---
+        String selectedKey = null;
         int checkedChipId = chipGroupFilter.getCheckedChipId();
         if (checkedChipId != View.NO_ID) {
-            Chip chip = chipGroupFilter.findViewById(checkedChipId);
-            // This gets "Rendah" if app is in Malay, or "Primary" if English
-            selectedLevel = chip.getText().toString().toLowerCase();
+            View chip = chipGroupFilter.findViewById(checkedChipId);
+            int index = chipGroupFilter.indexOfChild(chip);
+
+            // Map Index to Key (e.g. Index 0 -> "PRIMARY", Index 1 -> "LOWER_SEC")
+            if (index >= 0 && index < ListingDataHelper.LEVEL_KEYS.length) {
+                selectedKey = ListingDataHelper.LEVEL_KEYS[index];
+            }
+        }
+
+        // --- STEP 2: Get Display Text for Fuzzy Matching (For Old Data) ---
+        // If user selects "Lower Secondary", we also want to match old string data containing "Lower Secondary"
+        String selectedDisplayText = "";
+        if (selectedKey != null && getContext() != null) {
+            selectedDisplayText = ListingDataHelper.getLevelDisplayName(getContext(), selectedKey).toLowerCase();
+            // Simplify text (e.g., remove brackets)
+            if (selectedDisplayText.contains("(")) {
+                selectedDisplayText = selectedDisplayText.substring(0, selectedDisplayText.indexOf("(")).trim();
+            }
         }
 
         displayList.clear();
@@ -173,30 +175,31 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
             boolean matchesSubject = false;
             boolean matchesLevel = false;
 
-            // 1. SUBJECT CHECK (Assume subject names might be English in DB)
-            // If you have a LocalizationHelper for subjects, apply it here too.
+            // 1. SUBJECT CHECK
             String reqSubject = request.getSubject() != null ? request.getSubject().toLowerCase() : "";
             if (TextUtils.isEmpty(query) || reqSubject.contains(query)) {
                 matchesSubject = true;
             }
 
-            // 2. LEVEL CHECK (CRITICAL FIX)
-            // Get raw DB value: "Primary"
-            String rawDbLevel = request.getLevel();
-            String localizedDbLevel = rawDbLevel;
-
-            // Use Helper to translate "Primary" -> "Rendah" (if app is in Malay)
-            // Make sure you import your LocalizationHelper class
-            int resId = com.example.mad_edumatch.helper.LocalizationHelper.getLevelStringId(rawDbLevel);
-            if (resId != 0 && isAdded()) {
-                localizedDbLevel = getString(resId);
-            }
-
-            // Now compare "rendah" (from DB translated) with "rendah" (from Chip)
-            String reqLevelForSearch = localizedDbLevel != null ? localizedDbLevel.toLowerCase() : "";
-
-            if (TextUtils.isEmpty(selectedLevel) || reqLevelForSearch.contains(selectedLevel)) {
-                matchesLevel = true;
+            // 2. LEVEL CHECK (Robust Logic)
+            if (selectedKey == null) {
+                matchesLevel = true; // No filter selected
+            } else {
+                String dbLevel = request.getLevel();
+                if (dbLevel != null) {
+                    // A. Direct Key Match (e.g. "PRIMARY" == "PRIMARY")
+                    if (dbLevel.equals(selectedKey)) {
+                        matchesLevel = true;
+                    }
+                    // B. Fuzzy Text Match (For Old Data like "Primary School")
+                    else {
+                        // Translate DB Value to Display Text, then check if it matches selection
+                        String dbLevelDisplay = ListingDataHelper.getLevelDisplayName(getContext(), dbLevel).toLowerCase();
+                        if (!selectedDisplayText.isEmpty() && dbLevelDisplay.contains(selectedDisplayText)) {
+                            matchesLevel = true;
+                        }
+                    }
+                }
             }
 
             if (matchesSubject && matchesLevel) {
@@ -207,6 +210,7 @@ public class TutorSearchStudentRequestsFragment extends Fragment {
         adapter.notifyDataSetChanged();
         updateEmptyView();
     }
+
     private void updateEmptyView() {
         if (displayList.isEmpty()) {
             tvNoRequestFound.setVisibility(View.VISIBLE);
